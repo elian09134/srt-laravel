@@ -34,6 +34,28 @@
             </div>
         </div>
 
+        <div class="mt-6">
+            <h3 class="font-semibold">Timeline Status</h3>
+            <div class="mt-3 space-y-3">
+                @forelse($application->statusHistories as $history)
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-sm text-gray-700">{{ \Carbon\Carbon::parse($history->created_at)->format('d') }}</div>
+                        </div>
+                        <div class="flex-1 text-sm text-gray-800">
+                            <div class="font-medium">{{ $history->status }}</div>
+                            <div class="text-xs text-gray-500">{{ $history->created_at->format('d M Y H:i') }}{{ $history->changer ? ' — oleh ' . $history->changer->name : '' }}</div>
+                            @if($history->note)
+                                <div class="mt-1 text-gray-700">{{ $history->note }}</div>
+                            @endif
+                        </div>
+                    </div>
+                @empty
+                    <div class="text-sm text-gray-500">Belum ada riwayat status.</div>
+                @endforelse
+            </div>
+        </div>
+
     </div>
 </div>
 @endsection

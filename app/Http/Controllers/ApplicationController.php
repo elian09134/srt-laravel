@@ -6,6 +6,7 @@ use App\Models\Application;
 use App\Models\Job;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ApplicationStatusHistory;
 
 class ApplicationController extends Controller
 {
@@ -31,7 +32,7 @@ class ApplicationController extends Controller
 
         $profile = $user->profile ?? null;
 
-        Application::create([
+        $application = Application::create([
             'user_id' => $user->id,
             'job_id' => $job->id,
             'status' => 'Baru',
@@ -41,6 +42,14 @@ class ApplicationController extends Controller
             'applicant_phone' => $profile->phone ?? null,
             'applicant_last_position' => $profile->last_position ?? null,
             'applicant_last_education' => $profile->last_education ?? null,
+        ]);
+
+        // record initial status history
+        ApplicationStatusHistory::create([
+            'application_id' => $application->id,
+            'status' => 'Baru',
+            'note' => 'Lamaran dikirim oleh pelamar',
+            'changed_by' => $user->id,
         ]);
 
         return redirect()->back()->with('success', 'Lamaran berhasil dikirim. Terima kasih!');

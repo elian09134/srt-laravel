@@ -26,5 +26,11 @@ public function job()
 {
     return $this->belongsTo(Job::class);
 }
+    
+  public function statusHistories()
+  {
+    return $this->hasMany(ApplicationStatusHistory::class)->orderBy('created_at', 'desc');
+  }
+
   //
 }

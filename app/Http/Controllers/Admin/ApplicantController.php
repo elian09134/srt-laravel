@@ -44,13 +44,21 @@ class ApplicantController extends Controller
      */
     public function show(Application $application)
     {
-        $application->load(['user.profile', 'user.workExperiences', 'job']);
+        $application->load(['user.profile', 'user.workExperiences', 'job', 'statusHistories']);
 
         // Jika status masih 'Baru' atau kosong, tandai sebagai 'Lamaran Dilihat' saat detail dibuka
         if (empty($application->status) || $application->status === 'Baru') {
             $application->update(['status' => 'Lamaran Dilihat']);
+            // catat ke history
+            \App\Models\ApplicationStatusHistory::create([
+                'application_id' => $application->id,
+                'status' => 'Lamaran Dilihat',
+                'note' => 'Dilihat oleh tim rekrutmen',
+                'changed_by' => auth()->id(),
+            ]);
             // reload to reflect change
             $application->refresh();
+            $application->load('statusHistories');
         }
 
         return view('admin.applicants.show', [
@@ -62,6 +70,14 @@ class ApplicantController extends Controller
     {
         $request->validate(['status' => 'required|string']);
         $application->update(['status' => $request->status]);
+        // create history entry
+        \App\Models\ApplicationStatusHistory::create([
+            'application_id' => $application->id,
+            'status' => $request->status,
+            'note' => null,
+            'changed_by' => auth()->id(),
+        ]);
+
         return back()->with('success', 'Status lamaran berhasil diperbarui.');
     }
 
@@ -72,6 +88,14 @@ class ApplicantController extends Controller
         
         // Update status lamaran menjadi Shortlist
         $application->update(['status' => 'Shortlist']);
+
+        // record history
+        \App\Models\ApplicationStatusHistory::create([
+            'application_id' => $application->id,
+            'status' => 'Shortlist',
+            'note' => 'Ditambahkan ke Talent Pool',
+            'changed_by' => auth()->id(),
+        ]);
 
         return back()->with('success', 'Kandidat berhasil ditambahkan ke Talent Pool.');
     }
