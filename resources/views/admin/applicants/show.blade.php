@@ -92,23 +92,65 @@
                     </div>
 
                     <h4 class="text-sm font-semibold text-gray-600 mt-6">Timeline Status</h4>
-                    <div class="mt-3 space-y-3">
-                        @forelse($application->statusHistories as $history)
-                            <div class="flex items-start space-x-3">
-                                <div class="flex-shrink-0">
-                                    <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-sm text-gray-700">{{ \Carbon\Carbon::parse($history->created_at)->format('d') }}</div>
-                                </div>
-                                <div class="flex-1 text-sm text-gray-800">
-                                    <div class="font-medium">{{ $history->status }}</div>
-                                    <div class="text-xs text-gray-500">{{ $history->created_at->format('d M Y H:i') }}{{ $history->changer ? ' — oleh ' . $history->changer->name : '' }}</div>
-                                    @if($history->note)
-                                        <div class="mt-1 text-gray-700">{{ $history->note }}</div>
-                                    @endif
-                                </div>
-                            </div>
-                        @empty
-                            <div class="text-sm text-gray-500">Belum ada riwayat status.</div>
-                        @endforelse
+                    <div class="mt-4">
+                        @php
+                            $steps = [
+                                'Baru',
+                                'Lamaran Dilihat',
+                                'Psikotest',
+                                'Wawancara HR',
+                                'Wawancara User',
+                                'Offering Letter',
+                                'Shortlist',
+                                'Diterima',
+                                'Tidak Lanjut',
+                            ];
+                            $currentIndex = array_search($application->status, $steps);
+                            if ($currentIndex === false) {
+                                // if status not in defined steps, set to -1
+                                $currentIndex = -1;
+                            }
+                        @endphp
+
+                        <ol class="border-l border-gray-200">
+                            @foreach($steps as $i => $step)
+                                @php
+                                    $state = 'future';
+                                    if ($i < $currentIndex) $state = 'done';
+                                    if ($i === $currentIndex) $state = 'current';
+                                @endphp
+
+                                <li class="mb-6 ml-6">
+                                    <span class="-left-3.5 absolute mt-1 flex items-center justify-center h-7 w-7 rounded-full text-white">
+                                    </span>
+                                    <div class="flex items-center space-x-3">
+                                        <div class="flex-shrink-0">
+                                            @if($state === 'done')
+                                                <div class="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center text-white">✓</div>
+                                            @elseif($state === 'current')
+                                                <div class="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white">●</div>
+                                            @else
+                                                <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-700">○</div>
+                                            @endif
+                                        </div>
+                                        <div class="flex-1">
+                                            <div class="font-medium @if($state === 'current') text-blue-600 @elseif($state === 'done') text-gray-700 @else text-gray-500 @endif">{{ $step }}</div>
+                                            @if($state === 'done' || $state === 'current')
+                                                @php
+                                                    $h = $application->statusHistories->firstWhere('status', $step);
+                                                @endphp
+                                                @if($h)
+                                                    <div class="text-xs text-gray-500">{{ $h->created_at->format('d M Y H:i') }}{{ $h->changer ? ' — oleh ' . $h->changer->name : '' }}</div>
+                                                    @if($h->note)
+                                                        <div class="text-sm text-gray-700 mt-1">{{ $h->note }}</div>
+                                                    @endif
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ol>
                     </div>
 
                     <div class="mt-6 flex flex-wrap gap-3">
