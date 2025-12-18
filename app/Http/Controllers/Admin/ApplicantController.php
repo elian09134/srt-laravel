@@ -7,6 +7,7 @@ use App\Models\Application;
 use App\Models\Job;
 use App\Models\TalentPool;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ApplicantController extends Controller
 {
@@ -54,7 +55,7 @@ class ApplicantController extends Controller
                 'application_id' => $application->id,
                 'status' => 'Lamaran Dilihat',
                 'note' => 'Dilihat oleh tim rekrutmen',
-                'changed_by' => auth()->id(),
+                'changed_by' => Auth::id(),
             ]);
             // reload to reflect change
             $application->refresh();
@@ -75,7 +76,7 @@ class ApplicantController extends Controller
             'application_id' => $application->id,
             'status' => $request->status,
             'note' => null,
-            'changed_by' => auth()->id(),
+            'changed_by' => Auth::id(),
         ]);
 
         return back()->with('success', 'Status lamaran berhasil diperbarui.');
@@ -94,7 +95,7 @@ class ApplicantController extends Controller
             'application_id' => $application->id,
             'status' => 'Shortlist',
             'note' => 'Ditambahkan ke Talent Pool',
-            'changed_by' => auth()->id(),
+            'changed_by' => Auth::id(),
         ]);
 
         return back()->with('success', 'Kandidat berhasil ditambahkan ke Talent Pool.');
