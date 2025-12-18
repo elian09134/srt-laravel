@@ -25,6 +25,34 @@
                         </div>
                     </div>
 
+                    @php
+                        $rawPhone = $application->applicant_phone ?? optional($application->user->profile)->phone_number ?? null;
+                        $waNumber = null;
+                        if ($rawPhone) {
+                            // remove non-digit characters
+                            $num = preg_replace('/\D+/', '', $rawPhone);
+                            // if starts with 0, assume Indonesian number and replace with 62
+                            if (strlen($num) > 0 && $num[0] === '0') {
+                                $num = '62' . substr($num, 1);
+                            }
+                            // strip leading plus if any (preg_replace removed it)
+                            $waNumber = $num;
+                        }
+                        $waMessage = '';
+                        if ($waNumber) {
+                            $name = $application->applicant_name ?? ($application->user->name ?? 'Kandidat');
+                            $waMessage = urlencode("Halo $name, saya dari tim SRT ingin berdiskusi mengenai lamaran Anda.");
+                        }
+                    @endphp
+
+                    @if($waNumber)
+                        <div class="mt-4">
+                            <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessage }}" target="_blank" rel="noopener" class="inline-flex items-center px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                                Hubungi via WhatsApp
+                            </a>
+                        </div>
+                    @endif
+
                     <div class="mt-6">
                         <h4 class="text-sm font-semibold text-gray-600">Status Lamaran</h4>
                         <div class="mt-2 text-sm text-gray-800">{{ $application->status }}</div>
