@@ -20,7 +20,7 @@
                         <div class="text-right">
                             <div class="text-sm text-gray-600">Status</div>
                             <div class="mt-1 font-semibold @if(in_array($app->status, ['Diterima','Offering Letter'])) text-green-600 @elseif(in_array($app->status, ['Tidak Lanjut','Ditolak'])) text-red-600 @else text-gray-800 @endif">{{ $app->status }}</div>
-                            <a href="{{ route('admin.applicants.show', $app) }}" class="mt-2 inline-block text-sm text-blue-600">Lihat Detail</a>
+                            <a href="{{ route('applications.show', $app) }}" class="mt-2 inline-block text-sm text-blue-600">Lihat Detail</a>
                         </div>
                     </li>
                 @endforeach
