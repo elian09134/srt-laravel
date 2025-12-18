@@ -40,6 +40,7 @@
                 @else
                     <!-- Tampilan jika user biasa login -->
                     <a href="/profile" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Profil Saya</a>
+                    <a href="{{ route('applications.index') }}" class="ml-4 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Riwayat Lamaran</a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -65,11 +66,12 @@
         <a href="{{ route('home') }}#business-scope" class="block py-2 text-gray-600 hover:text-blue-600">Scope Bisnis</a>
         <a href="{{ route('karir') }}" class="block py-2 text-gray-600 hover:text-blue-600">Karir</a>
         <div class="mt-4 pt-4 border-t">
-            @auth
+             @auth
                       @if (auth()->user()->role == 'admin')
                           <a href="{{ route('admin.dashboard') }}" class="block text-center py-2 font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">Admin Panel</a>
                 @else
-                     <a href="/profile" class="block text-center py-2 font-medium text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50">Profil Saya</a>
+                 <a href="/profile" class="block text-center py-2 font-medium text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50">Profil Saya</a>
+                 <a href="{{ route('applications.index') }}" class="block mt-2 text-center py-2 font-medium text-gray-700 rounded-lg hover:bg-gray-50">Riwayat Lamaran</a>
                 @endif
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
