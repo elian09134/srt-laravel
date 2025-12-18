@@ -1,61 +1,45 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## SRT Recruitment — Project README
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This repository is a Laravel-based recruitment site for SRT. It provides job listings, candidate registration, application submission, and an admin panel to manage applicants and a talent pool.
 
-## About Laravel
+Quick links
+- Admin applicants list: [resources/views/admin/applicants.blade.php](resources/views/admin/applicants.blade.php)
+- Admin applicant detail: [resources/views/admin/applicants/show.blade.php](resources/views/admin/applicants/show.blade.php)
+- Application model: [app/Models/Application.php](app/Models/Application.php)
+- Application submission controller: [app/Http/Controllers/ApplicationController.php](app/Http/Controllers/ApplicationController.php)
+- Admin controllers: [app/Http/Controllers/Admin](app/Http/Controllers/Admin)
+- Routes: [routes/web.php](routes/web.php)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Features
+- Candidate registration and profile management.
+- Public careers pages (`/karir` and job detail `/karir/{job}`).
+- Users can submit applications with optional cover letter. Applications store a snapshot of applicant data to preserve registration info at time of apply.
+- Admin panel (under `/admin`) to view applicants, change statuses, add to talent pool, and view applicant details.
+- Applicant detail auto-marks status to **Lamaran Dilihat** when opened and provides quick action buttons for stages (Psikotest, Interview HR/User, Offering Letter, Diterima, Ditolak).
+- WhatsApp contact button on applicant detail (uses `wa.me`) when phone number is available.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Database changes (recent)
+- `2025_12_18_090000_add_cover_letter_to_applications_table.php` — adds `cover_letter` to `applications`.
+- `2025_12_18_100000_add_applicant_snapshot_to_applications_table.php` — adds `applicant_name`, `applicant_email`, `applicant_phone`, `applicant_last_position`, `applicant_last_education` to `applications`.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Local setup
+1. Copy `.env.example` to `.env` and configure DB and `APP_URL`.
+2. Install PHP deps: `composer install`.
+3. Install JS deps and build: `npm install` then `npm run build` (or `npm run dev`).
+4. Create storage symlink: `php artisan storage:link`.
+5. Run migrations: `php artisan migrate`.
+6. (Optional) Backfill existing `applications` snapshots from users/profiles. A Tinker chunked script is available during development.
 
-## Learning Laravel
+Useful commands
+- Start server: `php artisan serve`
+- Tinker: `php artisan tinker`
+- Run tests: `php artisan test`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Notes for maintainers
+- Admin routes are protected by `auth` and `admin` middleware. Ensure admin users have `role` set appropriately.
+- Phone normalization for WhatsApp: non-digits removed; leading `0` is replaced with Indonesian country code `62` by default.
+- Application snapshots preserve user data at apply time — this is intentional so applicant history remains accurate.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Need help?
+If you want me to add notifications, CV upload, or automated tests, tell me which feature to implement next.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
