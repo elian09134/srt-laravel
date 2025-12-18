@@ -2,27 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Job;
 use App\Models\SiteContent;
 use App\Models\Gallery; // Tambahkan ini
 use Illuminate\Http\Request;
+use App\Models\Job;
 
 class PageController extends Controller
 {
     public function home()
     {
-        // Mengambil 3 lowongan terbaru yang aktif
-        $jobs = Job::where('is_active', 1)->latest()->take(3)->get();
+        // Mengambil 3 lowongan terbaru yang aktif dengan caching
+        $jobs = \Cache::remember('homepage_jobs', 1800, function () {
+            return Job::where('is_active', 1)->latest()->take(3)->get();
+        });
 
-        // Mengambil semua konten website
-        $content_items = SiteContent::all();
-        $content = [];
-        foreach ($content_items as $item) {
-            $content[$item->section_name][$item->content_key] = $item->content_value;
-        }
+        // Mengambil semua konten website dengan caching
+        $content = \Cache::remember('site_content', 3600, function () {
+            $content_items = SiteContent::all();
+            return $content_items->groupBy('section_name')
+                ->map(function ($items) {
+                    return $items->pluck('content_value', 'content_key');
+                })
+                ->toArray();
+        });
 
-        // --- LOGIKA BARU: Mengambil data galeri ---
-        $gallery = Gallery::latest()->take(4)->get();
+        // Mengambil data galeri dengan caching
+        $gallery = \Cache::remember('gallery_images', 3600, function () {
+            return Gallery::latest()->take(4)->get();
+        });
 
         // Mengirim semua data ke view
         return view('home', [
@@ -53,6 +60,13 @@ class PageController extends Controller
         return view('karir', [
             'jobs' => $jobs,
             'locations' => $locations
+        ]);
+    }
+
+    public function showJob(Job $job)
+    {
+        return view('karir_show', [
+            'job' => $job
         ]);
     }
 }

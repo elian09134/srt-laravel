@@ -42,18 +42,27 @@ class ImageController extends Controller
             if ($request->hasFile($inputName)) {
                 $file = $request->file($inputName);
                 
-                // Hapus gambar lama jika ada
-                $oldImage = SiteContent::where('section_name', $sectionName)->where('content_key', 'image')->first();
-                if ($oldImage && $oldImage->content_value && Storage::disk('public')->exists($oldImage->content_value)) {
-                    Storage::disk('public')->delete($oldImage->content_value);
-                }
+                // Validasi file
+                $request->validate([
+                    $inputName => 'image|max:2048', // maks 2MB
+                ]);
 
-                // Simpan gambar baru
-                $path = $file->store('images', 'public');
-                SiteContent::updateOrCreate(
-                    ['section_name' => $sectionName, 'content_key' => 'image'],
-                    ['content_value' => $path]
-                );
+                try {
+                    // Hapus gambar lama jika ada
+                    $oldImage = SiteContent::where('section_name', $sectionName)->where('content_key', 'image')->first();
+                    if ($oldImage && $oldImage->content_value && Storage::disk('public')->exists($oldImage->content_value)) {
+                        Storage::disk('public')->delete($oldImage->content_value);
+                    }
+
+                    // Simpan gambar baru
+                    $path = $file->store('images', 'public');
+                    SiteContent::updateOrCreate(
+                        ['section_name' => $sectionName, 'content_key' => 'image'],
+                        ['content_value' => $path]
+                    );
+                } catch (\Exception $e) {
+                    return back()->with('error', 'Gagal memperbarui gambar ' . $sectionName . ': ' . $e->getMessage());
+                }
             }
         }
 
@@ -63,11 +72,16 @@ class ImageController extends Controller
                 'gallery_alt_text' => 'required|string|max:255',
                 'gallery_image' => 'required|image|max:2048', // maks 2MB
             ]);
-            $path = $request->file('gallery_image')->store('gallery', 'public');
-            Gallery::create([
-                'file_path' => $path,
-                'alt_text' => $request->gallery_alt_text,
-            ]);
+
+            try {
+                $path = $request->file('gallery_image')->store('gallery', 'public');
+                Gallery::create([
+                    'file_path' => $path,
+                    'alt_text' => $request->gallery_alt_text,
+                ]);
+            } catch (\Exception $e) {
+                return back()->with('error', 'Gagal mengunggah gambar galeri: ' . $e->getMessage());
+            }
         }
 
         return back()->with('success', 'Gambar berhasil diperbarui.');
@@ -78,10 +92,14 @@ class ImageController extends Controller
      */
     public function destroyGalleryImage(Gallery $gallery)
     {
-        if (Storage::disk('public')->exists($gallery->file_path)) {
-            Storage::disk('public')->delete($gallery->file_path);
+        try {
+            if (Storage::disk('public')->exists($gallery->file_path)) {
+                Storage::disk('public')->delete($gallery->file_path);
+            }
+            $gallery->delete();
+            return back()->with('success', 'Gambar galeri berhasil dihapus.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal menghapus gambar galeri: ' . $e->getMessage());
         }
-        $gallery->delete();
-        return back()->with('success', 'Gambar galeri berhasil dihapus.');
     }
 }

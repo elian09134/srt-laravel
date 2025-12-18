@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Office team working">
+  <rect width="100%" height="100%" fill="#F8FAFF"/>
+  <g transform="translate(120,120)">
+    <rect x="0" y="0" width="960" height="560" rx="12" fill="#FFFFFF" stroke="#E6EEF8"/>
+    <text x="40" y="70" font-size="36" fill="#0F172A" font-family="Inter, Arial">Team brainstorming</text>
+    <circle cx="140" cy="160" r="38" fill="#60A5FA"/>
+    <circle cx="220" cy="160" r="38" fill="#34D399"/>
+    <rect x="40" y="220" width="160" height="90" rx="8" fill="#EFF6FF"/>
+    <rect x="220" y="220" width="160" height="90" rx="8" fill="#FEF3C7"/>
+  </g>
+</svg>

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
+use App\Models\TalentPool;
 
 class RegisteredUserController extends Controller
 {
@@ -45,7 +46,7 @@ class RegisteredUserController extends Controller
             'institution' => ['required', 'string', 'max:255'],
             'major' => ['required', 'string', 'max:255'],
             'cv' => ['required', 'file', 'mimes:pdf', 'max:2048'], // maks 2MB
-            'photo' => ['nullable', 'file', 'mimes:jpg,png', 'max:1024'], // maks 1MB
+            'photo' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:2048'], // maks 2MB
         ]);
 
         // Memulai transaksi database untuk memastikan semua data aman
@@ -54,9 +55,14 @@ class RegisteredUserController extends Controller
         try {
             // 2. Handle Upload File
             $cvPath = $request->file('cv')->store('cvs', 'public');
+            
             $photoPath = null;
             if ($request->hasFile('photo')) {
-                $photoPath = $request->file('photo')->store('photos', 'public');
+                try {
+                    $photoPath = $request->file('photo')->store('photos', 'public');
+                } catch (\Exception $e) {
+                    return back()->withErrors(['photo' => 'The photo failed to upload. Please try again.']);
+                }
             }
 
             // 3. Buat User baru
@@ -76,6 +82,9 @@ class RegisteredUserController extends Controller
                 'education_level' => $request->education_level,
                 'institution' => $request->institution,
                 'major' => $request->major,
+                'last_company' => $request->last_company ?? null,
+                'last_position' => $request->last_position ?? null,
+                'last_company_duration' => $request->last_company_duration ?? null,
                 'skills' => $request->skills,
                 'languages' => $request->languages,
                 'job_interest' => $request->job_interest,
@@ -83,7 +92,19 @@ class RegisteredUserController extends Controller
                 'photo_path' => $photoPath,
             ]);
 
-            // 5. Simpan Pengalaman Kerja
+            // 5. Tambahkan user ke Talent Pool untuk rekrutmen mendatang (kecuali admin)
+            if ($user->role !== 'admin') {
+                // Prioritas: last_position -> job_interest -> skills
+                $jobPreferences = $request->last_position ?? $request->job_interest ?? $request->skills ?? null;
+
+                TalentPool::create([
+                    'user_id' => $user->id,
+                    'status' => 'available',
+                    'job_preferences' => $jobPreferences,
+                ]);
+            }
+
+            // 6. Simpan Pengalaman Kerja
             if ($request->has('experience')) {
                 foreach ($request->experience as $exp) {
                     if (!empty($exp['company'])) {

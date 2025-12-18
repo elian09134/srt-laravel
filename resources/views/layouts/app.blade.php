@@ -7,8 +7,7 @@
 
         <title>{{ config('app.name', 'SRT Corp') }}</title>
 
-        <!-- Tailwind CSS CDN -->
-        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- Tailwind CSS should be built via Vite; do not use CDN in production -->
         
         <!-- Google Fonts: Inter -->
         <link rel="preconnect" href="https://fonts.googleapis.com">

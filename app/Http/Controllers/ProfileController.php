@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Employee;
-use App\Models\EmployeeEducation;
+use App\Models\UserProfile;
+use App\Models\WorkExperience;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -11,62 +11,83 @@ use Illuminate\Support\Facades\DB;
 class ProfileController extends Controller
 {
     /**
-     * Menampilkan form untuk mengedit profil karyawan.
+     * Menampilkan form untuk mengedit profil user.
      */
     public function edit()
     {
         $user = Auth::user();
-        // Memuat semua relasi yang dibutuhkan
-        $user->load(['employee', 'educationHistory']);
+        // Memuat semua relasi yang dibutuhkan untuk user reguler
+        $user->load(['profile', 'workExperiences']);
 
         return view('profile.edit', compact('user'));
     }
 
     /**
-     * Memperbarui profil karyawan di database.
+     * Memperbarui profil user reguler di database.
      */
     public function update(Request $request)
     {
         $user = Auth::user();
-        $employee = $user->employee;
 
         $request->validate([
+            'nickname' => 'required|string|max:255',
             'phone_number' => 'required|string|max:20',
-            'place_of_birth' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
-            'current_address' => 'required|string',
-            'id_card_address' => 'required|string',
-            'gender' => 'required|string',
-            'religion' => 'required|string',
-            'marital_status' => 'required|string',
-            'ptkp_status' => 'required|string',
-            'id_card_number' => 'required|string|max:255|unique:employees,id_card_number,' . $employee->id,
-            'father_name' => 'required|string',
-            'mother_name' => 'required|string',
-            'bank_name' => 'required|string',
-            'account_number' => 'required|string',
-            'account_holder_name' => 'required|string',
-            'emergency_contact_name' => 'required|string',
-            'emergency_contact_phone' => 'required|string',
-            'emergency_contact_relation' => 'required|string',
+            'about_me' => 'required|string',
+            'education_level' => 'required|string',
+            'institution' => 'required|string|max:255',
+            'major' => 'required|string|max:255',
+            'last_company' => 'nullable|string|max:255',
+            'last_position' => 'nullable|string|max:255',
+            'last_company_duration' => 'nullable|string|max:255',
+            'skills' => 'nullable|string',
+            'languages' => 'nullable|string',
+            'job_interest' => 'nullable|string',
+            'photo' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         DB::beginTransaction();
         try {
-            // 1. Update profil user
+            // 1. Handle upload foto jika ada
+            $photoPath = $user->profile->photo_path;
+            if ($request->hasFile('photo')) {
+                $photoPath = $request->file('photo')->store('photos', 'public');
+            }
+
+            // 2. Update profil user
             $user->profile->update([
+                'nickname' => $request->nickname,
                 'phone_number' => $request->phone_number,
+                'date_of_birth' => $request->date_of_birth,
+                'about_me' => $request->about_me,
+                'education_level' => $request->education_level,
+                'institution' => $request->institution,
+                'major' => $request->major,
+                'last_company' => $request->last_company,
+                'last_position' => $request->last_position,
+                'last_company_duration' => $request->last_company_duration,
+                'skills' => $request->skills,
+                'languages' => $request->languages,
+                'job_interest' => $request->job_interest,
+                'photo_path' => $photoPath,
             ]);
 
-            // 2. Update data karyawan
-            $employee->update($request->except(['_token', '_method', 'education']));
+            // 3. Update pengalaman kerja jika ada
+            if ($request->has('experience')) {
+                // Hapus pengalaman kerja lama
+                $user->workExperiences()->delete();
 
-            // 3. Hapus riwayat pendidikan lama dan masukkan yang baru
-            $user->educationHistory()->delete();
-            if ($request->has('education')) {
-                foreach ($request->education as $edu) {
-                    if (!empty($edu['institution_name']) && !empty($edu['graduation_year'])) {
-                        $user->educationHistory()->create($edu);
+                // Tambahkan pengalaman kerja baru
+                foreach ($request->experience as $exp) {
+                    if (!empty($exp['company'])) {
+                        $user->workExperiences()->create([
+                            'company_name' => $exp['company'],
+                            'position' => $exp['position'] ?? null,
+                            'start_date' => $exp['start_date'] ?? null,
+                            'end_date' => $exp['end_date'] ?? null,
+                            'duration_months' => $exp['duration_months'] ?? null,
+                            'description' => $exp['description'] ?? null,
+                        ]);
                     }
                 }
             }
@@ -78,6 +99,49 @@ class ProfileController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Menghapus akun user reguler.
+     */
+    public function destroy(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'password' => 'required|string',
+        ]);
+
+        // Verifikasi password
+        if (!Auth::guard('web')->validate([
+            'email' => $user->email,
+            'password' => $request->password,
+        ])) {
+            return back()->withErrors(['password' => 'Password yang dimasukkan salah.']);
+        }
+
+        DB::beginTransaction();
+        try {
+            // Hapus semua data terkait user
+            $user->profile()->delete();
+            $user->workExperiences()->delete();
+            $user->talentPool()->delete();
+            $user->applications()->delete();
+
+            // Hapus user
+            $user->delete();
+
+            DB::commit();
+
+            // Logout user
+            Auth::logout();
+
+            return redirect('/')->with('success', 'Akun Anda telah berhasil dihapus.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Terjadi kesalahan saat menghapus akun: ' . $e->getMessage()]);
         }
     }
 }

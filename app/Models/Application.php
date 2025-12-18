@@ -6,6 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Application extends Model
 {
+    protected $fillable = [
+      'user_id',
+      'job_id',
+      'status',
+      'cover_letter',
+      'applicant_name',
+      'applicant_email',
+      'applicant_phone',
+      'applicant_last_position',
+      'applicant_last_education',
+    ];
   public function user()
 {
     return $this->belongsTo(User::class);

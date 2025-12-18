@@ -8,6 +8,7 @@ use App\Models\EmployeeEducation;
 use App\Models\EmployeeInvitation;
 use App\Models\User;
 use App\Models\UserProfile;
+use App\Models\TalentPool;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -102,6 +103,13 @@ class EmployeeRegisterController extends Controller
             UserProfile::create([
                 'user_id' => $user->id,
                 'phone_number' => $request->phone_number,
+            ]);
+
+            // 2.1. Tambahkan user ke Talent Pool untuk rekrutmen mendatang
+            TalentPool::create([
+                'user_id' => $user->id,
+                'status' => 'available',
+                'job_preferences' => $request->job_interest ?? $request->position ?? null,
             ]);
 
             // 3. Buat data karyawan lengkap

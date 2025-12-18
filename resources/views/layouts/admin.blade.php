@@ -4,63 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Panel') - SRT Corp</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vite-built CSS/JS -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Font Awesome (kept as CDN for admin icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <style> body { font-family: 'Inter', sans-serif; } </style>
+    <style>
+        .bg-grid-pattern {
+            background-image: 
+                linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+    </style>
 </head>
-<body class="bg-slate-100">
-    <div class="flex min-h-screen">
+<body class="bg-gray-50" x-data="{ sidebarOpen: true }">
+    <div class="flex min-h-screen" :class="{ 'overflow-hidden': sidebarOpen === false }">
         <!-- Sidebar -->
-        <aside class="w-64 bg-gray-800 text-white flex-shrink-0 h-screen sticky top-0">
-            <div class="p-6 text-2xl font-bold">SRT <span class="text-blue-400">Admin</span></div>
-            <nav class="mt-8">
-                <a href="{{ route('admin.dashboard') }}" class="flex items-center px-6 py-3 {{ request()->routeIs('admin.dashboard') ? 'bg-gray-700' : 'text-gray-400' }} hover:bg-gray-700 hover:text-white">
-                    <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+        <aside class="w-64 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white flex-shrink-0 h-screen sticky top-0 shadow-2xl">
+            <div class="p-6">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
+                        <span class="text-white font-bold text-lg">S</span>
+                    </div>
+                    <div>
+                        <span class="text-xl font-bold block">SRT Admin</span>
+                        <span class="text-xs text-blue-400">Management Panel</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="mt-4">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center px-6 py-3.5 {{ request()->routeIs('admin.dashboard') ? 'bg-blue-600 text-white border-l-4 border-blue-400' : 'text-gray-400 hover:bg-gray-700/50' }} hover:text-white transition-all duration-200">
+                    <i class="fas fa-tachometer-alt mr-3 w-5"></i> <span class="font-medium">Dashboard</span>
                 </a>
-                <a href="{{ route('admin.applicants.index') }}" class="flex items-center px-6 py-3 {{ request()->routeIs('admin.applicants.index') ? 'bg-gray-700' : 'text-gray-400' }} hover:bg-gray-700 hover:text-white">
-                    <i class="fas fa-users mr-3"></i> Data Pelamar
+                <a href="{{ route('admin.applicants.index') }}" class="flex items-center px-6 py-3.5 {{ request()->routeIs('admin.applicants.index') ? 'bg-blue-600 text-white border-l-4 border-blue-400' : 'text-gray-400 hover:bg-gray-700/50' }} hover:text-white transition-all duration-200">
+                    <i class="fas fa-users mr-3 w-5"></i> <span class="font-medium">Data Pelamar</span>
                 </a>
-                <a href="{{ route('admin.jobs.index') }}" class="flex items-center px-6 py-3 {{ request()->routeIs('admin.jobs.*') ? 'bg-gray-700' : 'text-gray-400' }} hover:bg-gray-700 hover:text-white">
-                    <i class="fas fa-briefcase mr-3"></i> Kelola Lowongan
+                <a href="{{ route('admin.jobs.index') }}" class="flex items-center px-6 py-3.5 {{ request()->routeIs('admin.jobs.*') ? 'bg-blue-600 text-white border-l-4 border-blue-400' : 'text-gray-400 hover:bg-gray-700/50' }} hover:text-white transition-all duration-200">
+                    <i class="fas fa-briefcase mr-3 w-5"></i> <span class="font-medium">Kelola Lowongan</span>
                 </a>
-                <a href="{{ route('admin.content.edit') }}" class="flex items-center px-6 py-3 {{ request()->routeIs('admin.content.edit') ? 'bg-gray-700' : 'text-gray-400' }} hover:bg-gray-700 hover:text-white">
-                    <i class="fas fa-edit mr-3"></i> Kelola Konten
+                <a href="{{ route('admin.content.edit') }}" class="flex items-center px-6 py-3.5 {{ request()->routeIs('admin.content.edit') ? 'bg-blue-600 text-white border-l-4 border-blue-400' : 'text-gray-400 hover:bg-gray-700/50' }} hover:text-white transition-all duration-200">
+                    <i class="fas fa-edit mr-3 w-5"></i> <span class="font-medium">Kelola Konten</span>
                 </a>
-                <a href="{{ route('admin.images.index') }}" class="flex items-center px-6 py-3 {{ request()->routeIs('admin.images.index') ? 'bg-gray-700' : 'text-gray-400' }} hover:bg-gray-700 hover:text-white">
-                    <i class="fas fa-images mr-3"></i> Kelola Gambar
+                <a href="{{ route('admin.images.index') }}" class="flex items-center px-6 py-3.5 {{ request()->routeIs('admin.images.index') ? 'bg-blue-600 text-white border-l-4 border-blue-400' : 'text-gray-400 hover:bg-gray-700/50' }} hover:text-white transition-all duration-200">
+                    <i class="fas fa-images mr-3 w-5"></i> <span class="font-medium">Kelola Gambar</span>
                 </a>
-                
-                {{-- Tautan untuk fitur selanjutnya --}}
-                {{-- 
-                <a href="#" class="flex items-center px-6 py-3 text-gray-400 hover:bg-gray-700 hover:text-white">
-                    <i class="fas fa-database mr-3"></i> Talent Community
+                <a href="{{ route('admin.talent_pool.index') }}" class="flex items-center px-6 py-3.5 {{ request()->routeIs('admin.talent_pool.*') ? 'bg-blue-600 text-white border-l-4 border-blue-400' : 'text-gray-400 hover:bg-gray-700/50' }} hover:text-white transition-all duration-200">
+                    <i class="fas fa-user-circle mr-3 w-5"></i> <span class="font-medium">Talent Pool</span>
                 </a>
-                <a href="#" class="flex items-center px-6 py-3 text-gray-400 hover:bg-gray-700 hover:text-white">
-                    <i class="fas fa-comments mr-3"></i> Kelola Forum
-                </a> 
-                --}}
 
-                <a href="{{ route('admin.invitations.index') }}" class="flex items-center px-6 py-3 {{ request()->routeIs('admin.invitations.index') ? 'bg-gray-700' : 'text-gray-400' }} hover:bg-gray-700 hover:text-white">
-                    <i class="fas fa-paper-plane mr-3"></i> Undang Karyawan
-                </a>
-                <a href="{{ route('admin.employees.index') }}" class="flex items-center px-6 py-3 {{ request()->routeIs('admin.employees.*') ? 'bg-gray-700' : 'text-gray-400' }} hover:bg-gray-700 hover:text-white">
-                    <i class="fas fa-id-card mr-3"></i> Kelola Karyawan
-                </a>
+                <!-- Employee invitation feature removed: recruitment-only site -->
+                <!-- Employee management removed: recruitment-only site -->
                 
-                 <a href="{{ route('home') }}" class="flex items-center px-6 py-3 mt-4 text-gray-400 hover:bg-gray-700 hover:text-white">
-                    <i class="fas fa-arrow-left mr-3"></i> Kembali ke Website
-                </a>
+                <div class="border-t border-gray-700 mt-6 pt-6">
+                    <a href="{{ route('home') }}" class="flex items-center px-6 py-3.5 text-gray-400 hover:bg-gray-700/50 hover:text-white transition-all duration-200">
+                        <i class="fas fa-arrow-left mr-3 w-5"></i> <span class="font-medium">Kembali ke Website</span>
+                    </a>
+                </div>
             </nav>
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-grow p-8">
-            @if(session('success'))
-                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
-                    <p>{{ session('success') }}</p>
+        <main class="flex-grow bg-gradient-to-br from-blue-50/30 via-white to-blue-50/30 relative">
+            <div class="absolute inset-0 bg-grid-pattern opacity-30"></div>
+            <div class="relative z-10 p-6 lg:p-8">
+                <!-- Topbar -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-4">
+                        <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-md bg-white/40 hover:bg-white text-gray-700 lg:hidden">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <div>
+                            <h2 class="text-2xl font-semibold text-gray-900">@yield('title', 'Admin Panel')</h2>
+                            <p class="text-sm text-gray-600">Kontrol panel perekrutan & manajemen lowongan</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="hidden md:block">
+                            <input type="search" placeholder="Cari pelamar atau lowongan..." class="px-3 py-2 rounded-lg border border-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="text-sm text-gray-600">Hello, <strong>{{ auth()->user()->name ?? 'Admin' }}</strong></div>
+                            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="text-sm text-red-600 hover:text-red-700">Logout</a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+                        </div>
+                    </div>
                 </div>
-            @endif
-            @yield('content')
+                
+                @if(session('success'))
+                    <div class="bg-gradient-to-r from-green-50 to-green-100 border-l-4 border-green-500 text-green-800 p-4 mb-6 rounded-xl shadow-sm" role="alert">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle mr-3 text-green-500"></i>
+                            <p class="font-medium">{{ session('success') }}</p>
+                        </div>
+                    </div>
+                @endif
+                @yield('content')
+            </div>
         </main>
     </div>
 </body>

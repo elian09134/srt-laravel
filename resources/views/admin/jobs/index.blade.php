@@ -26,11 +26,14 @@
                         <td class="px-6 py-4 whitespace-nowrap font-medium">{{ $job->title }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">{{ $job->location }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
+                            <span data-job-id-state="{{ $job->id }}">
                             @if ($job->is_active)
                                 <span class="px-3 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Aktif</span>
                             @else
                                 <span class="px-3 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">Tidak Aktif</span>
                             @endif
+                            </span>
+                            <button data-toggle-job="{{ $job->id }}" class="ml-3 text-sm px-2 py-1 rounded-md bg-gray-100 hover:bg-gray-200">Toggle</button>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap space-x-4">
                             <a href="{{ route('admin.jobs.edit', $job) }}" class="text-blue-600 hover:text-blue-800">Edit</a>

@@ -97,4 +97,18 @@ class JobController extends Controller
         $job->delete();
         return redirect()->route('admin.jobs.index')->with('success', 'Lowongan berhasil dihapus.');
     }
+
+    /**
+     * Toggle the active state via AJAX.
+     */
+    public function toggleActive(Job $job)
+    {
+        $job->is_active = !$job->is_active;
+        $job->save();
+
+        return response()->json([
+            'success' => true,
+            'is_active' => (bool) $job->is_active,
+        ]);
+    }
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="900" viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Office corridor">
+  <rect width="100%" height="100%" fill="#FBFEFF"/>
+  <g transform="translate(140,160)">
+    <rect x="0" y="0" width="920" height="620" rx="12" fill="#FFFFFF" stroke="#E8F0FF"/>
+    <text x="40" y="60" font-size="34" fill="#0F172A" font-family="Inter, Arial">Lobby & Reception</text>
+    <rect x="60" y="160" width="80" height="200" rx="6" fill="#60A5FA"/>
+    <rect x="160" y="160" width="80" height="200" rx="6" fill="#93C5FD"/>
+  </g>
+</svg>

@@ -83,8 +83,8 @@
                                 </button>
                             </form>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right">
-                            <a href="#" class="text-blue-600 hover:text-blue-800">Detail</a>
+                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                            <a href="{{ route('admin.applicants.show', $app) }}" class="text-blue-600 hover:text-blue-800">Detail</a>
                         </td>
                     </tr>
                 @empty

@@ -56,24 +56,38 @@
             <h2 class="text-2xl font-semibold text-gray-800 border-b pb-3">Seksi Lingkup Bisnis</h2>
             <!-- Card 1 -->
             <div class="border p-4 rounded-md bg-slate-50 space-y-4">
-                <h3 class="font-medium">Kartu 1: Pengembangan Teknologi</h3>
+                <h3 class="font-medium">Kartu 1: Wrapping</h3>
                 <input type="text" name="content[business_scope][card1_title]" value="{{ old('content.business_scope.card1_title', $content['business_scope']['card1_title'] ?? '') }}" class="block w-full border-gray-300 rounded-md shadow-sm">
                 <textarea name="content[business_scope][card1_desc]" rows="3" class="block w-full border-gray-300 rounded-md shadow-sm">{{ old('content.business_scope.card1_desc', $content['business_scope']['card1_desc'] ?? '') }}</textarea>
                 <textarea name="content[business_scope][card1_list]" rows="4" class="block w-full border-gray-300 rounded-md shadow-sm" placeholder="Poin list (satu per baris)">{{ old('content.business_scope.card1_list', isset($content['business_scope']['card1_list']) ? implode("\n", json_decode($content['business_scope']['card1_list'])) : '') }}</textarea>
             </div>
             <!-- Card 2 -->
             <div class="border p-4 rounded-md bg-slate-50 space-y-4">
-                <h3 class="font-medium">Kartu 2: Konsultasi Bisnis</h3>
+                <h3 class="font-medium">Kartu 2: F&B</h3>
                 <input type="text" name="content[business_scope][card2_title]" value="{{ old('content.business_scope.card2_title', $content['business_scope']['card2_title'] ?? '') }}" class="block w-full border-gray-300 rounded-md shadow-sm">
                 <textarea name="content[business_scope][card2_desc]" rows="3" class="block w-full border-gray-300 rounded-md shadow-sm">{{ old('content.business_scope.card2_desc', $content['business_scope']['card2_desc'] ?? '') }}</textarea>
                 <textarea name="content[business_scope][card2_list]" rows="4" class="block w-full border-gray-300 rounded-md shadow-sm" placeholder="Poin list (satu per baris)">{{ old('content.business_scope.card2_list', isset($content['business_scope']['card2_list']) ? implode("\n", json_decode($content['business_scope']['card2_list'])) : '') }}</textarea>
             </div>
             <!-- Card 3 -->
             <div class="border p-4 rounded-md bg-slate-50 space-y-4">
-                <h3 class="font-medium">Kartu 3: Digital Marketing</h3>
+                <h3 class="font-medium">Kartu 3: Minimarket</h3>
                 <input type="text" name="content[business_scope][card3_title]" value="{{ old('content.business_scope.card3_title', $content['business_scope']['card3_title'] ?? '') }}" class="block w-full border-gray-300 rounded-md shadow-sm">
                 <textarea name="content[business_scope][card3_desc]" rows="3" class="block w-full border-gray-300 rounded-md shadow-sm">{{ old('content.business_scope.card3_desc', $content['business_scope']['card3_desc'] ?? '') }}</textarea>
                 <textarea name="content[business_scope][card3_list]" rows="4" class="block w-full border-gray-300 rounded-md shadow-sm" placeholder="Poin list (satu per baris)">{{ old('content.business_scope.card3_list', isset($content['business_scope']['card3_list']) ? implode("\n", json_decode($content['business_scope']['card3_list'])) : '') }}</textarea>
+            </div>
+            <!-- Card 4 -->
+             <div class="border p-4 rounded-md bg-slate-50 space-y-4">
+                <h3 class="font-medium">Kartu 4: Reflexology</h3>
+                <input type="text" name="content[business_scope][card4_title]" value="{{ old('content.business_scope.card4_title', $content['business_scope']['card4_title'] ?? '') }}" class="block w-full border-gray-300 rounded-md shadow-sm">
+                <textarea name="content[business_scope][card4_desc]" rows="3" class="block w-full border-gray-300 rounded-md shadow-sm">{{ old('content.business_scope.card4_desc', $content['business_scope']['card4_desc'] ?? '') }}</textarea>
+                <textarea name="content[business_scope][card4_list]" rows="4" class="block w-full border-gray-300 rounded-md shadow-sm" placeholder="Poin list (satu per baris)">{{ old('content.business_scope.card4_list', isset($content['business_scope']['card4_list']) ? implode("\n", json_decode($content['business_scope']['card4_list'])) : '') }}</textarea>
+            </div>
+
+            <div class="border p-4 rounded-md bg-slate-50 space-y-4">
+                <h3 class="font-medium">Kartu 5: Celluler</h3>
+                <input type="text" name="content[business_scope][card5_title]" value="{{ old('content.business_scope.card5_title', $content['business_scope']['card5_title'] ?? '') }}" class="block w-full border-gray-300 rounded-md shadow-sm">
+                <textarea name="content[business_scope][card5_desc]" rows="3" class="block w-full border-gray-300 rounded-md shadow-sm">{{ old('content.business_scope.card5_desc', $content['business_scope']['card5_desc'] ?? '') }}</textarea>
+                <textarea name="content[business_scope][card5_list]" rows="4" class="block w-full border-gray-300 rounded-md shadow-sm" placeholder="Poin list (satu per baris)">{{ old('content.business_scope.card5_list', isset($content['business_scope']['card5_list']) ? implode("\n", json_decode($content['business_scope']['card5_list'])) : '') }}</textarea>
             </div>
         </div>
 

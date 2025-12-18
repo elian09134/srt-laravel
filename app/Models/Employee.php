@@ -54,4 +54,9 @@ class Employee extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected $casts = [
+        'join_date' => 'date',
+        'date_of_birth' => 'date',
+    ];
 }

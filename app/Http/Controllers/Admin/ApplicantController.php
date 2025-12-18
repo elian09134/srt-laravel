@@ -39,6 +39,25 @@ class ApplicantController extends Controller
         ]);
     }
 
+    /**
+     * Show the detail for a single application.
+     */
+    public function show(Application $application)
+    {
+        $application->load(['user.profile', 'user.workExperiences', 'job']);
+
+        // Jika status masih 'Baru' atau kosong, tandai sebagai 'Lamaran Dilihat' saat detail dibuka
+        if (empty($application->status) || $application->status === 'Baru') {
+            $application->update(['status' => 'Lamaran Dilihat']);
+            // reload to reflect change
+            $application->refresh();
+        }
+
+        return view('admin.applicants.show', [
+            'application' => $application,
+        ]);
+    }
+
     public function updateStatus(Request $request, Application $application)
     {
         $request->validate(['status' => 'required|string']);

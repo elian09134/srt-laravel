@@ -60,4 +60,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Application::class);
     }
+
+    public function talentPool()
+    {
+        return $this->hasOne(TalentPool::class);
+    }
 }

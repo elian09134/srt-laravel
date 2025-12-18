@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Office rooftop">
+  <rect width="100%" height="100%" fill="#F8FAFF"/>
+  <g transform="translate(120,120)">
+    <rect x="0" y="0" width="960" height="560" rx="12" fill="#FFFFFF" stroke="#EAF6FF"/>
+    <text x="40" y="70" font-size="36" fill="#0F172A" font-family="Inter, Arial">Rooftop event</text>
+    <circle cx="300" cy="260" r="60" fill="#FDE68A"/>
+    <rect x="420" y="220" width="260" height="120" rx="8" fill="#C7F9DB"/>
+  </g>
+</svg>
