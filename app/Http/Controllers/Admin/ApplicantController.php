@@ -15,7 +15,17 @@ class ApplicantController extends Controller
     {
         // Ambil data untuk filter dropdown
         $jobs = Job::orderBy('title')->get();
-        $statuses = ["Baru", "Lamaran Dilihat", "Psikotest", "Wawancara", "Offering Letter", "Diterima", "Tidak Lanjut", "Shortlist"];
+        $statuses = [
+            'Baru',
+            'Lamaran Dilihat',
+            'Psikotest',
+            'Wawancara HR',
+            'Wawancara User',
+            'Offering Letter',
+            'Shortlist',
+            'Diterima',
+            'Tidak Lanjut',
+        ];
 
         // Query dasar untuk mengambil data lamaran
         $query = Application::with(['user.profile', 'job']);
