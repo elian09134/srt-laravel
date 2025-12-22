@@ -29,6 +29,10 @@
                 <input type="text" name="content[hr_department][title]" id="hr_department_title" value="{{ old('content.hr_department.title', $content['hr_department']['title'] ?? '') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
             </div>
             <div>
+                <label for="hr_department_team_title" class="block text-sm font-medium text-gray-700">Judul (Meet Our Team)</label>
+                <input type="text" name="content[hr_department][team_title]" id="hr_department_team_title" value="{{ old('content.hr_department.team_title', $content['hr_department']['team_title'] ?? '') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+            </div>
+            <div>
                 <label for="hr_department_description" class="block text-sm font-medium text-gray-700">Deskripsi</label>
                 <textarea name="content[hr_department][description]" id="hr_department_description" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">{{ old('content.hr_department.description', $content['hr_department']['description'] ?? '') }}</textarea>
             </div>

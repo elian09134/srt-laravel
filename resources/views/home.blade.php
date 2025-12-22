@@ -38,8 +38,8 @@
         <section id="hr-department" class="py-20 md:py-24 bg-white reveal" data-reveal>
             <div class="container mx-auto px-6">
                 <div class="text-center">
-                    <h2 class="text-3xl font-bold text-gray-900">{{ $content['hr_department']['title'] ?? 'Seksi Departemen HR' }}</h2>
-                    <p class="mt-4 max-w-2xl mx-auto text-gray-600">{{ $content['hr_department']['description'] ?? '' }}</p>
+                    <h2 class="text-3xl font-bold text-gray-900">{{ $content['hr_department']['team_title'] ?? $content['hr_department']['title'] ?? 'Meet Our Team' }}</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-gray-600 text-justify">{{ $content['hr_department']['description'] ?? '' }}</p>
                 </div>
                 <div class="mt-12 flex flex-col lg:flex-row items-center gap-12">
                     <div class="lg:w-5/12">
