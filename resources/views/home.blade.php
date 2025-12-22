@@ -33,6 +33,31 @@
             </div>
         </section>
         <!-- =================================================================== -->
+        <!-- SEKSI DEPARTEMEN HR -->
+        <!-- =================================================================== -->
+        <section id="hr-department" class="py-20 md:py-24 bg-white reveal" data-reveal>
+            <div class="container mx-auto px-6">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-900">{{ $content['hr_department']['title'] ?? 'Seksi Departemen HR' }}</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-gray-600">{{ $content['hr_department']['description'] ?? '' }}</p>
+                </div>
+                <div class="mt-12 flex flex-col lg:flex-row items-center gap-12">
+                    <div class="lg:w-5/12">
+                        @php
+                            $hrImageMain = !empty($content['hr_department']['image']) ? asset('storage/' . $content['hr_department']['image']) : asset('images/gallery/office2.svg');
+                        @endphp
+                        <img src="{{ $hrImageMain }}" alt="HR Department" class="rounded-lg shadow-2xl w-full">
+                    </div>
+                    <div class="lg:w-7/12">
+                        <div class="space-y-6 text-left">
+                            <p class="text-lg text-gray-700">{{ $content['hr_department']['description'] ?? '' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================== -->
         <!-- TENTANG SRT CORP SECTION -->
         <!-- =================================================================== -->
         <section id="about-us" class="py-20 md:py-24 bg-white reveal reveal-stagger" data-reveal>
