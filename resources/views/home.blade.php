@@ -196,6 +196,14 @@
                                     </figcaption>
                                 </figure>
                             @endforeach
+                            {{-- Tambahkan selalu elemen HR Department di galeri agar tidak hilang --}}
+                            <figure class="gallery-item reveal" style="break-inside:avoid">
+                                @php
+                                    $hrImage = !empty($content['hr_department']['image']) ? asset('storage/' . $content['hr_department']['image']) : asset('images/gallery/office2.svg');
+                                @endphp
+                                <img src="{{ $hrImage }}" alt="HR Department">
+                                <figcaption class="gallery-overlay"><h4>{{ $content['hr_department']['title'] ?? 'HR Department' }}</h4></figcaption>
+                            </figure>
                         </div>
                     @else
                         <div class="gallery-masonry">
@@ -203,13 +211,7 @@
                                 <img src="{{ asset('images/gallery/office1.svg') }}" alt="Office team">
                                 <figcaption class="gallery-overlay"><h4>Team brainstorming</h4></figcaption>
                             </figure>
-                            <figure class="gallery-item">
-                                @php
-                                    $hrImage = !empty($content['hr_department']['image']) ? asset('storage/' . $content['hr_department']['image']) : asset('images/gallery/office2.svg');
-                                @endphp
-                                <img src="{{ $hrImage }}" alt="HR Department">
-                                <figcaption class="gallery-overlay"><h4>{{ $content['hr_department']['title'] ?? 'HR Department' }}</h4></figcaption>
-                            </figure>
+                            {{-- HR Department element already ditampilkan di atas ketika galeri berisi item --}}
                             <figure class="gallery-item">
                                 <img src="{{ asset('images/gallery/office3.svg') }}" alt="Meeting room">
                                 <figcaption class="gallery-overlay"><h4>Meeting room</h4></figcaption>
