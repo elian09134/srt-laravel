@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - SRT Corp</title>
+    <title>Login - TERANG By SRT</title>
     
     <!-- Vite-built CSS/JS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -33,8 +33,8 @@
                         <span class="text-white font-bold text-xl">S</span>
                     </div>
                     <span class="text-2xl font-bold">
-                        <span class="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">SRT</span>
-                        <span class="text-gray-700"> Corp</span>
+                        <span class="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">TERANG</span>
+                        <span class="text-gray-700"> By SRT</span>
                     </span>
                 </a>
                 

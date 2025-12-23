@@ -4,13 +4,13 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             <!-- Kolom 1: Logo & Social -->
             <div>
-                <a href="{{ route('home') }}" class="flex items-center space-x-2 group">
+                    <a href="{{ route('home') }}" class="flex items-center space-x-2 group">
                     <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                        <span class="text-white font-bold text-lg">S</span>
+                        <span class="text-white font-bold text-lg">T</span>
                     </div>
                     <span class="text-xl font-bold">
-                        <span class="text-white">SRT</span>
-                        <span class="text-blue-400"> Corp</span>
+                        <span class="text-white">TERANG</span>
+                        <span class="text-blue-400"> By SRT</span>
                     </span>
                 </a>
                 <p class="mt-4 text-gray-400 text-sm leading-relaxed">
@@ -52,14 +52,14 @@
                         <span class="text-gray-400 text-sm">Jl. Sudirman No. 123, Jakarta Selatan, 12190</span>
                     </li>
                     <li class="flex items-start">
-                        <i class="fas fa-envelope text-blue-500 mt-1 mr-3"></i>
-                        <span class="text-gray-400 text-sm">info@srtcorp.com</span>
-                    </li>
+                            <i class="fas fa-envelope text-blue-500 mt-1 mr-3"></i>
+                            <span class="text-gray-400 text-sm">info@terang.id</span>
+                        </li>
                 </ul>
             </div>
         </div>
         <div class="mt-12 border-t border-gray-700/50 pt-8 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-500">
-            <p>&copy; {{ date('Y') }} SRT Corp. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} TERANG By SRT. All rights reserved.</p>
             <div class="mt-4 sm:mt-0 space-x-6">
                 <a href="#" class="hover:text-blue-400 transition-colors">Kebijakan Privasi</a>
                 <a href="#" class="hover:text-blue-400 transition-colors">Syarat & Ketentuan</a>

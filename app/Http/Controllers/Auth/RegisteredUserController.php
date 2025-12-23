@@ -49,6 +49,7 @@ class RegisteredUserController extends Controller
             'photo' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:2048'], // maks 2MB
             'experience' => ['nullable', 'array'],
             'experience.*.company' => ['nullable', 'string', 'max:255'],
+            'experience.*.position' => ['nullable', 'string', 'max:255'],
             'experience.*.duration' => ['nullable', 'string', 'max:255'],
             'experience.*.jobdesk' => ['nullable', 'string'],
             'currently_employed' => ['nullable', 'boolean'],
@@ -116,11 +117,21 @@ class RegisteredUserController extends Controller
             if ($request->has('experience')) {
                 foreach ($request->experience as $exp) {
                     if (!empty($exp['company'])) {
+                        // Combine position and jobdesk into job_description
+                        $parts = [];
+                        if (!empty($exp['position'])) {
+                            $parts[] = trim($exp['position']);
+                        }
+                        if (!empty($exp['jobdesk'])) {
+                            $parts[] = trim($exp['jobdesk']);
+                        }
+                        $jobDescription = $parts ? implode(' — ', $parts) : null;
+
                         WorkExperience::create([
                             'user_id' => $user->id,
                             'company_name' => $exp['company'],
-                            'duration' => $exp['duration'],
-                            'job_description' => $exp['jobdesk'],
+                            'duration' => $exp['duration'] ?? null,
+                            'job_description' => $jobDescription,
                         ]);
                     }
                 }

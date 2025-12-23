@@ -10,7 +10,7 @@
         <div class="flex items-start justify-between">
             <div>
                 <h1 class="text-2xl font-bold">{{ $application->job->title ?? 'Lowongan Dihapus' }}</h1>
-                <div class="text-sm text-gray-500">{{ $application->job->location ?? '-' }} • {{ $application->created_at->format('d M Y') }}</div>
+                <div class="text-sm text-gray-500">{{ $application->job->location ?? '-' }} • {{ optional($application->created_at)->format('d M Y') ?? '-' }}</div>
             </div>
             <div class="text-right">
                 <div class="text-sm text-gray-500">Status</div>
@@ -77,7 +77,7 @@
                                     @if($state === 'done' || $state === 'current')
                                         @php $h = $application->statusHistories->firstWhere('status', $step); @endphp
                                         @if($h)
-                                            <div class="text-xs text-gray-500">{{ $h->created_at->format('d M Y H:i') }}{{ $h->changer ? ' — oleh ' . $h->changer->name : '' }}</div>
+                                            <div class="text-xs text-gray-500">{{ optional($h->created_at)->format('d M Y H:i') ?? '' }}{{ $h->changer ? ' — oleh ' . $h->changer->name : '' }}</div>
                                             @if($h->note)
                                                 <div class="text-sm text-gray-700 mt-1">{{ $h->note }}</div>
                                             @endif

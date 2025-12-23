@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'SRT Corp') }}</title>
+        <title>{{ config('app.name', 'TERANG By SRT') }}</title>
 
         <!-- Tailwind CSS should be built via Vite; do not use CDN in production -->
         

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin Panel') - SRT Corp</title>
+    <title>@yield('title', 'Admin Panel') - TERANG</title>
     <!-- Vite-built CSS/JS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <!-- Font Awesome (kept as CDN for admin icons) -->
@@ -27,7 +27,7 @@
                         <span class="text-white font-bold text-lg">S</span>
                     </div>
                     <div>
-                        <span class="text-xl font-bold block">SRT Admin</span>
+                        <span class="text-xl font-bold block">TERANG Admin</span>
                         <span class="text-xs text-blue-400">Management Panel</span>
                     </div>
                 </div>

@@ -27,7 +27,7 @@
                         @php
                             $heroImage = !empty($content['hero']['image']) ? asset('storage/' . $content['hero']['image']) : asset('images/office_building.svg');
                         @endphp
-                        <img src="{{ $heroImage }}" alt="Tim SRT Corp" class="relative rounded-2xl shadow-2xl w-full max-w-md lg:max-w-lg object-cover ring-4 ring-blue-100 animate-float">
+                        <img src="{{ $heroImage }}" alt="Tim TERANG" class="relative rounded-2xl shadow-2xl w-full max-w-md lg:max-w-lg object-cover ring-4 ring-blue-100 animate-float">
                     </div>
                 </div>
             </div>
@@ -125,7 +125,7 @@
         </section>
 
         <!-- =================================================================== -->
-        <!-- TENTANG SRT CORP SECTION -->
+        <!-- TENTANG TERANG SECTION -->
         <!-- =================================================================== -->
         <section id="about-us" class="py-20 md:py-24 bg-white reveal reveal-stagger" data-reveal>
             <div class="container mx-auto px-6">
@@ -138,7 +138,7 @@
                         @php
                             $aboutImage = !empty($content['about_us']['image']) ? asset('storage/' . $content['about_us']['image']) : asset('images/office_building.svg');
                         @endphp
-                        <img src="{{ $aboutImage }}" alt="Gedung kantor SRT Corp" class="rounded-lg shadow-2xl w-full">
+                        <img src="{{ $aboutImage }}" alt="Gedung kantor TERANG" class="rounded-lg shadow-2xl w-full">
                     </div>
                     <div class="lg:w-7/12">
                         <div class="space-y-6">
@@ -227,7 +227,7 @@
                         <span class="dot"></span>
                         <div>
                             <h2 class="text-3xl font-bold text-gray-900">Lowongan Terbaru</h2>
-                            <p class="mt-2 max-w-2xl mx-auto text-gray-600">Bergabunglah dengan tim kami dan jadilah bagian dari perjalanan bersama SRT Corp.</p>
+                            <p class="mt-2 max-w-2xl mx-auto text-gray-600">Bergabunglah dengan tim kami dan jadilah bagian dari perjalanan bersama TERANG.</p>
                         </div>
                     </div>
                 </div>
@@ -242,7 +242,7 @@
                                 <p class="text-blue-600 text-sm font-medium mt-1">{{ $job->division }}</p>
                                 <ul class="mt-4 text-sm text-gray-600 space-y-1">
                                     <li><i class="fas fa-briefcase mr-2 text-blue-500"></i> {{ $job->employment_type ?? 'Full-time' }}</li>
-                                    <li><i class="fas fa-clock mr-2 text-blue-500"></i> Closing: {{ $job->closing_date ? $job->closing_date->format('d M Y') : '-' }}</li>
+                                    <li><i class="fas fa-clock mr-2 text-blue-500"></i> Closing: {{ optional($job->closing_date)->format('d M Y') ?? '-' }}</li>
                                 </ul>
                                 <div class="mt-4 space-y-2">
                                     <p class="text-gray-600 text-sm flex items-center"><i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>{{ $job->location }}</p>
@@ -295,7 +295,7 @@
                                     <img src="{{ asset('storage/' . $img->file_path) }}" alt="{{ $img->alt_text }}">
                                     <figcaption class="gallery-overlay">
                                         <div>
-                                            <h4>{{ $img->alt_text ?? 'SRT Event' }}</h4>
+                                            <h4>{{ $img->alt_text ?? 'TERANG Event' }}</h4>
                                         </div>
                                     </figcaption>
                                 </figure>

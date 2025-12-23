@@ -90,7 +90,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <x-input-label for="date_of_birth" :value="__('Tanggal Lahir')" />
-                    <x-text-input id="date_of_birth" name="date_of_birth" type="date" class="mt-1 block w-full" :value="old('date_of_birth', $user->profile->date_of_birth ? $user->profile->date_of_birth->format('Y-m-d') : '')" required />
+                    <x-text-input id="date_of_birth" name="date_of_birth" type="date" class="mt-1 block w-full" :value="old('date_of_birth', optional($user->profile->date_of_birth)->format('Y-m-d') ?? '')" required />
                     <x-input-error class="mt-2" :messages="$errors->get('date_of_birth')" />
                 </div>
 
@@ -198,22 +198,57 @@
                 </svg>
                 Pengalaman Kerja Terakhir
             </h3>
+            @php
+                $firstExp = $user->workExperiences()->latest()->first();
+            @endphp
+
+            @if($user->workExperiences->isNotEmpty())
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium text-gray-800 mb-2">Riwayat Pekerjaan Tersimpan</h4>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        @foreach($user->workExperiences as $we)
+                            @php
+                                $parts = $we->job_description ? explode(' — ', $we->job_description) : [];
+                                $pos = $parts[0] ?? null;
+                                $desc = $parts[1] ?? null;
+                            @endphp
+                            <li class="p-2 bg-white border rounded flex justify-between items-center">
+                                <div>
+                                    <div class="font-medium">{{ $we->company_name }}</div>
+                                    <div class="text-xs text-gray-500">{{ $pos ? $pos . ($we->duration ? ' · ' . $we->duration : '') : ($we->duration ?? '') }}</div>
+                                    @if($desc)
+                                        <div class="text-xs text-gray-600 mt-1">{{ $desc }}</div>
+                                    @endif
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                     <x-input-label for="last_company" :value="__('Perusahaan Terakhir')" />
-                    <x-text-input id="last_company" name="last_company" type="text" class="mt-1 block w-full" :value="old('last_company', $user->profile->last_company ?? '')" />
+                    <x-text-input id="last_company" name="last_company" type="text" class="mt-1 block w-full" :value="old('last_company', $user->profile->last_company ?? ($firstExp->company_name ?? ''))" />
                     <x-input-error class="mt-2" :messages="$errors->get('last_company')" />
                 </div>
 
                 <div>
                     <x-input-label for="last_position" :value="__('Posisi Terakhir')" />
-                    <x-text-input id="last_position" name="last_position" type="text" class="mt-1 block w-full" :value="old('last_position', $user->profile->last_position ?? '')" />
+                    @php
+                        $firstPos = null;
+                        if(!empty($firstExp) && $firstExp->job_description) {
+                            $parts = explode(' — ', $firstExp->job_description);
+                            $firstPos = $parts[0] ?? null;
+                        }
+                    @endphp
+                    <x-text-input id="last_position" name="last_position" type="text" class="mt-1 block w-full" :value="old('last_position', $user->profile->last_position ?? ($firstPos ?? ''))" />
                     <x-input-error class="mt-2" :messages="$errors->get('last_position')" />
                 </div>
 
                 <div>
                     <x-input-label for="last_company_duration" :value="__('Durasi Bekerja')" />
-                    <x-text-input id="last_company_duration" name="last_company_duration" type="text" class="mt-1 block w-full" :value="old('last_company_duration', $user->profile->last_company_duration ?? '')" placeholder="contoh: 2 tahun 3 bulan" />
+                    <x-text-input id="last_company_duration" name="last_company_duration" type="text" class="mt-1 block w-full" :value="old('last_company_duration', $user->profile->last_company_duration ?? ($firstExp->duration ?? ''))" placeholder="contoh: 2 tahun 3 bulan" />
                     <x-input-error class="mt-2" :messages="$errors->get('last_company_duration')" />
                 </div>
             </div>

@@ -181,7 +181,7 @@ FINAL CHECKS
 
 CATATAN TAMBAHAN
 ----------------
-Untuk aplikasi SRT Corp:
+Untuk aplikasi TERANG:
 - Pastikan folder uploads/hr untuk foto team HR sudah ada
 - Test fitur Meet Our Team dengan upload foto
 - Test semua form kontak dan aplikasi lowongan

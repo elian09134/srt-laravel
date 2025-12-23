@@ -10,7 +10,7 @@
                 <div>
                     <h3 class="text-xl font-semibold text-gray-900">{{ $user->name }}</h3>
                     <p class="text-gray-600">{{ $user->email }}</p>
-                    <p class="text-sm text-gray-500">Bergabung: {{ $user->created_at->format('d M Y') }}</p>
+                    <p class="text-sm text-gray-500">Bergabung: {{ optional($user->created_at)->format('d M Y') ?? '-' }}</p>
                 </div>
                 <div class="flex items-center space-x-3">
                     <span class="px-3 py-1 rounded-full text-sm font-medium
@@ -160,8 +160,8 @@
                             <h5 class="font-medium text-gray-900">{{ $experience->position }}</h5>
                             <p class="text-gray-600">{{ $experience->company }}</p>
                             <p class="text-sm text-gray-500">
-                                {{ $experience->start_date->format('M Y') }} -
-                                {{ $experience->end_date ? $experience->end_date->format('M Y') : 'Sekarang' }}
+                                {{ optional($experience->start_date)->format('M Y') ?? '-' }} -
+                                {{ $experience->end_date ? optional($experience->end_date)->format('M Y') : 'Sekarang' }}
                                 @if($experience->duration_months)
                                 ({{ $experience->duration_months }} bulan)
                                 @endif
@@ -199,7 +199,7 @@
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-700">Ditambahkan</label>
-                            <p class="text-gray-900">{{ $talent->created_at->format('d M Y H:i') }}</p>
+                            <p class="text-gray-900">{{ optional($talent->created_at)->format('d M Y H:i') ?? '-' }}</p>
                         </div>
                         @if($talent->job_preferences)
                         <div>

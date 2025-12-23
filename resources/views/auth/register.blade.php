@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar - SRT Corp</title>
+    <title>Daftar - TERANG By SRT</title>
     @vite(['resources/css/app.css','resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
@@ -21,7 +21,7 @@
                             <span class="text-white font-bold text-xl">S</span>
                         </div>
                         <div>
-                            <div class="text-2xl font-bold text-gray-900">SRT <span class="text-gray-600">Corp</span></div>
+                            <div class="text-2xl font-bold text-gray-900">TERANG <span class="text-gray-600">By SRT</span></div>
                             <div class="text-sm text-gray-500">Karir & Rekrutmen</div>
                         </div>
                     </a>
@@ -112,39 +112,24 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Perusahaan Terakhir</label>
-                            <input type="text" name="last_company" value="{{ old('last_company') }}" class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500">
-                            <x-input-error :messages="$errors->get('last_company')" class="mt-2" />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Posisi Terakhir</label>
-                            <input type="text" name="last_position" value="{{ old('last_position') }}" class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500">
-                            <x-input-error :messages="$errors->get('last_position')" class="mt-2" />
-                        </div>
-                    </div>
-
-                    <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-700">Lama Bekerja (contoh: 2 tahun 3 bulan)</label>
-                        <input type="text" name="last_company_duration" value="{{ old('last_company_duration') }}" class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500">
-                        <x-input-error :messages="$errors->get('last_company_duration')" class="mt-2" />
-                    </div>
+                    <!-- Removed previous single 'last company' fields in favor of structured experience inputs -->
 
                     <!-- Two previous work history entries -->
                     <div class="mt-6">
                         <h4 class="text-sm font-medium text-gray-800 mb-2">Riwayat Pekerjaan (2 terakhir)</h4>
                         <div class="grid grid-cols-1 gap-4">
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
                                 <input type="text" name="experience[0][company]" placeholder="Perusahaan" value="{{ old('experience.0.company') }}" class="px-3 py-2 border rounded" />
+                                <input type="text" name="experience[0][position]" placeholder="Posisi" value="{{ old('experience.0.position') }}" class="px-3 py-2 border rounded" />
                                 <input type="text" name="experience[0][duration]" placeholder="Durasi (contoh: 1 tahun)" value="{{ old('experience.0.duration') }}" class="px-3 py-2 border rounded" />
-                                <input type="text" name="experience[0][jobdesk]" placeholder="Deskripsi singkat / posisi" value="{{ old('experience.0.jobdesk') }}" class="px-3 py-2 border rounded" />
+                                <input type="text" name="experience[0][jobdesk]" placeholder="Deskripsi singkat / tanggung jawab" value="{{ old('experience.0.jobdesk') }}" class="px-3 py-2 border rounded" />
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
                                 <input type="text" name="experience[1][company]" placeholder="Perusahaan" value="{{ old('experience.1.company') }}" class="px-3 py-2 border rounded" />
+                                <input type="text" name="experience[1][position]" placeholder="Posisi" value="{{ old('experience.1.position') }}" class="px-3 py-2 border rounded" />
                                 <input type="text" name="experience[1][duration]" placeholder="Durasi (contoh: 2 tahun)" value="{{ old('experience.1.duration') }}" class="px-3 py-2 border rounded" />
-                                <input type="text" name="experience[1][jobdesk]" placeholder="Deskripsi singkat / posisi" value="{{ old('experience.1.jobdesk') }}" class="px-3 py-2 border rounded" />
+                                <input type="text" name="experience[1][jobdesk]" placeholder="Deskripsi singkat / tanggung jawab" value="{{ old('experience.1.jobdesk') }}" class="px-3 py-2 border rounded" />
                             </div>
                         </div>
                     </div>

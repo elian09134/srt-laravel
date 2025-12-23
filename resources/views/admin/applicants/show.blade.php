@@ -41,7 +41,7 @@
                         $waMessage = '';
                         if ($waNumber) {
                             $name = $application->applicant_name ?? ($application->user->name ?? 'Kandidat');
-                            $waMessage = urlencode("Halo $name, saya dari tim SRT ingin berdiskusi mengenai lamaran Anda.");
+                            $waMessage = urlencode("Halo $name, saya dari tim Recruitment TERANG By SRT ingin berdiskusi mengenai lamaran Anda.");
                         }
                     @endphp
 
@@ -60,7 +60,7 @@
 
                     <div class="mt-6">
                         <h4 class="text-sm font-semibold text-gray-600">Diterima Pada</h4>
-                        <div class="mt-2 text-sm text-gray-800">{{ $application->created_at->format('d M Y H:i') }}</div>
+                        <div class="mt-2 text-sm text-gray-800">{{ optional($application->created_at)->format('d M Y H:i') ?? '-' }}</div>
                     </div>
                 </div>
 
@@ -78,9 +78,33 @@
                     <div class="mt-2 text-sm text-gray-800 space-y-2">
                         <div><strong>Nama saat daftar:</strong> {{ $application->applicant_name ?? ($application->user->name ?? '—') }}</div>
                         <div><strong>Email saat daftar:</strong> {{ $application->applicant_email ?? ($application->user->email ?? '—') }}</div>
-                        <div><strong>Telepon saat daftar:</strong> {{ $application->applicant_phone ?? optional($application->user->profile)->phone ?? '—' }}</div>
-                        <div><strong>Pendidikan terakhir saat daftar:</strong> {{ $application->applicant_last_education ?? optional($application->user->profile)->last_education ?? '—' }}</div>
+                        <div><strong>Telepon saat daftar:</strong> {{ $application->applicant_phone ?? optional($application->user->profile)->phone_number ?? '—' }}</div>
+                        <div><strong>Pendidikan terakhir saat daftar:</strong> {{ $application->applicant_last_education ?? optional($application->user->profile)->education_level ?? '—' }}</div>
                         <div><strong>Posisi terakhir saat daftar:</strong> {{ $application->applicant_last_position ?? optional($application->user->profile)->last_position ?? '—' }}</div>
+                        <div><strong>Sedang Bekerja saat daftar:</strong> {{ optional($application->user->profile)->currently_employed ? 'Ya' : 'Tidak' }}</div>
+                        <div><strong>Ekspektasi Gaji saat daftar:</strong> {{ optional($application->user->profile)->expected_salary ? number_format(optional($application->user->profile)->expected_salary,0,',','.') . ' IDR' : '—' }}</div>
+
+                        @php
+                            $regExps = $application->user->workExperiences ?? collect();
+                        @endphp
+                        @if($regExps->isNotEmpty())
+                            <div class="pt-2">
+                                <div class="font-medium">Riwayat Pekerjaan saat Daftar</div>
+                                <ul class="mt-2 list-disc list-inside text-sm text-gray-700">
+                                    @foreach($regExps->take(5) as $we)
+                                        @php
+                                            $parts = $we->job_description ? explode(' — ', $we->job_description) : [];
+                                            $pos = $parts[0] ?? null;
+                                            $desc = $parts[1] ?? null;
+                                        @endphp
+                                        <li>
+                                            <strong>{{ $we->company_name }}</strong>@if($pos) — {{ $pos }}@endif @if($we->duration) ({{ $we->duration }})@endif
+                                            @if($desc)<div class="text-xs text-gray-600">{{ $desc }}</div>@endif
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                     </div>
 
                     <h4 class="text-sm font-semibold text-gray-600 mt-6">Profil Pelamar (Terkini)</h4>
@@ -140,7 +164,7 @@
                                                     $h = $application->statusHistories->firstWhere('status', $step);
                                                 @endphp
                                                 @if($h)
-                                                    <div class="text-xs text-gray-500">{{ $h->created_at->format('d M Y H:i') }}{{ $h->changer ? ' — oleh ' . $h->changer->name : '' }}</div>
+                                                    <div class="text-xs text-gray-500">{{ optional($h->created_at)->format('d M Y H:i') ?? '' }}{{ $h->changer ? ' — oleh ' . $h->changer->name : '' }}</div>
                                                     @if($h->note)
                                                         <div class="text-sm text-gray-700 mt-1">{{ $h->note }}</div>
                                                     @endif

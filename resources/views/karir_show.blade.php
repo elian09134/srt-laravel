@@ -41,13 +41,27 @@
 
                             <div class="mt-6">
                                 @auth
-                                <form method="post" action="{{ route('karir.apply', $job) }}">
-                                    @csrf
-                                    <textarea name="cover_letter" rows="4" class="w-full border-gray-200 rounded-md p-2 mb-2" placeholder="Surat Lamaran (opsional)"></textarea>
-                                    <button type="submit" class="w-full inline-block text-center px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">Daftar / Kirim Lamaran</button>
-                                </form>
+                                    @php
+                                        $hasApplied = \\App\\Models\\Application::where('job_id', $job->id)
+                                                    ->where('user_id', auth()->id())
+                                                    ->exists();
+                                    @endphp
+
+                                    @if($hasApplied)
+                                        <div class="space-y-2">
+                                            <button disabled class="w-full inline-block text-center px-4 py-2 bg-gray-300 text-gray-700 rounded-xl cursor-not-allowed">Sudah Melamar</button>
+                                            <a href="{{ route('applications.index') }}" class="w-full inline-block text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50">Lihat Riwayat Lamaran</a>
+                                        </div>
+                                    @else
+                                        <form method="post" action="{{ route('karir.apply', $job) }}">
+                                            @csrf
+                                            <textarea name="cover_letter" rows="4" class="w-full border-gray-200 rounded-md p-2 mb-2" placeholder="Surat Lamaran (opsional)"></textarea>
+                                            <button type="submit" class="w-full inline-block text-center px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">Daftar / Kirim Lamaran</button>
+                                        </form>
+                                    @endif
+
                                 @else
-                                <a href="{{ route('login') }}?redirect={{ url()->current() }}" class="w-full inline-block text-center px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">Masuk untuk Melamar</a>
+                                    <a href="{{ route('login') }}?redirect={{ url()->current() }}" class="w-full inline-block text-center px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">Masuk untuk Melamar</a>
                                 @endauth
                             </div>
                         </aside>
