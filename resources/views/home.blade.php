@@ -39,19 +39,82 @@
             <div class="container mx-auto px-6">
                 <div class="text-center">
                     <h2 class="text-3xl font-bold text-gray-900">{{ $content['hr_department']['team_title'] ?? $content['hr_department']['title'] ?? 'Meet Our Team' }}</h2>
-                    <p class="mt-4 max-w-2xl mx-auto text-gray-600 text-justify">{{ $content['hr_department']['description'] ?? '' }}</p>
+                    <p class="mt-4 max-w-2xl mx-auto text-gray-600">{{ $content['hr_department']['description'] ?? '' }}</p>
                 </div>
-                <div class="mt-12 flex flex-col lg:flex-row items-center gap-12">
-                    <div class="lg:w-5/12">
+                <div class="mt-12">
+                    <div class="w-full">
                         @php
-                            $hrImageMain = !empty($content['hr_department']['image']) ? asset('storage/' . $content['hr_department']['image']) : asset('images/gallery/office2.svg');
+                            $membersJson = $content['hr_department']['members'] ?? null;
+                            try {
+                                $members = (is_array($membersJson) ? $membersJson : json_decode($membersJson, true)) ?: [];
+                            } catch (\Throwable $e) {
+                                $members = [];
+                            }
                         @endphp
-                        <img src="{{ $hrImageMain }}" alt="HR Department" class="rounded-lg shadow-2xl w-full">
-                    </div>
-                    <div class="lg:w-7/12">
-                        <div class="space-y-6 text-left">
-                            <p class="text-lg text-gray-700">{{ $content['hr_department']['description'] ?? '' }}</p>
-                        </div>
+
+                        @if(!empty($members))
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                                @foreach($members as $member)
+                                    @php
+                                        $photo = $member['photo'] ?? null;
+                                        $photoUrl = $photo ? asset('storage/' . ltrim($photo, '/')) : asset('images/avatar-placeholder.png');
+                                        $bio = $member['bio'] ?? '';
+                                        $email = $member['email'] ?? '';
+                                        $phone = $member['phone'] ?? '';
+                                        $social = $member['social'] ?? [];
+                                    @endphp
+                                    <div class="group relative bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden">
+                                        <!-- Front Card -->
+                                        <div class="p-6 text-center transition-opacity duration-300 group-hover:opacity-0">
+                                            <div class="mx-auto w-32 h-32 rounded-full overflow-hidden border-4 border-blue-100 mb-4">
+                                                <img src="{{ $photoUrl }}" alt="{{ $member['name'] ?? 'Team' }}" class="w-full h-full object-cover">
+                                            </div>
+                                            <h3 class="text-lg font-bold text-gray-900">{{ $member['name'] ?? '-' }}</h3>
+                                            <p class="text-sm text-blue-600 mt-1">{{ $member['role'] ?? '' }}</p>
+                                        </div>
+                                        
+                                        <!-- Hover Card -->
+                                        <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 p-6 flex flex-col justify-center items-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <div class="w-20 h-20 rounded-full overflow-hidden border-3 border-white mb-3">
+                                                <img src="{{ $photoUrl }}" alt="{{ $member['name'] ?? 'Team' }}" class="w-full h-full object-cover">
+                                            </div>
+                                            <h3 class="text-lg font-bold">{{ $member['name'] ?? '-' }}</h3>
+                                            <p class="text-sm opacity-90 mb-3">{{ $member['role'] ?? '' }}</p>
+                                            @if($bio)
+                                                <p class="text-xs text-center mb-4 line-clamp-3">{{ $bio }}</p>
+                                            @endif
+                                            @if($email)
+                                                <a href="mailto:{{ $email }}" class="text-xs hover:underline mb-1">✉ {{ $email }}</a>
+                                            @endif
+                                            @if($phone)
+                                                <a href="tel:{{ $phone }}" class="text-xs hover:underline mb-3">📱 {{ $phone }}</a>
+                                            @endif
+                                            <div class="flex space-x-3 mt-2">
+                                                @if(!empty($social['linkedin']))
+                                                    <a href="{{ $social['linkedin'] }}" target="_blank" class="text-white hover:text-blue-200 transition-colors">
+                                                        <i class="fab fa-linkedin text-xl"></i>
+                                                    </a>
+                                                @endif
+                                                @if(!empty($social['instagram']))
+                                                    <a href="https://instagram.com/{{ ltrim($social['instagram'], '@') }}" target="_blank" class="text-white hover:text-blue-200 transition-colors">
+                                                        <i class="fab fa-instagram text-xl"></i>
+                                                    </a>
+                                                @endif
+                                                @if(!empty($social['twitter']))
+                                                    <a href="{{ $social['twitter'] }}" target="_blank" class="text-white hover:text-blue-200 transition-colors">
+                                                        <i class="fab fa-twitter text-xl"></i>
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center py-8">
+                                <p class="text-gray-500">Belum ada data anggota tim. Silakan tambahkan melalui admin panel.</p>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

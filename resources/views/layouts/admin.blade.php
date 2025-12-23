@@ -20,8 +20,8 @@
 <body class="bg-gray-50" x-data="{ sidebarOpen: true }">
     <div class="flex min-h-screen" :class="{ 'overflow-hidden': sidebarOpen === false }">
         <!-- Sidebar -->
-        <aside class="w-64 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white flex-shrink-0 h-screen sticky top-0 shadow-2xl">
-            <div class="p-6">
+        <aside class="w-56 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white flex-shrink-0 h-screen sticky top-0 shadow-2xl">
+            <div class="p-4">
                 <div class="flex items-center space-x-2">
                     <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
                         <span class="text-white font-bold text-lg">S</span>
@@ -66,7 +66,7 @@
         <!-- Main Content -->
         <main class="flex-grow bg-gradient-to-br from-blue-50/30 via-white to-blue-50/30 relative">
             <div class="absolute inset-0 bg-grid-pattern opacity-30"></div>
-            <div class="relative z-10 p-6 lg:p-8">
+            <div class="relative z-10 max-w-7xl mx-auto w-full p-6 sm:p-8 lg:pl-12">
                 <!-- Topbar -->
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center space-x-4">
@@ -102,5 +102,6 @@
             </div>
         </main>
     </div>
+    @yield('scripts')
 </body>
 </html>

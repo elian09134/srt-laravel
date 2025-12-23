@@ -11,20 +11,16 @@ class PageController extends Controller
 {
     public function home()
     {
-        // Mengambil 3 lowongan terbaru yang aktif dengan caching
-        $jobs = \Cache::remember('homepage_jobs', 1800, function () {
-            return Job::where('is_active', 1)->latest()->take(3)->get();
-        });
+        // Mengambil 3 lowongan terbaru yang aktif
+        $jobs = Job::where('is_active', 1)->latest()->take(3)->get();
 
-        // Mengambil semua konten website dengan caching
-        $content = \Cache::remember('site_content', 3600, function () {
-            $content_items = SiteContent::all();
-            return $content_items->groupBy('section_name')
-                ->map(function ($items) {
-                    return $items->pluck('content_value', 'content_key');
-                })
-                ->toArray();
-        });
+        // Mengambil semua konten website dengan query yang lebih efisien
+        $content_items = SiteContent::all();
+        $content = $content_items->groupBy('section_name')
+            ->map(function ($items) {
+                return $items->pluck('content_value', 'content_key');
+            })
+            ->toArray();
 
         // Mengambil data galeri dengan caching
         $gallery = \Cache::remember('gallery_images', 3600, function () {

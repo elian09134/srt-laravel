@@ -27,12 +27,20 @@ class DashboardController extends Controller
             ->groupBy('status')
             ->pluck('total', 'status');
 
+        // 3. Ambil beberapa lowongan aktif beserta jumlah lamaran
+        $active_jobs = Job::where('is_active', 1)
+            ->withCount('applications')
+            ->orderBy('created_at', 'desc')
+            ->take(6)
+            ->get();
+
         // Mengirim semua data ke view
         return view('admin.dashboard', [
             'total_applicants' => $total_applicants,
             'total_jobs' => $total_jobs,
             'total_talent_pool' => $total_talent_pool,
             'status_distribution' => $status_distribution,
+            'active_jobs' => $active_jobs,
         ]);
     }
 }

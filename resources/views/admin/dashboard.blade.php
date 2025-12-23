@@ -8,6 +8,32 @@
         <p class="text-gray-600 mt-2">Ringkasan dan statistik aplikasi perekrutan</p>
     </div>
     
+    <!-- Lowongan Aktif -->
+    <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-3">Lowongan Aktif</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @forelse($active_jobs as $job)
+                <div class="bg-white p-4 rounded-lg shadow-sm border">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <a href="{{ route('admin.jobs.show', $job) }}" class="text-lg font-medium text-gray-900">{{ $job->title }}</a>
+                            <div class="text-sm text-gray-500">{{ $job->location ?? '-' }} • {{ $job->employment_type ?? '-' }}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-gray-500">Pelamar</div>
+                            <div class="text-2xl font-bold text-gray-900">{{ $job->applications_count }}</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-sm text-gray-600">{{ \Illuminate\Support\Str::limit(strip_tags($job->jobdesk ?? ''), 140) }}</div>
+                </div>
+            @empty
+                <div class="col-span-1">
+                    <div class="bg-white p-4 rounded-lg shadow-sm border text-gray-500">Tidak ada lowongan aktif ditemukan.</div>
+                </div>
+            @endforelse
+        </div>
+    </div>
+
     <!-- Ringkasan Umum -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="group bg-white p-6 rounded-2xl shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">

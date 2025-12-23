@@ -99,6 +99,15 @@ class JobController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(Job $job)
+    {
+        $job->load(['applications.user.profile']);
+        return view('admin.jobs.show', compact('job'));
+    }
+
+    /**
      * Toggle the active state via AJAX.
      */
     public function toggleActive(Job $job)

@@ -30,6 +30,37 @@ class ContentController extends Controller
     {
         $content_array = $request->input('content', []);
 
+        // Handle hr_department members separately
+        if (isset($content_array['hr_department']['members'])) {
+            $members = $content_array['hr_department']['members'];
+            $membersArray = [];
+            
+            foreach ($members as $member) {
+                if (!empty($member['name'])) {
+                    $membersArray[] = array_filter([
+                        'name' => $member['name'] ?? '',
+                        'role' => $member['role'] ?? '',
+                        'photo' => $member['photo'] ?? '',
+                        'bio' => $member['bio'] ?? '',
+                        'email' => $member['email'] ?? '',
+                        'phone' => $member['phone'] ?? '',
+                        'social' => array_filter([
+                            'linkedin' => $member['linkedin'] ?? '',
+                            'instagram' => $member['instagram'] ?? '',
+                            'twitter' => $member['twitter'] ?? '',
+                        ])
+                    ]);
+                }
+            }
+            
+            SiteContent::updateOrCreate(
+                ['section_name' => 'hr_department', 'content_key' => 'members'],
+                ['content_value' => json_encode($membersArray)]
+            );
+            
+            unset($content_array['hr_department']['members']);
+        }
+
         foreach ($content_array as $section_name => $keys) {
             foreach ($keys as $content_key => $content_value) {
                 // Perlakuan khusus untuk list yang disimpan sebagai JSON

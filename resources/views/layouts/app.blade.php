@@ -39,7 +39,11 @@
 
         <!-- Konten Halaman Utama -->
         <main>
-            {{ $slot }}
+            @isset($slot)
+                {{ $slot }}
+            @endisset
+
+            @yield('content')
         </main>
 
         <!-- Footer Komponen -->
