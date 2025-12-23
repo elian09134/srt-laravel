@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\SiteContent;
+use App\Models\Gallery;
 use Illuminate\Http\Request;
 
 class ContentController extends Controller
@@ -20,7 +21,10 @@ class ContentController extends Controller
             $content[$item->section_name][$item->content_key] = $item->content_value;
         }
 
-        return view('admin.content.edit', compact('content'));
+        // Ambil semua gambar dari gallery untuk dropdown foto tim HR
+        $galleryImages = Gallery::latest()->get();
+
+        return view('admin.content.edit', compact('content', 'galleryImages'));
     }
 
     /**
@@ -35,12 +39,30 @@ class ContentController extends Controller
             $members = $content_array['hr_department']['members'];
             $membersArray = [];
             
-            foreach ($members as $member) {
+            foreach ($members as $index => $member) {
                 if (!empty($member['name'])) {
+                    // Handle photo file upload
+                    $photoPath = $member['photo_existing'] ?? ''; // Keep existing photo if no new upload
+                    
+                    if ($request->hasFile("content.hr_department.members.$index.photo_file")) {
+                        // Validate and upload new photo
+                        $request->validate([
+                            "content.hr_department.members.$index.photo_file" => 'image|mimes:jpeg,png,jpg,webp|max:2048'
+                        ]);
+                        
+                        $file = $request->file("content.hr_department.members.$index.photo_file");
+                        $photoPath = $file->store('hr_team', 'public');
+                        
+                        // Delete old photo if exists
+                        if (!empty($member['photo_existing']) && \Storage::disk('public')->exists($member['photo_existing'])) {
+                            \Storage::disk('public')->delete($member['photo_existing']);
+                        }
+                    }
+                    
                     $membersArray[] = array_filter([
                         'name' => $member['name'] ?? '',
                         'role' => $member['role'] ?? '',
-                        'photo' => $member['photo'] ?? '',
+                        'photo' => $photoPath,
                         'bio' => $member['bio'] ?? '',
                         'email' => $member['email'] ?? '',
                         'phone' => $member['phone'] ?? '',

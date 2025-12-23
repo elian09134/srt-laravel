@@ -63,9 +63,9 @@
                                         $phone = $member['phone'] ?? '';
                                         $social = $member['social'] ?? [];
                                     @endphp
-                                    <div class="group relative bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden">
+                                    <div class="group relative bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden h-80">
                                         <!-- Front Card -->
-                                        <div class="p-6 text-center transition-opacity duration-300 group-hover:opacity-0">
+                                        <div class="absolute inset-0 p-6 flex flex-col justify-center items-center text-center transition-opacity duration-300 group-hover:opacity-0">
                                             <div class="mx-auto w-32 h-32 rounded-full overflow-hidden border-4 border-blue-100 mb-4">
                                                 <img src="{{ $photoUrl }}" alt="{{ $member['name'] ?? 'Team' }}" class="w-full h-full object-cover">
                                             </div>
@@ -74,38 +74,42 @@
                                         </div>
                                         
                                         <!-- Hover Card -->
-                                        <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 p-6 flex flex-col justify-center items-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                            <div class="w-20 h-20 rounded-full overflow-hidden border-3 border-white mb-3">
+                                        <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 p-6 flex flex-col justify-start items-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-y-auto">
+                                            <div class="w-16 h-16 rounded-full overflow-hidden border-3 border-white mb-3 flex-shrink-0">
                                                 <img src="{{ $photoUrl }}" alt="{{ $member['name'] ?? 'Team' }}" class="w-full h-full object-cover">
                                             </div>
-                                            <h3 class="text-lg font-bold">{{ $member['name'] ?? '-' }}</h3>
-                                            <p class="text-sm opacity-90 mb-3">{{ $member['role'] ?? '' }}</p>
+                                            <h3 class="text-base font-bold flex-shrink-0">{{ $member['name'] ?? '-' }}</h3>
+                                            <p class="text-xs opacity-90 mb-3 flex-shrink-0">{{ $member['role'] ?? '' }}</p>
                                             @if($bio)
-                                                <p class="text-xs text-center mb-4 line-clamp-3">{{ $bio }}</p>
+                                                <p class="text-xs text-center mb-3 leading-relaxed">{{ $bio }}</p>
                                             @endif
-                                            @if($email)
-                                                <a href="mailto:{{ $email }}" class="text-xs hover:underline mb-1">✉ {{ $email }}</a>
-                                            @endif
-                                            @if($phone)
-                                                <a href="tel:{{ $phone }}" class="text-xs hover:underline mb-3">📱 {{ $phone }}</a>
-                                            @endif
-                                            <div class="flex space-x-3 mt-2">
-                                                @if(!empty($social['linkedin']))
-                                                    <a href="{{ $social['linkedin'] }}" target="_blank" class="text-white hover:text-blue-200 transition-colors">
-                                                        <i class="fab fa-linkedin text-xl"></i>
-                                                    </a>
+                                            <div class="flex flex-col items-center space-y-1 mb-3 flex-shrink-0">
+                                                @if($email)
+                                                    <a href="mailto:{{ $email }}" class="text-xs hover:underline break-all">✉ {{ $email }}</a>
                                                 @endif
-                                                @if(!empty($social['instagram']))
-                                                    <a href="https://instagram.com/{{ ltrim($social['instagram'], '@') }}" target="_blank" class="text-white hover:text-blue-200 transition-colors">
-                                                        <i class="fab fa-instagram text-xl"></i>
-                                                    </a>
-                                                @endif
-                                                @if(!empty($social['twitter']))
-                                                    <a href="{{ $social['twitter'] }}" target="_blank" class="text-white hover:text-blue-200 transition-colors">
-                                                        <i class="fab fa-twitter text-xl"></i>
-                                                    </a>
+                                                @if($phone)
+                                                    <a href="tel:{{ $phone }}" class="text-xs hover:underline">📱 {{ $phone }}</a>
                                                 @endif
                                             </div>
+                                            @if(!empty($social['linkedin']) || !empty($social['instagram']) || !empty($social['twitter']))
+                                                <div class="flex space-x-3 mt-auto pt-3 flex-shrink-0">
+                                                    @if(!empty($social['linkedin']))
+                                                        <a href="{{ $social['linkedin'] }}" target="_blank" class="text-white hover:text-blue-200 transition-colors">
+                                                            <i class="fab fa-linkedin text-xl"></i>
+                                                        </a>
+                                                    @endif
+                                                    @if(!empty($social['instagram']))
+                                                        <a href="https://instagram.com/{{ ltrim($social['instagram'], '@') }}" target="_blank" class="text-white hover:text-blue-200 transition-colors">
+                                                            <i class="fab fa-instagram text-xl"></i>
+                                                        </a>
+                                                    @endif
+                                                    @if(!empty($social['twitter']))
+                                                        <a href="{{ $social['twitter'] }}" target="_blank" class="text-white hover:text-blue-200 transition-colors">
+                                                            <i class="fab fa-twitter text-xl"></i>
+                                                        </a>
+                                                    @endif
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 @endforeach
@@ -274,7 +278,19 @@
                 <div class="mt-12">
                     @if($gallery->isNotEmpty())
                         <div class="gallery-masonry">
-                            @foreach($gallery as $img)
+                            @php
+                                // Sort gallery: prioritize horizontal/landscape images first
+                                $sortedGallery = $gallery->sortByDesc(function($img) {
+                                    $imagePath = storage_path('app/public/' . $img->file_path);
+                                    if (file_exists($imagePath)) {
+                                        list($width, $height) = getimagesize($imagePath);
+                                        return $width / $height; // Higher ratio = more horizontal
+                                    }
+                                    return 1; // Default ratio if image not found
+                                });
+                            @endphp
+                            
+                            @foreach($sortedGallery as $img)
                                 <figure class="gallery-item reveal" style="break-inside:avoid">
                                     <img src="{{ asset('storage/' . $img->file_path) }}" alt="{{ $img->alt_text }}">
                                     <figcaption class="gallery-overlay">

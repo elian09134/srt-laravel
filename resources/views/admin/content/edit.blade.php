@@ -8,7 +8,7 @@
         <p class="text-sm text-gray-600">Atur dan kelola semua konten yang tampil di halaman utama</p>
     </div>
     
-    <form action="{{ route('admin.content.update') }}" method="POST" class="space-y-6">
+    <form action="{{ route('admin.content.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
         
         <!-- Section: Hero -->
@@ -95,11 +95,20 @@
                             </div>
                             
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1.5">Path Foto <span class="text-red-500">*</span></label>
-                                <input type="text" name="content[hr_department][members][{{ $index }}][photo]" 
-                                       value="{{ old("content.hr_department.members.$index.photo", $member['photo'] ?? '') }}"
-                                       placeholder="uploads/hr/nama.jpg"
-                                       class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono">
+                                <label class="block text-xs font-medium text-gray-700 mb-1.5">Foto <span class="text-red-500">*</span></label>
+                                <input type="file" name="content[hr_department][members][{{ $index }}][photo_file]" 
+                                       accept="image/jpeg,image/png,image/jpg,image/webp"
+                                       class="block w-full text-sm text-gray-900 border border-gray-200 rounded-lg cursor-pointer bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                @if(isset($member['photo']) && $member['photo'])
+                                    <input type="hidden" name="content[hr_department][members][{{ $index }}][photo_existing]" value="{{ $member['photo'] }}">
+                                    <div class="mt-2 flex items-center space-x-2">
+                                        <img src="{{ Storage::url($member['photo']) }}" alt="Current photo" class="w-16 h-16 object-cover rounded-lg border">
+                                        <span class="text-xs text-gray-600">Foto saat ini</span>
+                                    </div>
+                                @endif
+                                <p class="text-xs text-gray-500 mt-1">
+                                    <i class="fas fa-info-circle"></i> Format: JPG, PNG, WebP. Max 2MB
+                                </p>
                             </div>
                             
                             <div>
@@ -151,7 +160,7 @@
                 
                 <p class="text-xs text-gray-500 bg-blue-50 border border-blue-100 rounded-lg p-3 flex items-start space-x-2">
                     <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
-                    <span><strong>Catatan:</strong> Field bertanda <span class="text-red-500">*</span> wajib diisi. Path foto relatif dari folder storage/ (contoh: uploads/hr/foto.jpg)</span>
+                    <span><strong>Catatan:</strong> Field bertanda <span class="text-red-500">*</span> wajib diisi. Upload foto langsung dari device Anda (PC/Laptop/HP). Format yang diterima: JPG, PNG, WebP dengan ukuran maksimal 2MB.</span>
                 </p>
             </div>
         </div>
@@ -375,9 +384,9 @@
 @section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    let memberIndex = parseInt(container.dataset.initialCount, 10) || 0;
     const container = document.getElementById('membersContainer');
     const addBtn = document.getElementById('addMemberBtn');
+    let memberIndex = parseInt(container.dataset.initialCount, 10) || 0;
     
     // Member template
     function createMemberHtml(index) {
@@ -412,10 +421,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1.5">Path Foto <span class="text-red-500">*</span></label>
-                        <input type="text" name="content[hr_department][members][${index}][photo]" 
-                               placeholder="uploads/hr/nama.jpg"
-                               class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono">
+                        <label class="block text-xs font-medium text-gray-700 mb-1.5">Foto <span class="text-red-500">*</span></label>
+                        <input type="file" name="content[hr_department][members][${index}][photo_file]" 
+                               accept="image/jpeg,image/png,image/jpg,image/webp"
+                               class="block w-full text-sm text-gray-900 border border-gray-200 rounded-lg cursor-pointer bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <p class="text-xs text-gray-500 mt-1">
+                            <i class="fas fa-info-circle"></i> Format: JPG, PNG, WebP. Max 2MB
+                        </p>
                     </div>
                     
                     <div>
