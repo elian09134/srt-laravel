@@ -131,6 +131,36 @@
                         <x-input-error :messages="$errors->get('last_company_duration')" class="mt-2" />
                     </div>
 
+                    <!-- Two previous work history entries -->
+                    <div class="mt-6">
+                        <h4 class="text-sm font-medium text-gray-800 mb-2">Riwayat Pekerjaan (2 terakhir)</h4>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <input type="text" name="experience[0][company]" placeholder="Perusahaan" value="{{ old('experience.0.company') }}" class="px-3 py-2 border rounded" />
+                                <input type="text" name="experience[0][duration]" placeholder="Durasi (contoh: 1 tahun)" value="{{ old('experience.0.duration') }}" class="px-3 py-2 border rounded" />
+                                <input type="text" name="experience[0][jobdesk]" placeholder="Deskripsi singkat / posisi" value="{{ old('experience.0.jobdesk') }}" class="px-3 py-2 border rounded" />
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <input type="text" name="experience[1][company]" placeholder="Perusahaan" value="{{ old('experience.1.company') }}" class="px-3 py-2 border rounded" />
+                                <input type="text" name="experience[1][duration]" placeholder="Durasi (contoh: 2 tahun)" value="{{ old('experience.1.duration') }}" class="px-3 py-2 border rounded" />
+                                <input type="text" name="experience[1][jobdesk]" placeholder="Deskripsi singkat / posisi" value="{{ old('experience.1.jobdesk') }}" class="px-3 py-2 border rounded" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Currently employed + expected salary -->
+                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="currently_employed" name="currently_employed" value="1" class="h-4 w-4 text-blue-600 border-gray-300 rounded" {{ old('currently_employed') ? 'checked' : '' }}>
+                            <label for="currently_employed" class="ml-2 text-sm text-gray-700">Sedang bekerja saat ini</label>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Ekspektasi Gaji (IDR per bulan)</label>
+                            <input type="number" name="expected_salary" value="{{ old('expected_salary') }}" class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="contoh: 5000000">
+                        </div>
+                    </div>
+
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Tentang Saya</label>
                         <textarea name="about_me" rows="3" class="mt-1 block w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500">{{ old('about_me') }}</textarea>

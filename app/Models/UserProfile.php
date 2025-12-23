@@ -21,6 +21,8 @@ class UserProfile extends Model
         'last_company',
         'last_position',
         'last_company_duration',
+        'currently_employed',
+        'expected_salary',
         'skills',
         'languages',
         'job_interest',
@@ -30,6 +32,8 @@ class UserProfile extends Model
 
     protected $casts = [
         'date_of_birth' => 'date',
+        'currently_employed' => 'boolean',
+        'expected_salary' => 'integer',
     ];
 
     /**

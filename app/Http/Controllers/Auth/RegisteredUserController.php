@@ -47,6 +47,12 @@ class RegisteredUserController extends Controller
             'major' => ['required', 'string', 'max:255'],
             'cv' => ['required', 'file', 'mimes:pdf', 'max:2048'], // maks 2MB
             'photo' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:2048'], // maks 2MB
+            'experience' => ['nullable', 'array'],
+            'experience.*.company' => ['nullable', 'string', 'max:255'],
+            'experience.*.duration' => ['nullable', 'string', 'max:255'],
+            'experience.*.jobdesk' => ['nullable', 'string'],
+            'currently_employed' => ['nullable', 'boolean'],
+            'expected_salary' => ['nullable', 'numeric'],
         ]);
 
         // Memulai transaksi database untuk memastikan semua data aman
@@ -85,6 +91,8 @@ class RegisteredUserController extends Controller
                 'last_company' => $request->last_company ?? null,
                 'last_position' => $request->last_position ?? null,
                 'last_company_duration' => $request->last_company_duration ?? null,
+                'currently_employed' => $request->boolean('currently_employed', false),
+                'expected_salary' => $request->expected_salary ?? null,
                 'skills' => $request->skills,
                 'languages' => $request->languages,
                 'job_interest' => $request->job_interest,
