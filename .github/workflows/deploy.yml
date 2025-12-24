@@ -36,16 +36,24 @@ jobs:
         run: |
           composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
-      - name: Sync files to server (rsync over SSH)
-        uses: burnett01/rsync-deploy@v2
+      - name: Create release archive
+        run: |
+          tar --exclude='.git' \
+              --exclude='node_modules' \
+              --exclude='storage' \
+              --exclude='.env' \
+              --exclude='deploy/keys' \
+              -czf release.tar.gz .
+
+      - name: Upload release archive to server
+        uses: appleboy/scp-action@master
         with:
-          switches: -az --delete --exclude='.git' --exclude='node_modules' --exclude='storage' --exclude='.env'
-          path: '.'
-          remote_path: ${{ secrets.DEPLOY_PATH }}
-          remote_host: ${{ secrets.DEPLOY_HOST }}
-          remote_user: ${{ secrets.DEPLOY_USER }}
-          remote_port: ${{ secrets.DEPLOY_PORT }}
-          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          source: release.tar.gz
+          target: ${{ secrets.DEPLOY_PATH }}
 
       - name: Run remote deployment commands
         uses: appleboy/ssh-action@v0.1.7
@@ -56,12 +64,18 @@ jobs:
           port: ${{ secrets.DEPLOY_PORT }}
           script: |
             set -e
+            # ensure deploy path exists
+            mkdir -p ${{ secrets.DEPLOY_PATH }}
+            # extract uploaded archive
+            tar -xzf ${{ secrets.DEPLOY_PATH }}/release.tar.gz -C ${{ secrets.DEPLOY_PATH }} || true
+            rm -f ${{ secrets.DEPLOY_PATH }}/release.tar.gz || true
             cd ${{ secrets.DEPLOY_PATH }}
-            # install PHP dependencies on server (ensure composer is available)
+
+            # if composer exists on remote, install (optional)
             if command -v composer >/dev/null 2>&1; then
               composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
             else
-              echo "Composer not found on remote. You can either install Composer on the server or pre-build vendor locally and include it in the artifact."
+              echo "Composer not found on remote; vendor shipped from CI if required."
             fi
 
             # Laravel maintenance + migrations
