@@ -38,12 +38,17 @@ jobs:
 
       - name: Create release archive
         run: |
-          tar --exclude='.git' \
-              --exclude='node_modules' \
-              --exclude='storage' \
-              --exclude='.env' \
-              --exclude='deploy/keys' \
-              -czf release.tar.gz .
+          # create a static snapshot to avoid 'file changed as we read it' during tar
+          SNAPSHOT_DIR=$(mktemp -d)
+          rsync -a --delete \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='storage' \
+            --exclude='.env' \
+            --exclude='deploy/keys' \
+            ./ "$SNAPSHOT_DIR"/
+          tar -C "$SNAPSHOT_DIR" -czf release.tar.gz .
+          rm -rf "$SNAPSHOT_DIR"
 
       - name: Upload release archive to server
         uses: appleboy/scp-action@master
