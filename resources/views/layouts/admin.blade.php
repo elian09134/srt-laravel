@@ -2,18 +2,31 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1280, initial-scale=1.0">
     <title>@yield('title', 'Admin Panel') - TERANG</title>
     <!-- Vite-built CSS/JS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <!-- Font Awesome (kept as CDN for admin icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
+        /* Admin panel: disable mobile responsive, min-width for desktop */
+        body {
+            min-width: 1280px;
+            overflow-x: auto;
+        }
+        
         .bg-grid-pattern {
             background-image: 
                 linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
             background-size: 40px 40px;
+        }
+        
+        /* Ensure admin layout is fixed width on small screens */
+        @media (max-width: 1279px) {
+            html {
+                min-width: 1280px;
+            }
         }
     </style>
 </head>
