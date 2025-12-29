@@ -146,10 +146,11 @@
                             </div>
                             
                             <div class="md:col-span-2">
-                                   <input type="email" name="content[hr_department][members][{{ $index }}][email]" 
-                                       value="{{ old("content.hr_department.members.$index.email", $member['email'] ?? '') }}"
+                                <label class="block text-xs font-medium text-gray-700 mb-1.5">Bio Singkat</label>
+                                <textarea name="content[hr_department][members][{{ $index }}][bio]" 
+                                       rows="3"
                                        class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                                       placeholder="email@terang.id">
+                                       placeholder="Deskripsi singkat tentang anggota tim...">{{ old("content.hr_department.members.$index.bio", $member['bio'] ?? '') }}</textarea>
                             </div>
                         </div>
                     </div>
