@@ -53,7 +53,7 @@
                     </li>
                     <li class="flex items-start">
                             <i class="fas fa-envelope text-blue-500 mt-1 mr-3"></i>
-                            <span class="text-gray-400 text-sm">info@terang.id</span>
+                            <span class="text-gray-400 text-sm">rekrutmensrt@gmail.com</span>
                         </li>
                 </ul>
             </div>
