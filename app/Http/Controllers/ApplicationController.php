@@ -31,6 +31,35 @@ class ApplicationController extends Controller
         }
 
         $profile = $user->profile ?? null;
+        $workExperiences = $user->workExperiences ?? collect();
+        
+        // Ambil pengalaman kerja terakhir
+        $lastExperience = $workExperiences->first();
+        
+        // Build snapshot data lengkap
+        $snapshotData = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone_number' => $profile->phone_number ?? null,
+            'date_of_birth' => $profile->date_of_birth ?? null,
+            'education_level' => $profile->education_level ?? null,
+            'institution' => $profile->institution ?? null,
+            'major' => $profile->major ?? null,
+            'skills' => $profile->skills ?? null,
+            'languages' => $profile->languages ?? null,
+            'about_me' => $profile->about_me ?? null,
+            'currently_employed' => $profile->currently_employed ?? false,
+            'expected_salary' => $profile->expected_salary ?? null,
+            'cv_path' => $profile->cv_path ?? null,
+            'photo_path' => $profile->photo_path ?? null,
+            'work_experiences' => $workExperiences->map(function($exp) {
+                return [
+                    'company_name' => $exp->company_name,
+                    'duration' => $exp->duration,
+                    'job_description' => $exp->job_description,
+                ];
+            })->toArray(),
+        ];
 
         $application = Application::create([
             'user_id' => $user->id,
@@ -39,9 +68,10 @@ class ApplicationController extends Controller
             'cover_letter' => $request->cover_letter,
             'applicant_name' => $user->name,
             'applicant_email' => $user->email,
-            'applicant_phone' => $profile->phone ?? null,
-            'applicant_last_position' => $profile->last_position ?? null,
-            'applicant_last_education' => $profile->last_education ?? null,
+            'applicant_phone' => $profile->phone_number ?? null,
+            'applicant_last_position' => $lastExperience->job_description ?? $profile->last_position ?? null,
+            'applicant_last_education' => $profile->education_level ?? $profile->last_education ?? null,
+            'snapshot_data' => json_encode($snapshotData),
         ]);
 
         // record initial status history
