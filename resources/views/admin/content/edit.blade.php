@@ -239,11 +239,30 @@
                     </div>
                     <div>
                         <h2 class="text-lg font-semibold text-gray-900">Seksi Lingkup Bisnis</h2>
-                        <p class="text-xs text-gray-600">5 kartu bisnis utama perusahaan</p>
+                        <p class="text-xs text-gray-600">Kelola kartu bisnis perusahaan</p>
                     </div>
                 </div>
             </div>
-            <div class="p-6 space-y-4">
+            <div class="p-6 space-y-5">
+                <div>
+                    <label for="business_scope_title" class="block text-sm font-medium text-gray-700 mb-2">Judul Section</label>
+                    <input type="text" name="content[business_scope][title]" id="business_scope_title" value="{{ old('content.business_scope.title', $content['business_scope']['title'] ?? 'Scope Bisnis') }}" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Scope Bisnis">
+                </div>
+                <div>
+                    <label for="business_scope_description" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi Section</label>
+                    <textarea name="content[business_scope][description]" id="business_scope_description" rows="2" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Deskripsi singkat...">{{ old('content.business_scope.description', $content['business_scope']['description'] ?? 'Lini Bisnis Kami') }}</textarea>
+                </div>
+                
+                <div class="pt-4 border-t border-gray-100">
+                    <div class="flex justify-between items-center mb-4">
+                        <label class="block text-sm font-medium text-gray-700">Kartu Bisnis</label>
+                        <button type="button" id="addScopeBtn" class="px-4 py-2 bg-orange-600 text-white text-sm rounded-lg hover:bg-orange-700 transition-colors flex items-center space-x-2">
+                            <i class="fas fa-plus text-xs"></i>
+                            <span>Tambah Kartu</span>
+                        </button>
+                    </div>
+
+                    <div id="scopeContainer" class="space-y-4">
                 <!-- Card 1 -->
                 <div class="border border-gray-200 rounded-lg p-5 bg-gradient-to-br from-orange-50/50 to-white hover:shadow-md transition-all">
                     <div class="flex items-center space-x-2 mb-4">
