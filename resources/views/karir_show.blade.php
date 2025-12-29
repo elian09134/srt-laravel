@@ -42,7 +42,7 @@
                             <div class="mt-6">
                                 @auth
                                     @php
-                                        $hasApplied = \\App\\Models\\Application::where('job_id', $job->id)
+                                        $hasApplied = \App\Models\Application::where('job_id', $job->id)
                                                     ->where('user_id', auth()->id())
                                                     ->exists();
                                     @endphp
