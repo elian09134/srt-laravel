@@ -128,10 +128,8 @@
                             </div>
                             
                             <div>
-                                   <input type="email" name="content[hr_department][members][{{ $index }}][email]" 
-                                       value="{{ old("content.hr_department.members.$index.email", $member['email'] ?? '') }}"
-                                       class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                                       placeholder="email@terang.id">
+                                <label class="block text-xs font-medium text-gray-700 mb-1.5">LinkedIn</label>
+                                <input type="url" name="content[hr_department][members][{{ $index }}][linkedin]"
                                        value="{{ old("content.hr_department.members.$index.linkedin", $member['social']['linkedin'] ?? '') }}"
                                        placeholder="https://linkedin.com/in/username"
                                        class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
