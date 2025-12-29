@@ -63,14 +63,19 @@
                                         $phone = $member['phone'] ?? '';
                                         $social = $member['social'] ?? [];
                                     @endphp
-                                    <div class="group relative bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden h-80">
+                                    <div class="group relative bg-gradient-to-br from-white via-blue-50/30 to-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden h-80 border border-blue-100/50">
+                                        <!-- Decorative Elements -->
+                                        <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-transparent rounded-bl-full"></div>
+                                        <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-blue-400/10 to-transparent rounded-tr-full"></div>
+                                        
                                         <!-- Front Card -->
                                         <div class="absolute inset-0 p-6 flex flex-col justify-center items-center text-center transition-opacity duration-300 group-hover:opacity-0">
-                                            <div class="mx-auto w-32 h-32 rounded-full overflow-hidden border-4 border-blue-100 mb-4">
-                                                <img src="{{ $photoUrl }}" alt="{{ $member['name'] ?? 'Team' }}" class="w-full h-full object-cover">
+                                            <div class="mx-auto w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-xl mb-4 ring-2 ring-blue-200/50">
+                                                <img src="{{ $photoUrl }}" alt="{{ $member['name'] ?? 'Team' }}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
                                             </div>
-                                            <h3 class="text-lg font-bold text-gray-900">{{ $member['name'] ?? '-' }}</h3>
-                                            <p class="text-sm text-blue-600 mt-1">{{ $member['role'] ?? '' }}</p>
+                                            <h3 class="text-lg font-bold text-gray-900 mb-1">{{ $member['name'] ?? '-' }}</h3>
+                                            <p class="text-sm text-blue-600 font-medium">{{ $member['role'] ?? '' }}</p>
+                                            <div class="mt-3 w-16 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full"></div>
                                         </div>
                                         
                                         <!-- Hover Card -->
