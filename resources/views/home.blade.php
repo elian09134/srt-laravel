@@ -218,6 +218,32 @@
                             @endforeach
                         </ul>
                     </div>
+                    <!-- Kartu 4 -->
+                    <div class="group bg-white p-8 rounded-2xl shadow-md border border-gray-100 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:border-blue-200">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-spa text-2xl text-white"></i>
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold text-gray-900">{{ $content['business_scope']['card4_title'] ?? 'Judul Default' }}</h3>
+                        <p class="mt-3 text-gray-600 text-sm leading-relaxed">{{ $content['business_scope']['card4_desc'] ?? 'Deskripsi default.' }}</p>
+                        <ul class="mt-6 text-left space-y-3">
+                            @foreach (json_decode($content['business_scope']['card4_list'] ?? '[]') as $item)
+                                <li class="flex items-start"><i class="fas fa-check-circle text-green-500 mr-3 mt-1 flex-shrink-0"></i><span class="text-sm text-gray-600">{{ $item }}</span></li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <!-- Kartu 5 -->
+                    <div class="group bg-white p-8 rounded-2xl shadow-md border border-gray-100 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:border-blue-200">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-mobile-alt text-2xl text-white"></i>
+                        </div>
+                        <h3 class="mt-6 text-xl font-bold text-gray-900">{{ $content['business_scope']['card5_title'] ?? 'Judul Default' }}</h3>
+                        <p class="mt-3 text-gray-600 text-sm leading-relaxed">{{ $content['business_scope']['card5_desc'] ?? 'Deskripsi default.' }}</p>
+                        <ul class="mt-6 text-left space-y-3">
+                            @foreach (json_decode($content['business_scope']['card5_list'] ?? '[]') as $item)
+                                <li class="flex items-start"><i class="fas fa-check-circle text-amber-500 mr-3 mt-1 flex-shrink-0"></i><span class="text-sm text-gray-600">{{ $item }}</span></li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>

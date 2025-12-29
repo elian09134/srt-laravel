@@ -254,15 +254,8 @@
                 </div>
                 
                 <div class="pt-4 border-t border-gray-100">
-                    <div class="flex justify-between items-center mb-4">
-                        <label class="block text-sm font-medium text-gray-700">Kartu Bisnis</label>
-                        <button type="button" id="addScopeBtn" class="px-4 py-2 bg-orange-600 text-white text-sm rounded-lg hover:bg-orange-700 transition-colors flex items-center space-x-2">
-                            <i class="fas fa-plus text-xs"></i>
-                            <span>Tambah Kartu</span>
-                        </button>
-                    </div>
+                    <label class="block text-sm font-medium text-gray-700 mb-4">Kartu Bisnis (5 Kartu Tetap)</label>
 
-                    <div id="scopeContainer" class="space-y-4">
                 <!-- Card 1 -->
                 <div class="border border-gray-200 rounded-lg p-5 bg-gradient-to-br from-orange-50/50 to-white hover:shadow-md transition-all">
                     <div class="flex items-center space-x-2 mb-4">
