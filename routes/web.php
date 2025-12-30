@@ -53,7 +53,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Route::get('/invitations', [EmployeeInvitationController::class, 'index'])->name('admin.invitations.index');
     // Route::post('/invitations', [EmployeeInvitationController::class, 'store'])->name('admin.invitations.store');
     Route::get('/applicants', [ApplicantController::class, 'index'])->name('admin.applicants.index');
-    Route::get('/applicants/export', [ApplicantController::class, 'export'])->name('admin.applicants.export');
     Route::get('/applicants/{application}', [ApplicantController::class, 'show'])->name('admin.applicants.show');
     Route::patch('/applicants/{application}/status', [ApplicantController::class, 'updateStatus'])->name('admin.applicants.updateStatus');
     Route::post('/applicants/{application}/talent-pool', [ApplicantController::class, 'addToTalentPool'])->name('admin.applicants.addToTalentPool');
