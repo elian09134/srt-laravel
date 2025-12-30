@@ -4,8 +4,11 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             <!-- Kolom 1: Logo & Social -->
             <div>
-                    <a href="{{ route('home') }}" class="flex items-center group">
+                <a href="{{ route('home') }}" class="flex items-center space-x-3 group">
                     <img src="{{ asset('images/terang.png') }}" alt="TERANG By SRT" class="h-12 w-auto transform group-hover:scale-105 transition-transform duration-300">
+                    <div>
+                        <span class="text-xl font-bold text-white">TERANG <span class="text-blue-400">By SRT</span></span>
+                    </div>
                 </a>
                 <p class="mt-4 text-gray-400 text-sm leading-relaxed">
                     Memberikan solusi inovatif untuk pertumbuhan bisnis Anda.

@@ -1,8 +1,11 @@
 <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
     <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
         <!-- Logo -->
-        <a href="{{ route('home') }}" class="flex items-center group">
+        <a href="{{ route('home') }}" class="flex items-center space-x-3 group">
             <img src="{{ asset('images/terang.png') }}" alt="TERANG By SRT" class="h-12 w-auto transform group-hover:scale-105 transition-transform duration-300">
+            <div class="hidden lg:block">
+                <span class="text-xl font-bold text-gray-900">TERANG <span class="text-blue-600">By SRT</span></span>
+            </div>
         </a>
         
         <!-- Menu Utama (Desktop) -->
