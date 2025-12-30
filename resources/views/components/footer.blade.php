@@ -59,7 +59,7 @@
             <p>&copy; {{ date('Y') }} TERANG By SRT. All rights reserved.</p>
             <div class="mt-4 sm:mt-0 space-x-6">
                 <a href="{{ route('privacy') }}" class="hover:text-blue-400 transition-colors">Kebijakan Privasi</a>
-                <a href="#" class="hover:text-blue-400 transition-colors">Syarat & Ketentuan</a>
+                <a href="{{ route('terms') }}" class="hover:text-blue-400 transition-colors">Syarat & Ketentuan</a>
             </div>
         </div>
     </div>
