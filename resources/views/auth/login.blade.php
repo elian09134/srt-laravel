@@ -29,13 +29,7 @@
         <div class="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12">
             <div class="w-full max-w-md">
                 <a href="{{ route('home') }}" class="flex items-center space-x-2 group">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                        <span class="text-white font-bold text-xl">S</span>
-                    </div>
-                    <span class="text-2xl font-bold">
-                        <span class="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">TERANG</span>
-                        <span class="text-gray-700"> By SRT</span>
-                    </span>
+                    <img src="{{ asset('images/terang.png') }}" alt="{{ config('app.name', 'TERANG By SRT') }}" class="h-12 w-auto">
                 </a>
                 
                 <h1 class="mt-8 text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">Selamat Datang Kembali</h1>

@@ -14,7 +14,9 @@
         <div class="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
             <div class="p-8 sm:p-12">
                 <div class="text-center">
-                    <a href="{{ route('home') }}" class="text-3xl font-bold text-gray-900">SRT <span class="text-blue-700">Corp</span></a>
+                    <a href="{{ route('home') }}" class="inline-flex items-center justify-center">
+                        <img src="{{ asset('images/terang.png') }}" alt="TERANG By SRT" class="h-12 w-auto">
+                    </a>
                     <h1 class="mt-6 text-3xl font-bold text-gray-900">Lengkapi Data Karyawan</h1>
                     <p class="mt-2 text-gray-600">Selamat datang, {{ $invitation->full_name }}. Silakan lengkapi informasi di bawah ini.</p>
                 </div>

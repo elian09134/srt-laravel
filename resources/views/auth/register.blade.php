@@ -17,9 +17,7 @@
             <div class="hidden md:flex flex-col justify-center items-start p-10 auth-illustration">
                 <div class="mb-6">
                     <a href="{{ route('home') }}" class="inline-flex items-center space-x-3">
-                        <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
-                            <span class="text-white font-bold text-xl">S</span>
-                        </div>
+                        <img src="{{ asset('images/terang.png') }}" alt="TERANG By SRT" class="h-12 w-auto">
                         <div>
                             <div class="text-2xl font-bold text-gray-900">TERANG <span class="text-gray-600">By SRT</span></div>
                             <div class="text-sm text-gray-500">Karir & Rekrutmen</div>

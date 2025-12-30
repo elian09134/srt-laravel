@@ -35,10 +35,8 @@
         <!-- Sidebar -->
         <aside class="w-56 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white flex-shrink-0 h-screen sticky top-0 shadow-2xl">
             <div class="p-4">
-                <div class="flex items-center space-x-2">
-                    <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
-                        <span class="text-white font-bold text-lg">S</span>
-                    </div>
+                <div class="flex items-center space-x-3">
+                    <img src="{{ asset('images/terang.png') }}" alt="TERANG Admin" class="h-10 w-auto">
                     <div>
                         <span class="text-xl font-bold block">TERANG Admin</span>
                         <span class="text-xs text-blue-400">Management Panel</span>

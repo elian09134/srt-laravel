@@ -20,7 +20,9 @@
     <div class="flex min-h-screen items-center justify-center">
         <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
             <div class="text-center">
-                <a href="{{ route('home') }}" class="text-3xl font-bold text-gray-900">SRT <span class="text-blue-700">Corp</span></a>
+                <a href="{{ route('home') }}" class="inline-flex items-center justify-center">
+                    <img src="{{ asset('images/terang.png') }}" alt="TERANG By SRT" class="h-12 w-auto">
+                </a>
                 <h1 class="mt-6 text-2xl font-bold text-gray-900">Pendaftaran Karyawan</h1>
                 <p class="mt-2 text-gray-600">Silakan masukkan kode undangan yang Anda terima dari HR atau pindai QR code.</p>
             </div>
