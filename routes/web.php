@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ImageController;
 use App\Http\Controllers\Auth\EmployeeRegisterController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AI\AgentController;
 
 // Rute untuk halaman utama
 Route::get('/', [PageController::class, 'home'])->name('home');
@@ -78,3 +79,6 @@ Route::get('/dashboard', function () {
     }
     return redirect('/');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+// AI agent endpoint (web route returning JSON). Uses throttle to limit requests.
+Route::post('/api/ai/agent/query', [AgentController::class, 'query'])->middleware('throttle:10,1');
