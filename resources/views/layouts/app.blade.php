@@ -6,6 +6,10 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'TERANG By SRT') }}</title>
+        
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" href="{{ asset('images/terang.png') }}">
+        <link rel="shortcut icon" href="{{ asset('images/terang.png') }}">
 
         <!-- Tailwind CSS should be built via Vite; do not use CDN in production -->
         

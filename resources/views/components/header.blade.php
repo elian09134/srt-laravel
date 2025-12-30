@@ -1,14 +1,8 @@
 <header class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
     <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
         <!-- Logo -->
-        <a href="{{ route('home') }}" class="flex items-center space-x-2 group">
-            <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                <span class="text-white font-bold text-lg">T</span>
-            </div>
-            <span class="text-xl font-bold">
-                <span class="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">TERANG</span>
-                <span class="text-gray-700"> By SRT</span>
-            </span>
+        <a href="{{ route('home') }}" class="flex items-center group">
+            <img src="{{ asset('images/terang.png') }}" alt="TERANG By SRT" class="h-12 w-auto transform group-hover:scale-105 transition-transform duration-300">
         </a>
         
         <!-- Menu Utama (Desktop) -->
