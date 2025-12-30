@@ -5,8 +5,8 @@
 @section('content')
     <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-gray-800">Data Pelamar</h1>
-        <a href="#" class="px-5 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700">
-            <i class="fas fa-file-excel mr-2"></i> Export ke CSV
+        <a href="{{ route('admin.applicants.export', request()->query()) }}" class="px-5 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition-all">
+            <i class="fas fa-file-excel mr-2"></i> Export ke Excel
         </a>
     </div>
 

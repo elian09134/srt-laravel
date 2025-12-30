@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Job;
 use App\Models\TalentPool;
+use App\Exports\ApplicantsExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class ApplicantController extends Controller
 {
@@ -109,5 +111,17 @@ class ApplicantController extends Controller
         ]);
 
         return back()->with('success', 'Kandidat berhasil ditambahkan ke Talent Pool.');
+    }
+
+    /**
+     * Export applicants to Excel
+     */
+    public function export(Request $request)
+    {
+        $filters = $request->only(['job_id', 'status']);
+        $exporter = new ApplicantsExport($filters);
+        
+        return (new FastExcel($exporter->getData()))
+            ->download('data-pelamar-' . date('Y-m-d') . '.xlsx');
     }
 }
