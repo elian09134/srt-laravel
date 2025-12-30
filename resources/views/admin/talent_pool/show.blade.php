@@ -151,23 +151,19 @@
                 @endif
 
                 <!-- Work Experience -->
-                @if($workExperiences->count() > 0)
+                @if($workExperiences && $workExperiences->count() > 0)
                 <div class="bg-white rounded-xl p-6 shadow">
                     <h4 class="text-lg font-semibold mb-4">Pengalaman Kerja</h4>
                     <div class="space-y-4">
                         @foreach($workExperiences as $experience)
                         <div class="border-l-4 border-blue-500 pl-4">
-                            <h5 class="font-medium text-gray-900">{{ $experience->position }}</h5>
-                            <p class="text-gray-600">{{ $experience->company }}</p>
-                            <p class="text-sm text-gray-500">
-                                {{ optional($experience->start_date)->format('M Y') ?? '-' }} -
-                                {{ $experience->end_date ? optional($experience->end_date)->format('M Y') : 'Sekarang' }}
-                                @if($experience->duration_months)
-                                ({{ $experience->duration_months }} bulan)
-                                @endif
-                            </p>
-                            @if($experience->description)
-                            <p class="text-gray-700 mt-2">{{ $experience->description }}</p>
+                            <h5 class="font-medium text-gray-900">{{ $experience->position ?? '-' }}</h5>
+                            <p class="text-gray-600">{{ $experience->company ?? $experience->company_name ?? '-' }}</p>
+                            @if($experience->duration)
+                            <p class="text-sm text-gray-500">{{ $experience->duration }}</p>
+                            @endif
+                            @if($experience->job_description)
+                            <p class="text-gray-700 mt-2">{{ $experience->job_description }}</p>
                             @endif
                         </div>
                         @endforeach
@@ -201,12 +197,16 @@
                             <label class="text-sm font-medium text-gray-700">Ditambahkan</label>
                             <p class="text-gray-900">{{ optional($talent->created_at)->format('d M Y H:i') ?? '-' }}</p>
                         </div>
-                        @if($talent->job_preferences)
                         <div>
                             <label class="text-sm font-medium text-gray-700">Preferensi Pekerjaan</label>
-                            <p class="text-gray-900">{{ $talent->job_preferences }}</p>
+                            <p class="text-gray-900">
+                                @if($workExperiences && $workExperiences->count() > 0)
+                                    {{ $workExperiences->first()->position ?? $workExperiences->first()->company_name ?? '-' }}
+                                @else
+                                    {{ $talent->job_preferences ?? '-' }}
+                                @endif
+                            </p>
                         </div>
-                        @endif
                     </div>
                 </div>
 
