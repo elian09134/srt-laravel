@@ -204,17 +204,45 @@
                     <a href="{{ route('login') }}" class="text-sm text-gray-600 hover:text-blue-600 transition">
                         <i class="fas fa-arrow-left mr-2"></i>Sudah punya akun? Login
                     </a>
-                    <button type="submit" class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold shadow-lg hover:shadow-xl transition-all">
+                    <button id="register-button" type="submit" disabled class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold shadow-lg hover:shadow-xl transition-all opacity-60 cursor-not-allowed">
                         <i class="fas fa-user-plus mr-2"></i>Buat Akun
                     </button>
                 </div>
             </form>
         </div>
 
+                <!-- Agreement -->
+                <div class="mt-4 text-sm text-gray-700">
+                    <label class="inline-flex items-start space-x-3">
+                        <input id="terms-agree" type="checkbox" name="terms" value="1" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-1">
+                        <span>Saya menyetujui <a href="{{ route('terms') }}" target="_blank" class="text-blue-600 hover:underline">Syarat &amp; Ketentuan TERANG By SRT</a></span>
+                    </label>
+                </div>
+
         <!-- Footer Link -->
         <div class="text-center mt-6 text-sm text-gray-600">
-            <p>Dengan mendaftar, Anda menyetujui <a href="#" class="text-blue-600 hover:underline">Syarat & Ketentuan</a> kami</p>
+            <p>Dengan mendaftar, Anda menyetujui <a href="{{ route('terms') }}" class="text-blue-600 hover:underline">Syarat & Ketentuan</a> kami</p>
         </div>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const checkbox = document.getElementById('terms-agree');
+                const button = document.getElementById('register-button');
+                function update() {
+                    if (checkbox && button) {
+                        if (checkbox.checked) {
+                            button.removeAttribute('disabled');
+                            button.classList.remove('opacity-60', 'cursor-not-allowed');
+                        } else {
+                            button.setAttribute('disabled', 'disabled');
+                            button.classList.add('opacity-60', 'cursor-not-allowed');
+                        }
+                    }
+                }
+                if (checkbox) checkbox.addEventListener('change', update);
+                update();
+            });
+        </script>
     </div>
 </body>
 </html>
