@@ -46,7 +46,7 @@
                 <ul class="space-y-4">
                     <li class="flex items-start">
                         <i class="fas fa-map-marker-alt text-blue-500 mt-1 mr-3"></i>
-                        <span class="text-gray-400 text-sm">Jl. Sudirman No. 123, Jakarta Selatan, 12190</span>
+                        <span class="text-gray-400 text-sm">Bandara Mas Blok A No.7 Selapajang, Neglasari Kota Tangerang - Banten</span>
                     </li>
                     <li class="flex items-start">
                             <i class="fas fa-envelope text-blue-500 mt-1 mr-3"></i>
