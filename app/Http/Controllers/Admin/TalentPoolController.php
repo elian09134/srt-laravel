@@ -10,7 +10,7 @@ class TalentPoolController extends Controller
 {
     public function index(Request $request)
     {
-        $items = TalentPool::with('user')->latest()->paginate(20);
+        $items = TalentPool::with(['user.workExperiences'])->latest()->paginate(20);
 
         return view('admin.talent_pool.index', [
             'items' => $items,

@@ -29,7 +29,18 @@
                             </td>
                             <td class="py-3 px-2 align-top">{{ $item->user->email ?? '—' }}</td>
                             <td class="py-3 px-2 align-top"><span class="px-3 py-1 rounded-full text-xs {{ $item->status == 'available' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700' }}">{{ $item->status }}</span></td>
-                            <td class="py-3 px-2 align-top">{{ Str::limit($item->job_preferences, 80) }}</td>
+                            <td class="py-3 px-2 align-top">
+                                @php
+                                    $workExps = $item->user->workExperiences ?? collect();
+                                    if ($workExps->count() > 0) {
+                                        $jobDesc = $workExps->first()->job_description;
+                                        $position = $jobDesc ? explode(' — ', $jobDesc)[0] : '-';
+                                        echo Str::limit($position, 80);
+                                    } else {
+                                        echo Str::limit($item->job_preferences ?? '—', 80);
+                                    }
+                                @endphp
+                            </td>
                             <td class="py-3 px-2 align-top">{{ $item->created_at->diffForHumans() }}</td>
                         </tr>
                     @empty
