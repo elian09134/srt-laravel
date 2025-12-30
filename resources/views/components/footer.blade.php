@@ -58,7 +58,7 @@
         <div class="mt-12 border-t border-gray-700/50 pt-8 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-500">
             <p>&copy; {{ date('Y') }} TERANG By SRT. All rights reserved.</p>
             <div class="mt-4 sm:mt-0 space-x-6">
-                <a href="#" class="hover:text-blue-400 transition-colors">Kebijakan Privasi</a>
+                <a href="{{ route('privacy') }}" class="hover:text-blue-400 transition-colors">Kebijakan Privasi</a>
                 <a href="#" class="hover:text-blue-400 transition-colors">Syarat & Ketentuan</a>
             </div>
         </div>

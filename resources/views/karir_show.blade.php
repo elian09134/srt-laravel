@@ -31,7 +31,11 @@
                             <h3 class="mt-6 text-lg font-semibold">Persyaratan</h3>
                             <ul class="mt-2 space-y-2 text-gray-700">
                                 @php
-                                    $requirements = json_decode($job->requirement, true) ?: [$job->requirement];
+                                    $requirements = json_decode($job->requirement, true);
+                                    if (!is_array($requirements)) {
+                                        // If not JSON, split by newline or comma
+                                        $requirements = preg_split('/[\n,]+/', $job->requirement);
+                                    }
                                 @endphp
                                 @foreach($requirements as $req)
                                     @if(!empty(trim($req)))
@@ -46,7 +50,11 @@
                             <h3 class="mt-6 text-lg font-semibold">Manfaat</h3>
                             <ul class="mt-2 space-y-2 text-gray-700">
                                 @php
-                                    $benefits = json_decode($job->benefits, true) ?: [$job->benefits];
+                                    $benefits = json_decode($job->benefits, true);
+                                    if (!is_array($benefits)) {
+                                        // If not JSON, split by newline or comma
+                                        $benefits = preg_split('/[\n,]+/', $job->benefits);
+                                    }
                                 @endphp
                                 @foreach($benefits as $benefit)
                                     @if(!empty(trim($benefit)))

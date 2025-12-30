@@ -17,6 +17,8 @@ Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/karir', [PageController::class, 'karir'])->name('karir'); // Tambahkan baris ini
 // Public job detail page
 Route::get('/karir/{job}', [PageController::class, 'showJob'])->name('karir.show');
+// Privacy policy
+Route::view('/privacy', 'privacy')->name('privacy');
 // Submit application (user must be authenticated)
 Route::post('/karir/{job}/apply', [App\Http\Controllers\ApplicationController::class, 'store'])->name('karir.apply')->middleware('auth');
 // API: job search (AJAX)
