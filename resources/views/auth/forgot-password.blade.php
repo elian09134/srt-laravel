@@ -5,7 +5,7 @@
         </div>
         <h2 class="text-2xl font-bold text-gray-900">Lupa Password?</h2>
         <p class="mt-2 text-sm text-gray-600">
-            Tidak masalah! Masukkan email Anda dan kami akan mengirimkan link reset password.
+            Masukkan email yang terdaftar. Permintaan reset akan dikirim ke administrator untuk ditinjau — jika disetujui, administrator akan mengirimkan password sementara melalui email.
         </p>
     </div>
 
@@ -19,7 +19,7 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('password.email') }}" class="space-y-5">
+        <form method="POST" action="{{ route('password.email') }}" class="space-y-5">
         @csrf
 
         <!-- Email Address -->
@@ -37,9 +37,9 @@
             @enderror
         </div>
 
-        <div class="space-y-4">
+            <div class="space-y-4">
             <button type="submit" class="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-200 transition-all transform hover:scale-[1.02] active:scale-100">
-                <i class="fas fa-paper-plane mr-2"></i>Kirim Link Reset Password
+                <i class="fas fa-paper-plane mr-2"></i>Kirim Permintaan Reset Password
             </button>
             
             <a href="{{ route('login') }}" class="block text-center text-sm text-gray-600 hover:text-blue-600 transition-colors">
