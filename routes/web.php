@@ -64,6 +64,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Talent Pool management
     Route::get('/talent-pool', [App\Http\Controllers\Admin\TalentPoolController::class, 'index'])->name('admin.talent_pool.index');
     Route::get('/talent-pool/{talentPool}', [App\Http\Controllers\Admin\TalentPoolController::class, 'show'])->name('admin.talent_pool.show');
+    // Password reset requests admin panel
+    Route::get('/password-requests', [App\Http\Controllers\Admin\PasswordRequestController::class, 'index'])->name('admin.password_requests.index');
+    Route::get('/password-requests/{passwordRequest}', [App\Http\Controllers\Admin\PasswordRequestController::class, 'show'])->name('admin.password_requests.show');
+    Route::post('/password-requests/{passwordRequest}/approve', [App\Http\Controllers\Admin\PasswordRequestController::class, 'approve'])->name('admin.password_requests.approve');
+    Route::post('/password-requests/{passwordRequest}/reject', [App\Http\Controllers\Admin\PasswordRequestController::class, 'reject'])->name('admin.password_requests.reject');
     // Password reset requests admin
     Route::get('/password-requests', [App\Http\Controllers\Admin\PasswordResetRequestsController::class, 'index'])->name('admin.password_requests.index');
     Route::get('/password-requests/{passwordRequest}', [App\Http\Controllers\Admin\PasswordResetRequestsController::class, 'show'])->name('admin.password_requests.show');
