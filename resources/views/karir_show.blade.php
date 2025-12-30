@@ -29,10 +29,34 @@
                             </div>
 
                             <h3 class="mt-6 text-lg font-semibold">Persyaratan</h3>
-                            <div class="prose mt-2 text-gray-700">{!! nl2br(e($job->requirement)) !!}</div>
+                            <ul class="mt-2 space-y-2 text-gray-700">
+                                @php
+                                    $requirements = json_decode($job->requirement, true) ?: [$job->requirement];
+                                @endphp
+                                @foreach($requirements as $req)
+                                    @if(!empty(trim($req)))
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                                        <span>{{ trim($req) }}</span>
+                                    </li>
+                                    @endif
+                                @endforeach
+                            </ul>
 
                             <h3 class="mt-6 text-lg font-semibold">Manfaat</h3>
-                            <div class="prose mt-2 text-gray-700">{!! nl2br(e($job->benefits)) !!}</div>
+                            <ul class="mt-2 space-y-2 text-gray-700">
+                                @php
+                                    $benefits = json_decode($job->benefits, true) ?: [$job->benefits];
+                                @endphp
+                                @foreach($benefits as $benefit)
+                                    @if(!empty(trim($benefit)))
+                                    <li class="flex items-start">
+                                        <i class="fas fa-gift text-green-500 mt-1 mr-2"></i>
+                                        <span>{{ trim($benefit) }}</span>
+                                    </li>
+                                    @endif
+                                @endforeach
+                            </ul>
                         </div>
 
                         <aside class="bg-gray-50 rounded-xl p-4">
