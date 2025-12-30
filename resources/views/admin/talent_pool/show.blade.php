@@ -156,14 +156,21 @@
                     <h4 class="text-lg font-semibold mb-4">Pengalaman Kerja</h4>
                     <div class="space-y-4">
                         @foreach($workExperiences as $experience)
+                        @php
+                            $jobDesc = $experience->job_description;
+                            // Extract position and description from "Position — Jobdesk" format
+                            $parts = $jobDesc ? explode(' — ', $jobDesc, 2) : ['-', ''];
+                            $position = $parts[0] ?? '-';
+                            $description = $parts[1] ?? '';
+                        @endphp
                         <div class="border-l-4 border-blue-500 pl-4">
-                            <h5 class="font-medium text-gray-900">{{ $experience->position ?? '-' }}</h5>
-                            <p class="text-gray-600">{{ $experience->company ?? $experience->company_name ?? '-' }}</p>
+                            <h5 class="font-medium text-gray-900">{{ $position }}</h5>
+                            <p class="text-gray-600">{{ $experience->company_name ?? '-' }}</p>
                             @if($experience->duration)
                             <p class="text-sm text-gray-500">{{ $experience->duration }}</p>
                             @endif
-                            @if($experience->job_description)
-                            <p class="text-gray-700 mt-2">{{ $experience->job_description }}</p>
+                            @if($description)
+                            <p class="text-gray-700 mt-2">{{ $description }}</p>
                             @endif
                         </div>
                         @endforeach
@@ -201,7 +208,12 @@
                             <label class="text-sm font-medium text-gray-700">Preferensi Pekerjaan</label>
                             <p class="text-gray-900">
                                 @if($workExperiences && $workExperiences->count() > 0)
-                                    {{ $workExperiences->first()->position ?? $workExperiences->first()->company_name ?? '-' }}
+                                    @php
+                                        $jobDesc = $workExperiences->first()->job_description;
+                                        // Extract position from "Position — Jobdesk" format
+                                        $position = $jobDesc ? explode(' — ', $jobDesc)[0] : '-';
+                                    @endphp
+                                    {{ $position }}
                                 @else
                                     {{ $talent->job_preferences ?? '-' }}
                                 @endif
