@@ -13,14 +13,19 @@ class PasswordResetRequestController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'email' => ['required','email','max:255'],
+            'phone' => ['required','string','max:50'],
             'reason' => ['nullable','string','max:1000'],
         ]);
 
-        $user = User::where('email', $data['email'])->first();
+        // try find user by phone stored in user profile
+        $phone = preg_replace('/[^0-9+]/', '', $data['phone']);
+        $user = User::whereHas('profile', function($q) use ($phone) {
+            $q->where('phone_number', $phone)->orWhere('phone_number', ltrim($phone, '+'));
+        })->first();
 
         $pr = PasswordResetRequest::create([
-            'email' => $data['email'],
+            'email' => $user?->email,
+            'phone' => $data['phone'],
             'user_id' => $user?->id,
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),

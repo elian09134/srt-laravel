@@ -5,7 +5,7 @@
         </div>
         <h2 class="text-2xl font-bold text-gray-900">Lupa Password?</h2>
         <p class="mt-2 text-sm text-gray-600">
-            Masukkan email yang terdaftar. Permintaan reset akan dikirim ke administrator untuk ditinjau — jika disetujui, administrator akan mengirimkan password sementara melalui email.
+            Masukkan nomor HP yang terdaftar (contoh: 0812...) — permintaan akan dikirim ke administrator. Jika disetujui, administrator akan menghubungi Anda melalui WhatsApp atau email.
         </p>
     </div>
 
@@ -22,15 +22,15 @@
         <form method="POST" action="{{ route('password.email') }}" class="space-y-5">
         @csrf
 
-        <!-- Email Address -->
+        <!-- Phone Number -->
         <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                <i class="fas fa-envelope text-gray-400 mr-2"></i>Email
+            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                <i class="fas fa-phone text-gray-400 mr-2"></i>Nomor HP
             </label>
-            <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
-                   class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all @error('email') border-red-500 @enderror"
-                   placeholder="nama@email.com">
-            @error('email')
+            <input id="phone" type="text" name="phone" value="{{ old('phone') }}" required autofocus
+                   class="block w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all @error('phone') border-red-500 @enderror"
+                   placeholder="081234567890">
+            @error('phone')
                 <p class="mt-2 text-sm text-red-600 flex items-center">
                     <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
                 </p>

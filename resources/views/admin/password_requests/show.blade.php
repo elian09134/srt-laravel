@@ -12,7 +12,8 @@
     @endif
 
     <div class="bg-white p-4 rounded-lg shadow-sm mb-4">
-        <p><strong>Email:</strong> {{ $request->email }}</p>
+        <p><strong>Email:</strong> {{ $request->email ?? '-' }}</p>
+        <p><strong>Phone:</strong> {{ $request->phone ?? $request->user?->profile?->phone_number ?? '-' }}</p>
         <p><strong>User ID:</strong> {{ $request->user_id ?? '-' }}</p>
         <p><strong>Status:</strong> {{ ucfirst($request->status) }}</p>
         <p><strong>IP:</strong> {{ $request->ip_address }}</p>
@@ -40,10 +41,30 @@
         <p><strong>Catatan admin:</strong> {{ $request->admin_note ?? '-' }}</p>
         <p><strong>Temporary password:</strong> {{ $request->temporary_password ?? '-' }}</p>
         @if($request->temporary_password)
-            <form method="POST" action="{{ route('admin.password_requests.resend', $request) }}" class="mt-3">
-                @csrf
-                <button class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Kirim Ulang Password ke Email</button>
-            </form>
+            <div class="flex items-start gap-3 mt-3">
+                <form method="POST" action="{{ route('admin.password_requests.resend', $request) }}">
+                    @csrf
+                    <button class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Kirim Ulang Password ke Email</button>
+                </form>
+
+                @php
+                    $rawPhone = $request->phone ?? $request->user?->profile?->phone_number ?? null;
+                    $phoneDigits = $rawPhone ? preg_replace('/[^0-9]/', '', $rawPhone) : null;
+                    if ($phoneDigits && str_starts_with($phoneDigits, '0')) {
+                        $waNumber = '62' . ltrim($phoneDigits, '0');
+                    } else {
+                        $waNumber = $phoneDigits;
+                    }
+                    $waMessage = $request->temporary_password ? urlencode("Password sementara Anda: {$request->temporary_password}") : '';
+                    $waLink = $waNumber ? "https://wa.me/{$waNumber}?text={$waMessage}" : null;
+                @endphp
+
+                @if($waLink)
+                    <a href="{{ $waLink }}" target="_blank" class="inline-flex items-center px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                        <i class="fab fa-whatsapp mr-2"></i> Kirim via WhatsApp
+                    </a>
+                @endif
+            </div>
         @endif
     </div>
     @endif
