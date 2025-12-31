@@ -9,6 +9,7 @@ use App\Mail\AdminGeneratedPassword;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 class PasswordRequestController extends Controller
 {
@@ -41,7 +42,7 @@ class PasswordRequestController extends Controller
         $user->save();
 
         $passwordRequest->status = 'approved';
-        $passwordRequest->admin_id = auth()->id();
+        $passwordRequest->admin_id = Auth::id();
         $passwordRequest->admin_note = $request->input('admin_note');
         $passwordRequest->temporary_password = $temp;
         $passwordRequest->processed_at = now();
@@ -60,7 +61,7 @@ class PasswordRequestController extends Controller
         }
 
         $passwordRequest->status = 'rejected';
-        $passwordRequest->admin_id = auth()->id();
+        $passwordRequest->admin_id = Auth::id();
         $passwordRequest->admin_note = $request->input('admin_note');
         $passwordRequest->processed_at = now();
         $passwordRequest->save();

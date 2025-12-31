@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Auth;
 use App\Mail\AdminGeneratedPasswordMail;
 
 class PasswordResetRequestsController extends Controller
@@ -46,7 +47,7 @@ class PasswordResetRequestsController extends Controller
         $user->save();
 
         $passwordRequest->status = 'approved';
-        $passwordRequest->admin_id = auth()->id();
+        $passwordRequest->admin_id = Auth::id();
         $passwordRequest->processed_at = now();
         $passwordRequest->save();
 
@@ -59,7 +60,7 @@ class PasswordResetRequestsController extends Controller
     public function reject(Request $request, PasswordResetRequest $passwordRequest)
     {
         $passwordRequest->status = 'rejected';
-        $passwordRequest->admin_id = auth()->id();
+        $passwordRequest->admin_id = Auth::id();
         $passwordRequest->admin_note = $request->input('admin_note');
         $passwordRequest->processed_at = now();
         $passwordRequest->save();
