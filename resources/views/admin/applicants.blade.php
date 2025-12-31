@@ -47,6 +47,7 @@
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">Nama Pelamar</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">Posisi</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">Status</th>
+                    <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">Join Date</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600">Aksi Cepat</th>
                     <th class="px-6 py-3 text-left text-sm font-semibold text-gray-600"></th>
                 </tr>
@@ -71,6 +72,11 @@
                                     @endforeach
                                 </select>
                             </form>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            {{ $app->join_date ? 
+                                
+                                \\Carbon\\Carbon::parse($app->join_date)->format('d M Y') : '-' }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                              <form action="{{ route('admin.applicants.addToTalentPool', $app) }}" method="POST">
