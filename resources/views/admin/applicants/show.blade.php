@@ -206,10 +206,12 @@
                             <button type="submit" class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">Offering Letter</button>
                         </form>
 
-                        <form action="{{ route('admin.applicants.updateStatus', $application) }}" method="POST">
+                        <form id="mark-accepted-form" action="{{ route('admin.applicants.updateStatus', $application) }}" method="POST" class="inline-flex items-center">
                             @csrf
                             @method('PATCH')
                             <input type="hidden" name="status" value="Diterima">
+                            <label for="join_date" class="sr-only">Tanggal Mulai</label>
+                            <input id="join_date" name="join_date" type="date" class="mr-2 px-3 py-2 border rounded" required />
                             <button type="submit" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Tandai Diterima</button>
                         </form>
 

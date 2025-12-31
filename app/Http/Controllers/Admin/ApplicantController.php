@@ -79,13 +79,19 @@ class ApplicantController extends Controller
 
     public function updateStatus(Request $request, Application $application)
     {
-        $request->validate(['status' => 'required|string']);
-        $application->update(['status' => $request->status]);
+        $request->validate(['status' => 'required|string', 'join_date' => 'nullable|date']);
+
+        $data = ['status' => $request->status];
+        if ($request->status === 'Diterima' && $request->filled('join_date')) {
+            $data['join_date'] = $request->join_date;
+        }
+
+        $application->update($data);
         // create history entry
         \App\Models\ApplicationStatusHistory::create([
             'application_id' => $application->id,
             'status' => $request->status,
-            'note' => null,
+            'note' => ($request->status === 'Diterima' && $request->filled('join_date')) ? 'Join date: ' . $request->join_date : null,
             'changed_by' => Auth::id(),
         ]);
 

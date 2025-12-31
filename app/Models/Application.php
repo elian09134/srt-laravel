@@ -10,6 +10,7 @@ class Application extends Model
       'user_id',
       'job_id',
       'status',
+      'join_date',
       'cover_letter',
       'applicant_name',
       'applicant_email',
