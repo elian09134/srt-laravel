@@ -74,6 +74,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/password-requests/{passwordRequest}', [App\Http\Controllers\Admin\PasswordResetRequestsController::class, 'show'])->name('admin.password_requests.show');
     Route::post('/password-requests/{passwordRequest}/approve', [App\Http\Controllers\Admin\PasswordResetRequestsController::class, 'approve'])->name('admin.password_requests.approve');
     Route::post('/password-requests/{passwordRequest}/reject', [App\Http\Controllers\Admin\PasswordResetRequestsController::class, 'reject'])->name('admin.password_requests.reject');
+    Route::post('/password-requests/{passwordRequest}/resend', [App\Http\Controllers\Admin\PasswordResetRequestsController::class, 'resend'])->name('admin.password_requests.resend');
         // Employee management routes removed — site is recruitment-only
         // Route::resource('employees', App\Http\Controllers\Admin\EmployeeController::class)->only(['index', 'show'])->names('admin.employees');
 });

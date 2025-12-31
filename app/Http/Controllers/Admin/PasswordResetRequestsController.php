@@ -50,6 +50,8 @@ class PasswordResetRequestsController extends Controller
 
         $passwordRequest->status = 'approved';
         $passwordRequest->admin_id = Auth::id();
+        $passwordRequest->admin_note = $request->input('admin_note');
+        $passwordRequest->temporary_password = $temp;
         $passwordRequest->processed_at = now();
         $passwordRequest->save();
 
@@ -74,5 +76,25 @@ class PasswordResetRequestsController extends Controller
         // optional: notify user about rejection
 
         return redirect()->route('admin.password_requests.index')->with('status', 'Permintaan ditolak.');
+    }
+
+    public function resend(Request $request, PasswordResetRequest $passwordRequest)
+    {
+        if (! $passwordRequest->temporary_password) {
+            return back()->withErrors(['missing' => 'Tidak ada password sementara tersimpan untuk permintaan ini.']);
+        }
+
+        $user = User::where('email', $passwordRequest->email)->first();
+        if (! $user) {
+            return back()->withErrors(['missing' => 'User dengan email ini tidak ditemukan.']);
+        }
+
+        try {
+            Mail::to($user->email)->send(new AdminGeneratedPasswordMail($user, $passwordRequest->temporary_password));
+            return back()->with('status', 'Password sementara berhasil dikirim ulang.');
+        } catch (Throwable $e) {
+            Log::error('Failed to resend admin-generated password email', ['error' => $e->getMessage(), 'request_id' => $passwordRequest->id]);
+            return back()->with('warning', 'Gagal mengirim email. Periksa konfigurasi mail.');
+        }
     }
 }
