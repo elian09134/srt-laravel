@@ -38,6 +38,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // FPTK (Form Permintaan Tenaga Kerja) landing for operasional users
+    Route::get('/fptk', [App\Http\Controllers\FptkController::class, 'index'])->name('fptk.index');
+    Route::post('/fptk', [App\Http\Controllers\FptkController::class, 'store'])->name('fptk.store');
     // User application history
     Route::get('/applications', [App\Http\Controllers\User\ApplicationController::class, 'index'])->name('applications.index');
     Route::get('/applications/{application}', [App\Http\Controllers\User\ApplicationController::class, 'show'])->name('applications.show');
@@ -85,8 +88,12 @@ require __DIR__.'/auth.php';
 
 // Rute untuk halaman dashboard - redirect berdasarkan role user
 Route::get('/dashboard', function () {
-    if (request()->user()?->role === 'admin') {
+    $role = request()->user()?->role;
+    if ($role === 'admin') {
         return redirect('/admin');
+    }
+    if ($role === 'operasional') {
+        return redirect('/fptk');
     }
     return redirect('/');
 })->middleware(['auth', 'verified'])->name('dashboard');
