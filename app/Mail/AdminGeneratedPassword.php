@@ -26,6 +26,7 @@ class AdminGeneratedPassword extends Mailable
         return $this->subject('Password Sementara - TERANG By SRT')
                     ->view('emails.admin_generated_password')
                     ->with([
+                        'user' => $this->user,
                         'name' => $this->user->name,
                         'temporaryPassword' => $this->temporaryPassword,
                     ]);
