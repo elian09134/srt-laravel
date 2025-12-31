@@ -74,9 +74,7 @@
                             </form>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                            {{ $app->join_date ? 
-                                
-                                \\Carbon\\Carbon::parse($app->join_date)->format('d M Y') : '-' }}
+                            {{ $app->join_date ? \Carbon\Carbon::parse($app->join_date)->format('d M Y') : '-' }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                              <form action="{{ route('admin.applicants.addToTalentPool', $app) }}" method="POST">
