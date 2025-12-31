@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schema;
 use App\Mail\AdminGeneratedPasswordMail;
 
 class PasswordResetRequestsController extends Controller
@@ -39,7 +40,7 @@ class PasswordResetRequestsController extends Controller
 
         $user->password = Hash::make($temp);
         // optional: add must_change_password flag if exists
-        if (schema_has_column('users', 'must_change_password')) {
+        if (Schema::hasColumn('users', 'must_change_password')) {
             $user->must_change_password = true;
         }
         $user->save();
