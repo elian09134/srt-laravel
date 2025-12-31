@@ -44,6 +44,9 @@
                 </div>
             </div>
             <nav class="mt-4">
+                @php
+                    $pendingPasswordRequests = \App\Models\PasswordResetRequest::where('status', 'pending')->count();
+                @endphp
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center px-6 py-3.5 {{ request()->routeIs('admin.dashboard') ? 'bg-blue-600 text-white border-l-4 border-blue-400' : 'text-gray-400 hover:bg-gray-700/50' }} hover:text-white transition-all duration-200">
                     <i class="fas fa-tachometer-alt mr-3 w-5"></i> <span class="font-medium">Dashboard</span>
                 </a>
@@ -64,7 +67,11 @@
                 </a>
 
                 <a href="{{ route('admin.password_requests.index') }}" class="flex items-center px-6 py-3.5 {{ request()->routeIs('admin.password_requests.*') ? 'bg-blue-600 text-white border-l-4 border-blue-400' : 'text-gray-400 hover:bg-gray-700/50' }} hover:text-white transition-all duration-200">
-                    <i class="fas fa-key mr-3 w-5"></i> <span class="font-medium">Permintaan Reset Password</span>
+                    <i class="fas fa-key mr-3 w-5"></i>
+                    <span class="font-medium">Permintaan Reset Password</span>
+                    @if($pendingPasswordRequests > 0)
+                        <span class="ml-auto inline-flex items-center justify-center px-2 py-0.5 text-xs font-semibold bg-red-600 text-white rounded-full">{{ $pendingPasswordRequests }}</span>
+                    @endif
                 </a>
 
                 <!-- Employee invitation feature removed: recruitment-only site -->
