@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 use App\Mail\AdminGeneratedPasswordMail;
 
 class PasswordResetRequestsController extends Controller
@@ -51,10 +53,14 @@ class PasswordResetRequestsController extends Controller
         $passwordRequest->processed_at = now();
         $passwordRequest->save();
 
-        // send email to user with temp password
-        Mail::to($user->email)->send(new AdminGeneratedPasswordMail($user, $temp));
-
-        return redirect()->route('admin.password_requests.index')->with('status', 'Permintaan disetujui dan password dikirim.');
+        // send email to user with temp password — catch mail errors to avoid 500
+        try {
+            Mail::to($user->email)->send(new AdminGeneratedPasswordMail($user, $temp));
+            return redirect()->route('admin.password_requests.index')->with('status', 'Permintaan disetujui dan password dikirim.');
+        } catch (Throwable $e) {
+            Log::error('Failed to send admin-generated password email', ['error' => $e->getMessage(), 'request_id' => $passwordRequest->id]);
+            return redirect()->route('admin.password_requests.index')->with('warning', 'Permintaan disetujui tetapi pengiriman email gagal. Periksa konfigurasi mail.');
+        }
     }
 
     public function reject(Request $request, PasswordResetRequest $passwordRequest)
