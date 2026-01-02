@@ -10,25 +10,94 @@
 
     <form method="POST" action="{{ route('fptk.store') }}" class="space-y-4 bg-white p-4 rounded shadow-sm">
         @csrf
-        <div>
-            <label class="block text-sm font-medium">Posisi yang dibutuhkan</label>
-            <input name="position" class="mt-1 block w-full border rounded p-2" required>
-        </div>
-        <div>
-            <label class="block text-sm font-medium">Lokasi</label>
-            <input name="locations" class="mt-1 block w-full border rounded p-2">
-        </div>
-        <div>
-            <label class="block text-sm font-medium">Jumlah</label>
-            <input name="qty" type="number" min="1" class="mt-1 block w-32 border rounded p-2" required>
-        </div>
-        <div>
-            <label class="block text-sm font-medium">Catatan / Kualifikasi</label>
-            <textarea name="notes" class="mt-1 block w-full border rounded p-2" rows="4"></textarea>
-        </div>
-        <div>
-            <button class="px-4 py-2 bg-blue-600 text-white rounded">Kirim FPTK</button>
-        </div>
+            <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-12">
+                    <label class="block text-sm font-medium">Divisi</label>
+                    <input name="division" class="mt-1 block w-full border rounded p-2">
+                </div>
+
+                <div class="col-span-12">
+                    <label class="block text-sm font-medium">Dasar Permintaan</label>
+                    <div class="mt-1 space-y-1">
+                        <label class="inline-flex items-center"><input type="checkbox" name="dasar_permintaan[]" value="Penggantian (mengundurkan diri/mutasi)" class="mr-2"> Penggantian karyawan yang (MENGUNDURKAN DIRI/MUTASI/KERJA)</label>
+                        <label class="inline-flex items-center"><input type="checkbox" name="dasar_permintaan[]" value="Penggantian SEMENTARA" class="mr-2"> Penggantian SEMENTARA (cuti/tugas belajar, dll)</label>
+                        <label class="inline-flex items-center"><input type="checkbox" name="dasar_permintaan[]" value="Pengembangan perusahaan" class="mr-2"> Pengembangan perusahaan - Restrukturisasi organisasi</label>
+                        <label class="inline-flex items-center"><input type="checkbox" name="dasar_permintaan[]" value="Lain-lain" class="mr-2"> Lain-lain</label>
+                    </div>
+                </div>
+
+                <div class="col-span-6">
+                    <label class="block text-sm font-medium">Posisi yang dibutuhkan</label>
+                    <input name="position" class="mt-1 block w-full border rounded p-2" required>
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium">Jumlah (Pria)</label>
+                    <input name="qty" type="number" min="0" class="mt-1 block w-full border rounded p-2" value="0" required>
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium">Jumlah (Wanita)</label>
+                    <input name="qty_female" type="number" min="0" class="mt-1 block w-full border rounded p-2" value="0">
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-sm font-medium">Tanggal Kebutuhan</label>
+                    <input name="date_needed" type="date" class="mt-1 block w-full border rounded p-2">
+                </div>
+
+                <div class="col-span-6">
+                    <label class="block text-sm font-medium">Status (Masa Percobaan / Kontrak)</label>
+                    <input name="status_type" class="mt-1 block w-full border rounded p-2">
+                </div>
+                <div class="col-span-6">
+                    <label class="block text-sm font-medium">Golongan &amp; Range Gaji</label>
+                    <input name="golongan_gaji" class="mt-1 block w-full border rounded p-2">
+                </div>
+
+                <div class="col-span-6">
+                    <label class="block text-sm font-medium">Penempatan</label>
+                    <input name="penempatan" class="mt-1 block w-full border rounded p-2">
+                </div>
+                <div class="col-span-6">
+                    <label class="block text-sm font-medium">Upah (Rp)</label>
+                    <input name="gaji" class="mt-1 block w-full border rounded p-2">
+                </div>
+
+                <div class="col-span-12">
+                    <h3 class="font-semibold mt-4">Spesifikasi Jabatan</h3>
+                    <div class="grid grid-cols-3 gap-4 mt-2">
+                        <div>
+                            <label class="block text-sm font-medium">Usia</label>
+                            <input name="usia" class="mt-1 block w-full border rounded p-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">Pendidikan Minimal</label>
+                            <input name="pendidikan" class="mt-1 block w-full border rounded p-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">Kualifikasi / Keterampilan Khusus</label>
+                            <input name="keterampilan" class="mt-1 block w-full border rounded p-2">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mt-3">
+                        <div>
+                            <label class="block text-sm font-medium">Pengalaman Kerja Minimal</label>
+                            <input name="pengalaman" class="mt-1 block w-full border rounded p-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium">Keterangan Lain</label>
+                            <input name="notes" class="mt-1 block w-full border rounded p-2">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-span-12">
+                    <label class="block text-sm font-medium">Uraian Tugas dan Tanggung Jawab Utama</label>
+                    <textarea name="uraian" rows="6" class="mt-1 block w-full border rounded p-2"></textarea>
+                </div>
+
+                <div class="col-span-12">
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded">Kirim FPTK</button>
+                </div>
+            </div>
     </form>
     
     <div class="mt-6">

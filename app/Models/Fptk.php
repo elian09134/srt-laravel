@@ -30,4 +30,13 @@ class Fptk extends Model
     {
         return $this->belongsTo(User::class, 'admin_id');
     }
+
+    // decode notes JSON if stored as JSON
+    public function getNotesDecodedAttribute()
+    {
+        $notes = $this->attributes['notes'] ?? null;
+        if (! $notes) return null;
+        $decoded = json_decode($notes, true);
+        return is_array($decoded) ? $decoded : $notes;
+    }
 }
