@@ -9,8 +9,38 @@
         <p><strong>Pengaju:</strong> {{ $fptk->user->name }} ({{ $fptk->user->email }})</p>
         <p><strong>Posisi:</strong> {{ $fptk->position }}</p>
         <p><strong>Lokasi:</strong> {{ $fptk->locations }}</p>
-        <p><strong>Jumlah:</strong> {{ $fptk->qty }}</p>
-        <p><strong>Catatan:</strong><br>{{ $fptk->notes }}</p>
+        <p><strong>Jumlah (Pria/Wanita):</strong> {{ $fptk->qty_male ?? 0 }} / {{ $fptk->qty_female ?? 0 }} (Total: {{ $fptk->qty ?? (($fptk->qty_male ?? 0) + ($fptk->qty_female ?? 0)) }})</p>
+        <p><strong>Divisi:</strong> {{ $fptk->division }}</p>
+        <p><strong>Dasar Permintaan:</strong>
+            @php $das = $fptk->dasar_permintaan_list ?? []; @endphp
+            @if(count($das))
+                <ul class="ml-4 list-disc">
+                @foreach($das as $d)
+                    <li>{{ $d }}</li>
+                @endforeach
+                </ul>
+            @else
+                -
+            @endif
+        </p>
+        <p><strong>Tanggal Kebutuhan:</strong> {{ $fptk->date_needed ? $fptk->date_needed->format('Y-m-d') : '-' }}</p>
+        <p><strong>Golongan / Gaji:</strong> {{ $fptk->golongan_gaji }} / {{ $fptk->gaji ? number_format($fptk->gaji,0,',','.') : '-' }}</p>
+        <p><strong>Penempatan:</strong> {{ $fptk->penempatan }}</p>
+        <p><strong>Pendidikan:</strong> {{ $fptk->pendidikan }}</p>
+        <p><strong>Pengalaman:</strong> {{ $fptk->pengalaman }}</p>
+        <p><strong>Kualifikasi / Keterampilan:</strong>
+            @php $ks = $fptk->keterampilan_list ?? []; @endphp
+            @if(count($ks))
+                <ul class="ml-4 list-disc">
+                @foreach($ks as $k)
+                    <li>{{ $k }}</li>
+                @endforeach
+                </ul>
+            @else
+                -
+            @endif
+        </p>
+        <p><strong>Uraian Tugas:</strong><br>{!! nl2br(e($fptk->uraian ?? '')) !!}</p>
         <p class="mt-2"><strong>Status:</strong> {{ ucfirst($fptk->status) }}</p>
         @if($fptk->admin_note)
             <p><strong>Catatan Admin:</strong><br>{{ $fptk->admin_note }}</p>

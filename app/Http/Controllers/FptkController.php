@@ -27,15 +27,17 @@ class FptkController extends Controller
         $data = $request->validate([
             'position' => 'required|string|max:255',
             'locations' => 'nullable|string|max:255',
-            'qty' => 'required|integer|min:1',
+            'qty' => 'nullable|integer|min:0',
+            'qty_female' => 'nullable|integer|min:0',
             // additional fields saved into notes as JSON
             'division' => 'nullable|string|max:255',
-            'dasar_permintaan' => 'nullable|string|max:1000',
+            'dasar_permintaan' => 'nullable|array',
+            'dasar_permintaan.*' => 'string|max:1000',
             'date_needed' => 'nullable|date',
             'status_type' => 'nullable|string|max:100',
             'golongan_gaji' => 'nullable|string|max:255',
             'penempatan' => 'nullable|string|max:255',
-            'gaji' => 'nullable|string|max:255',
+            'gaji' => 'nullable|numeric',
             'usia' => 'nullable|string|max:255',
             'pendidikan' => 'nullable|string|max:255',
             'keterampilan' => 'nullable|string|max:2000',
@@ -44,29 +46,35 @@ class FptkController extends Controller
             'notes' => 'nullable|string|max:2000',
         ]);
 
-        // pack extra fields into notes as JSON so DB schema doesn't need change
-        $extra = [
+        // normalize dasar_permintaan (array -> json string) and quantities
+        $dasar = null;
+        if (! empty($data['dasar_permintaan'])) {
+            $dasar = json_encode(array_values($data['dasar_permintaan']), JSON_UNESCAPED_UNICODE);
+        }
+
+        $male = isset($data['qty']) ? (int) $data['qty'] : 0;
+        $female = isset($data['qty_female']) ? (int) $data['qty_female'] : 0;
+
+        $fptk = Fptk::create([
+            'user_id' => $user->id,
+            'position' => $data['position'],
+            'locations' => $data['locations'] ?? null,
+            'qty_male' => $male,
+            'qty_female' => $female,
+            'qty' => ($male + $female),
             'division' => $data['division'] ?? null,
-            'dasar_permintaan' => $data['dasar_permintaan'] ?? null,
+            'dasar_permintaan' => $dasar,
             'date_needed' => $data['date_needed'] ?? null,
             'status_type' => $data['status_type'] ?? null,
             'golongan_gaji' => $data['golongan_gaji'] ?? null,
             'penempatan' => $data['penempatan'] ?? null,
-            'gaji' => $data['gaji'] ?? null,
+            'gaji' => isset($data['gaji']) ? (int) $data['gaji'] : null,
             'usia' => $data['usia'] ?? null,
             'pendidikan' => $data['pendidikan'] ?? null,
             'keterampilan' => $data['keterampilan'] ?? null,
             'pengalaman' => $data['pengalaman'] ?? null,
             'uraian' => $data['uraian'] ?? null,
             'notes' => $data['notes'] ?? null,
-        ];
-
-        $fptk = Fptk::create([
-            'user_id' => $user->id,
-            'position' => $data['position'],
-            'locations' => $data['locations'] ?? null,
-            'qty' => $data['qty'],
-            'notes' => json_encode($extra, JSON_UNESCAPED_UNICODE),
             'status' => 'pending',
         ]);
 

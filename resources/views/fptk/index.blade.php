@@ -67,6 +67,26 @@
                         <div>
                             <label class="block text-sm font-medium">Usia</label>
                             <input name="usia" class="mt-1 block w-full border rounded p-2">
+
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function(){
+                        const kinput = document.querySelector('input[name="keterampilan"]');
+                        if(!kinput) return;
+
+                        kinput.addEventListener('paste', function(e){
+                            const paste = (e.clipboardData || window.clipboardData).getData('text');
+                            if(!paste) return;
+                            // If paste contains newlines, convert them to comma-separated values
+                            if(/\r|\n/.test(paste)){
+                                e.preventDefault();
+                                const normalized = paste.replace(/\s*\r?\n\s*/g, ', ').replace(/,+\s*/g, ', ');
+                                const start = kinput.selectionStart || 0;
+                                const end = kinput.selectionEnd || 0;
+                                kinput.value = kinput.value.slice(0,start) + normalized + kinput.value.slice(end);
+                            }
+                        });
+                    });
+                    </script>
                         </div>
                         <div>
                             <label class="block text-sm font-medium">Pendidikan Minimal</label>
@@ -74,7 +94,8 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium">Kualifikasi / Keterampilan Khusus</label>
-                            <input name="keterampilan" class="mt-1 block w-full border rounded p-2">
+                            <input name="keterampilan" placeholder="Contoh: Excel, Analisis Data, Presentasi" class="mt-1 block w-full border rounded p-2">
+                            <p class="mt-1 text-xs text-gray-500">Masukkan tiap kualifikasi sebagai poin, pisahkan dengan koma. Contoh: Excel, Analisis Data, Presentasi</p>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-4 mt-3">
@@ -111,13 +132,34 @@
             <div class="bg-white rounded shadow">
                 <table class="w-full">
                     <thead>
-                        <tr class="text-left"><th class="p-2">ID</th><th class="p-2">Posisi</th><th class="p-2">Jumlah</th><th class="p-2">Status</th><th class="p-2">Tanggal</th></tr>
+                        <tr class="text-left"><th class="p-2">ID</th><th class="p-2">Posisi</th><th class="p-2">Kualifikasi</th><th class="p-2">Jumlah</th><th class="p-2">Status</th><th class="p-2">Tanggal</th></tr>
                     </thead>
                     <tbody>
                         @foreach($subs as $s)
+                        @php
+                            $k = null;
+                            if(is_array($s->notes_decoded ?? null) && isset($s->notes_decoded['keterampilan'])){
+                                $k = $s->notes_decoded['keterampilan'];
+                            } elseif(!empty($s->keterampilan)){
+                                $k = $s->keterampilan;
+                            }
+                            $items = [];
+                            if($k){
+                                $items = array_filter(array_map('trim', explode(',', $k)));
+                            }
+                        @endphp
                         <tr class="border-t">
                             <td class="p-2">{{ $s->id }}</td>
                             <td class="p-2">{{ $s->position }}</td>
+                            <td class="p-2">
+                                @if(count($items))
+                                    @foreach($items as $it)
+                                        <div class="text-sm">- {{ $it }}</div>
+                                    @endforeach
+                                @else
+                                    <div class="text-sm text-gray-500">-</div>
+                                @endif
+                            </td>
                             <td class="p-2">{{ $s->qty }}</td>
                             <td class="p-2">{{ ucfirst($s->status) }}</td>
                             <td class="p-2">{{ $s->created_at->format('Y-m-d H:i') }}</td>
