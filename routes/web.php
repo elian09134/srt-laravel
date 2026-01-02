@@ -92,9 +92,7 @@ Route::get('/dashboard', function () {
     if ($role === 'admin') {
         return redirect('/admin');
     }
-    if ($role === 'operasional') {
-        return redirect('/fptk');
-    }
+    // Operasional redirect ke homepage, bukan /fptk
     return redirect('/');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
