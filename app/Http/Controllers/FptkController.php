@@ -32,6 +32,21 @@ class FptkController extends Controller
         return view('fptk.my-fptk', compact('fptks'));
     }
 
+    public function showDetail(Request $request, Fptk $fptk)
+    {
+        $user = $request->user();
+        if (! $user || $user->role !== 'operasional') {
+            abort(403);
+        }
+
+        // Ensure user can only view their own FPTK
+        if ($fptk->user_id !== $user->id) {
+            abort(403);
+        }
+
+        return view('fptk.detail', compact('fptk'));
+    }
+
     public function store(Request $request)
     {
         $user = $request->user();

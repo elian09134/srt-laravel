@@ -7,7 +7,7 @@
         {{ isset($job) ? 'Edit Lowongan' : 'Tambah Lowongan Baru' }}
     </h1>
 
-    <form action="{{ isset($job) ? route('admin.jobs.update', $job) : route('admin.jobs.store') }}" method="POST" class="bg-white p-8 rounded-lg shadow-md space-y-6">
+    <form action="{{ isset($job) ? route('admin.jobs.update', $job) : route('admin.jobs.store') }}" method="POST" class="bg-white p-8 rounded-lg shadow-md space-y-6" id="jobForm">
         @csrf
         @if(isset($job))
             @method('PUT')
@@ -15,15 +15,19 @@
 
         <div>
             <label for="fptk_id" class="block text-sm font-medium text-gray-700">Link ke FPTK (Opsional)</label>
-            <select name="fptk_id" id="fptk_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+            <select name="fptk_id" id="fptk_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" onchange="fillFromFptk()">
                 <option value="">-- Pilih FPTK (jika ada) --</option>
                 @foreach($fptks ?? [] as $fptk)
-                    <option value="{{ $fptk->id }}" @if(old('fptk_id', $job->fptk_id ?? '') == $fptk->id) selected @endif>
+                    <option value="{{ $fptk->id }}" 
+                        data-position="{{ $fptk->position }}"
+                        data-locations="{{ $fptk->locations }}"
+                        data-notes="{{ htmlspecialchars(json_encode($fptk->notes), ENT_QUOTES, 'UTF-8') }}"
+                        @if(old('fptk_id', $job->fptk_id ?? '') == $fptk->id) selected @endif>
                         FPTK #{{ $fptk->id }} - {{ $fptk->position }} ({{ $fptk->qty }} orang) - {{ $fptk->user->name }}
                     </option>
                 @endforeach
             </select>
-            <p class="mt-1 text-xs text-gray-500">Link job posting ini dengan FPTK yang sudah disetujui agar pengaju dapat melihat jumlah pelamar</p>
+            <p class="mt-1 text-xs text-gray-500">Pilih FPTK untuk otomatis mengisi data job posting dari FPTK</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -75,4 +79,70 @@
             <a href="{{ route('admin.jobs.index') }}" class="ml-4 text-gray-600">Batal</a>
         </div>
     </form>
+
+    <script>
+    function fillFromFptk() {
+        const select = document.getElementById('fptk_id');
+        const selectedOption = select.options[select.selectedIndex];
+        
+        if (!selectedOption.value) {
+            return; // No FPTK selected
+        }
+
+        const position = selectedOption.dataset.position || '';
+        const locations = selectedOption.dataset.locations || '';
+        const notesJson = selectedOption.dataset.notes || '{}';
+        
+        let notes = {};
+        try {
+            notes = JSON.parse(notesJson);
+        } catch (e) {
+            console.error('Failed to parse FPTK notes:', e);
+            notes = {};
+        }
+
+        // Auto-fill form fields from FPTK data
+        document.getElementById('title').value = position;
+        document.getElementById('location').value = locations || '';
+        
+        // Set salary range if available
+        if (notes.gaji) {
+            const gaji = parseInt(notes.gaji);
+            if (!isNaN(gaji)) {
+                document.getElementById('salary_range').value = 'Rp ' + gaji.toLocaleString('id-ID');
+            }
+        }
+
+        // Build job description from FPTK uraian
+        if (notes.uraian) {
+            document.getElementById('jobdesk').value = notes.uraian;
+        }
+
+        // Build requirements from FPTK data
+        let requirements = [];
+        if (notes.pendidikan) requirements.push('Pendidikan: ' + notes.pendidikan);
+        if (notes.usia) requirements.push('Usia: ' + notes.usia);
+        if (notes.pengalaman) requirements.push('Pengalaman: ' + notes.pengalaman);
+        if (notes.keterampilan) {
+            const skills = notes.keterampilan.split(/[,\n]+/).map(s => s.trim()).filter(s => s);
+            skills.forEach(skill => requirements.push(skill));
+        }
+        
+        if (requirements.length > 0) {
+            document.getElementById('requirement').value = requirements.join('\n');
+        }
+
+        // Show notification
+        alert('Data dari FPTK berhasil diisi! Silakan sesuaikan detail yang diperlukan.');
+    }
+
+    // Auto-fill if FPTK is pre-selected (edit mode)
+    document.addEventListener('DOMContentLoaded', function() {
+        const fptkSelect = document.getElementById('fptk_id');
+        if (fptkSelect.value) {
+            // Don't auto-fill on edit mode to prevent overwriting existing data
+            // User can manually trigger by changing FPTK selection
+        }
+    });
+    </script>
 @endsection
