@@ -342,7 +342,7 @@
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
     <script>
     let signaturePad;
-    const fptkForm = document.querySelector('form[action="{{ route('fptk.store') }}"]');
+    const fptkForm = document.querySelector('form[action="{{ route("fptk.store") }}"]');
 
     function openSignatureModal() {
         // Validate form first
