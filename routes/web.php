@@ -78,6 +78,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/password-requests/{passwordRequest}/approve', [App\Http\Controllers\Admin\PasswordResetRequestsController::class, 'approve'])->name('admin.password_requests.approve');
     Route::post('/password-requests/{passwordRequest}/reject', [App\Http\Controllers\Admin\PasswordResetRequestsController::class, 'reject'])->name('admin.password_requests.reject');
     Route::post('/password-requests/{passwordRequest}/resend', [App\Http\Controllers\Admin\PasswordResetRequestsController::class, 'resend'])->name('admin.password_requests.resend');
+    // FPTK management for admin
+    Route::get('/fptk', [App\Http\Controllers\Admin\FptkController::class, 'index'])->name('admin.fptk.index');
+    Route::get('/fptk/{fptk}', [App\Http\Controllers\Admin\FptkController::class, 'show'])->name('admin.fptk.show');
+    Route::post('/fptk/{fptk}/approve', [App\Http\Controllers\Admin\FptkController::class, 'approve'])->name('admin.fptk.approve');
+    Route::post('/fptk/{fptk}/reject', [App\Http\Controllers\Admin\FptkController::class, 'reject'])->name('admin.fptk.reject');
         // Employee management routes removed — site is recruitment-only
         // Route::resource('employees', App\Http\Controllers\Admin\EmployeeController::class)->only(['index', 'show'])->names('admin.employees');
 });

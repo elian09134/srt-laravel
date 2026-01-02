@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Fptk;
 
 class FptkController extends Controller
 {
@@ -30,8 +31,16 @@ class FptkController extends Controller
             'notes' => 'nullable|string|max:2000',
         ]);
 
-        // TODO: persist FPTK to DB (new model/migration) or send notification to admin.
+        // Persist to DB
+        $fptk = Fptk::create([
+            'user_id' => $user->id,
+            'position' => $data['position'],
+            'locations' => $data['locations'] ?? null,
+            'qty' => $data['qty'],
+            'notes' => $data['notes'] ?? null,
+            'status' => 'pending',
+        ]);
 
-        return back()->with('status', 'FPTK berhasil dikirim ke tim HR.');
+        return back()->with('status', 'FPTK berhasil dikirim ke tim HR. (Status: pending)');
     }
 }

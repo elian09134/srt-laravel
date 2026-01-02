@@ -30,5 +30,34 @@
             <button class="px-4 py-2 bg-blue-600 text-white rounded">Kirim FPTK</button>
         </div>
     </form>
+    
+    <div class="mt-6">
+        <h2 class="text-lg font-semibold mb-2">Riwayat Pengajuan Saya</h2>
+        @php
+            $subs = \App\Models\Fptk::where('user_id', auth()->id())->orderBy('created_at', 'desc')->get();
+        @endphp
+        @if($subs->isEmpty())
+            <div class="p-3 bg-gray-50 border">Belum ada pengajuan.</div>
+        @else
+            <div class="bg-white rounded shadow">
+                <table class="w-full">
+                    <thead>
+                        <tr class="text-left"><th class="p-2">ID</th><th class="p-2">Posisi</th><th class="p-2">Jumlah</th><th class="p-2">Status</th><th class="p-2">Tanggal</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach($subs as $s)
+                        <tr class="border-t">
+                            <td class="p-2">{{ $s->id }}</td>
+                            <td class="p-2">{{ $s->position }}</td>
+                            <td class="p-2">{{ $s->qty }}</td>
+                            <td class="p-2">{{ ucfirst($s->status) }}</td>
+                            <td class="p-2">{{ $s->created_at->format('Y-m-d H:i') }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+    </div>
 </div>
 @endsection
