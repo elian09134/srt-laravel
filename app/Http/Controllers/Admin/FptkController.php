@@ -41,12 +41,23 @@ class FptkController extends Controller
         return redirect()->route('admin.fptk.index')->with('status', 'FPTK rejected');
     }
 
-    public function exportPdf(Fptk $fptk)
+    public function exportPdf(Request $request, Fptk $fptk)
     {
+        $request->validate([
+            'signer_name' => 'required|string|max:255',
+            'signature' => 'required|string'
+        ]);
+        
         $notes = is_array($fptk->notes) ? $fptk->notes : (is_string($fptk->notes) ? json_decode($fptk->notes, true) : []);
         $notes = $notes ?: [];
         
-        $pdf = Pdf::loadView('admin.fptk.pdf', compact('fptk', 'notes'));
+        $signatureData = [
+            'name' => $request->signer_name,
+            'signature' => $request->signature,
+            'date' => now()->format('d F Y')
+        ];
+        
+        $pdf = Pdf::loadView('admin.fptk.pdf', compact('fptk', 'notes', 'signatureData'));
         $pdf->setPaper('a4', 'portrait');
         
         $filename = 'FPTK-' . $fptk->id . '-' . str_replace(' ', '-', $fptk->position) . '.pdf';

@@ -26,12 +26,12 @@
             <p class="text-gray-500 ml-9">Informasi lengkap permintaan tenaga kerja</p>
         </div>
         <div class="flex items-center space-x-3">
-            <a href="{{ route('admin.fptk.pdf', $fptk->id) }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-blue font-medium rounded-lg shadow-md hover:shadow-lg transition transform hover:scale-105">
+            <button onclick="openSignatureModal()" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition transform hover:scale-105">
                 <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd"/>
                 </svg>
                 Export PDF
-            </a>
+            </button>
             @if($fptk->status === 'pending')
                 <span class="px-4 py-2 inline-flex items-center text-sm font-semibold rounded-full bg-yellow-100 text-yellow-800">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
@@ -275,4 +275,96 @@
         </div>
     </div>
 </div>
+
+<!-- Signature Modal -->
+<div id="signatureModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4">
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-xl p-4">
+            <h3 class="text-xl font-bold text-white">Tanda Tangan Digital</h3>
+            <p class="text-blue-100 text-sm mt-1">Bubuhkan tanda tangan Anda sebelum export PDF</p>
+        </div>
+        <div class="p-6">
+            <form id="signatureForm" method="POST" action="{{ route('admin.fptk.pdf', $fptk->id) }}" target="_blank">
+                @csrf
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
+                    <input type="text" name="signer_name" value="{{ Auth::user()->name }}" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tanda Tangan</label>
+                    <div class="border-2 border-gray-300 rounded-lg overflow-hidden">
+                        <canvas id="signaturePad" width="400" height="200" class="w-full touch-none" style="cursor: crosshair;"></canvas>
+                    </div>
+                    <input type="hidden" name="signature" id="signatureData">
+                    <div class="flex justify-between mt-2">
+                        <button type="button" onclick="clearSignature()" class="text-sm text-gray-600 hover:text-gray-800">
+                            <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                            </svg>
+                            Bersihkan
+                        </button>
+                        <span class="text-xs text-gray-500">Gambar tanda tangan di area kotak</span>
+                    </div>
+                </div>
+                <div class="flex space-x-3">
+                    <button type="button" onclick="closeSignatureModal()" class="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg transition">
+                        Batal
+                    </button>
+                    <button type="submit" class="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg transition">
+                        Export PDF
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+<script>
+let signaturePad;
+
+function openSignatureModal() {
+    const modal = document.getElementById('signatureModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    if (!signaturePad) {
+        const canvas = document.getElementById('signaturePad');
+        signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgb(255, 255, 255)',
+            penColor: 'rgb(0, 0, 0)'
+        });
+    }
+}
+
+function closeSignatureModal() {
+    const modal = document.getElementById('signatureModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+function clearSignature() {
+    if (signaturePad) {
+        signaturePad.clear();
+    }
+}
+
+document.getElementById('signatureForm').addEventListener('submit', function(e) {
+    if (signaturePad.isEmpty()) {
+        e.preventDefault();
+        alert('Silakan bubuhkan tanda tangan Anda terlebih dahulu!');
+        return false;
+    }
+    
+    const signatureData = signaturePad.toDataURL('image/png');
+    document.getElementById('signatureData').value = signatureData;
+});
+
+// Close modal when clicking outside
+document.getElementById('signatureModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeSignatureModal();
+    }
+});
+</script>
 @endsection

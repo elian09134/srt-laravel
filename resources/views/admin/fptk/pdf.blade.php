@@ -304,6 +304,78 @@
     </div>
     @endif
 
+    <!-- Signature Section -->
+    <div class="section" style="margin-top: 30px; page-break-inside: avoid;">
+        <div class="section-title">PERSETUJUAN</div>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+            <thead>
+                <tr style="background: #f3f4f6;">
+                    <th style="border: 1px solid #ddd; padding: 8px; font-size: 10pt; text-align: center; width: 25%;">DIMINTA Oleh</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; font-size: 10pt; text-align: center; width: 25%;" colspan="2">Disetujui/Ditolak oleh</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; font-size: 10pt; text-align: center; width: 25%;">Diterima Oleh</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <!-- Diminta Oleh (Operasional) -->
+                    <td style="border: 1px solid #ddd; padding: 10px; vertical-align: top; height: 120px;">
+                        @if(isset($signatureData))
+                        <div style="text-align: center;">
+                            <img src="{{ $signatureData['signature'] }}" style="max-width: 150px; max-height: 60px; display: block; margin: 0 auto;">
+                            <div style="margin-top: 5px; padding-top: 5px; border-top: 1px solid #333; font-size: 9pt;">
+                                <strong>{{ $signatureData['name'] }}</strong><br>
+                                <span style="font-size: 8pt; color: #666;">Supervisor Divisi</span>
+                            </div>
+                        </div>
+                        @else
+                        <div style="text-align: center; color: #999; font-size: 9pt; padding-top: 40px;">
+                            Belum ditandatangani
+                        </div>
+                        @endif
+                    </td>
+                    
+                    <!-- Manager Divisi -->
+                    <td style="border: 1px solid #ddd; padding: 10px; vertical-align: bottom; text-align: center; height: 120px;">
+                        <div style="margin-top: 80px; padding-top: 5px; border-top: 1px solid #333; font-size: 9pt;">
+                            <strong>________________</strong><br>
+                            <span style="font-size: 8pt; color: #666;">Manager Divisi</span>
+                        </div>
+                    </td>
+                    
+                    <!-- Direktur -->
+                    <td style="border: 1px solid #ddd; padding: 10px; vertical-align: bottom; text-align: center; height: 120px;">
+                        <div style="margin-top: 80px; padding-top: 5px; border-top: 1px solid #333; font-size: 9pt;">
+                            <strong>________________</strong><br>
+                            <span style="font-size: 8pt; color: #666;">Direktur</span>
+                        </div>
+                    </td>
+                    
+                    <!-- HR Manager -->
+                    <td style="border: 1px solid #ddd; padding: 10px; vertical-align: bottom; text-align: center; height: 120px;">
+                        <div style="margin-top: 80px; padding-top: 5px; border-top: 1px solid #333; font-size: 9pt;">
+                            <strong>________________</strong><br>
+                            <span style="font-size: 8pt; color: #666;">HR Manager</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr style="background: #f9fafb;">
+                    <td style="border: 1px solid #ddd; padding: 5px; text-align: center; font-size: 8pt;">
+                        Tanggal: <strong>{{ $signatureData['date'] ?? '___________' }}</strong>
+                    </td>
+                    <td style="border: 1px solid #ddd; padding: 5px; text-align: center; font-size: 8pt;">
+                        Tanggal: ___________
+                    </td>
+                    <td style="border: 1px solid #ddd; padding: 5px; text-align: center; font-size: 8pt;">
+                        Tanggal: ___________
+                    </td>
+                    <td style="border: 1px solid #ddd; padding: 5px; text-align: center; font-size: 8pt;">
+                        Tanggal: ___________
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <div class="footer">
         Dicetak pada {{ now()->format('d F Y, H:i') }} WIB
     </div>
