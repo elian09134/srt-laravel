@@ -46,35 +46,33 @@ class FptkController extends Controller
             'notes' => 'nullable|string|max:2000',
         ]);
 
-        // normalize dasar_permintaan (array -> json string) and quantities
-        $dasar = null;
-        if (! empty($data['dasar_permintaan'])) {
-            $dasar = json_encode(array_values($data['dasar_permintaan']), JSON_UNESCAPED_UNICODE);
-        }
-
+        // Pack all extra fields into notes JSON temporarily until ALTER TABLE is run
         $male = isset($data['qty']) ? (int) $data['qty'] : 0;
         $female = isset($data['qty_female']) ? (int) $data['qty_female'] : 0;
-
-        $fptk = Fptk::create([
-            'user_id' => $user->id,
-            'position' => $data['position'],
-            'locations' => $data['locations'] ?? null,
-            'qty_male' => $male,
-            'qty_female' => $female,
-            'qty' => ($male + $female),
+        
+        $extra = [
             'division' => $data['division'] ?? null,
-            'dasar_permintaan' => $dasar,
+            'dasar_permintaan' => $data['dasar_permintaan'] ?? null,
             'date_needed' => $data['date_needed'] ?? null,
             'status_type' => $data['status_type'] ?? null,
             'golongan_gaji' => $data['golongan_gaji'] ?? null,
             'penempatan' => $data['penempatan'] ?? null,
-            'gaji' => isset($data['gaji']) ? (int) $data['gaji'] : null,
+            'gaji' => $data['gaji'] ?? null,
             'usia' => $data['usia'] ?? null,
             'pendidikan' => $data['pendidikan'] ?? null,
             'keterampilan' => $data['keterampilan'] ?? null,
             'pengalaman' => $data['pengalaman'] ?? null,
             'uraian' => $data['uraian'] ?? null,
-            'notes' => $data['notes'] ?? null,
+            'qty_male' => $male,
+            'qty_female' => $female,
+            'notes_text' => $data['notes'] ?? null,
+        ];
+
+        $fptk = Fptk::create([
+            'user_id' => $user->id,
+            'position' => $data['position'],
+            'locations' => $data['locations'] ?? null,
+            'qty' => ($male + $female),
             'status' => 'pending',
         ]);
 

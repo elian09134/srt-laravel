@@ -29,7 +29,6 @@ class Fptk extends Model
         'keterampilan',
         'pengalaman',
         'uraian',
-        'notes',
         'status',
         'admin_id',
         'admin_note',
