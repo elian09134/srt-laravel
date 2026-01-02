@@ -105,12 +105,24 @@
         document.getElementById('title').value = position;
         document.getElementById('location').value = locations || '';
         
-        // Set salary range if available
+        // Set salary range if available - check multiple possible formats
         if (notes.gaji) {
-            const gaji = parseInt(notes.gaji);
-            if (!isNaN(gaji)) {
-                document.getElementById('salary_range').value = 'Rp ' + gaji.toLocaleString('id-ID');
+            const gajiValue = notes.gaji;
+            let formattedGaji = '';
+            
+            // If it's already a number or string number
+            if (!isNaN(gajiValue)) {
+                const gaji = parseInt(gajiValue);
+                formattedGaji = 'Rp ' + gaji.toLocaleString('id-ID');
+            } else {
+                // If it's already formatted, use as is
+                formattedGaji = gajiValue;
             }
+            
+            document.getElementById('salary_range').value = formattedGaji;
+        } else if (notes.golongan_gaji) {
+            // Fallback to golongan_gaji if gaji not available
+            document.getElementById('salary_range').value = notes.golongan_gaji;
         }
 
         // Build job description from FPTK uraian
