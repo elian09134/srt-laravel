@@ -66,6 +66,16 @@
                     <i class="fas fa-user-circle mr-3 w-5"></i> <span class="font-medium">Talent Pool</span>
                 </a>
 
+                @php
+                    $pendingFptk = \App\Models\Fptk::where('status','pending')->count();
+                @endphp
+                <a href="{{ route('admin.fptk.index') }}" class="flex items-center px-6 py-3.5 {{ request()->routeIs('admin.fptk.*') ? 'bg-blue-600 text-white border-l-4 border-blue-400' : 'text-gray-400 hover:bg-gray-700/50' }} hover:text-white transition-all duration-200">
+                    <i class="fas fa-file-alt mr-3 w-5"></i> <span class="font-medium">Manajemen FPTK</span>
+                    @if($pendingFptk > 0)
+                        <span class="ml-auto inline-flex items-center justify-center px-2 py-0.5 text-xs font-semibold bg-red-600 text-white rounded-full">{{ $pendingFptk }}</span>
+                    @endif
+                </a>
+
                 <a href="{{ route('admin.password_requests.index') }}" class="flex items-center px-6 py-3.5 {{ request()->routeIs('admin.password_requests.*') ? 'bg-blue-600 text-white border-l-4 border-blue-400' : 'text-gray-400 hover:bg-gray-700/50' }} hover:text-white transition-all duration-200">
                     <i class="fas fa-key mr-3 w-5"></i>
                     <span class="font-medium">Permintaan Reset Password</span>
