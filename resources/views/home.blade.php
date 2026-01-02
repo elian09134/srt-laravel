@@ -149,11 +149,11 @@
                         <div class="space-y-6">
                             <div>
                                 <h3 class="text-2xl font-bold text-gray-800">{{ $content['about_us']['history_title'] ?? 'Sejarah Singkat' }}</h3>
-                                <p class="mt-2 text-gray-600">{{ $content['about_us']['history_text'] ?? 'Teks default.' }}</p>
+                                <p class="text-justify mt-2 text-gray-600">{{ $content['about_us']['history_text'] ?? 'Teks default.' }}</p>
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold text-gray-800">{{ $content['about_us']['vision_title'] ?? 'Visi' }}</h3>
-                                <p class="mt-2 text-gray-600">{{ $content['about_us']['vision_text'] ?? 'Teks default.' }}</p>
+                                <p class="text-justify mt-2 text-gray-600">{{ $content['about_us']['vision_text'] ?? 'Teks default.' }}</p>
                             </div>
                             <div>
                                 <h3 class="text-2xl font-bold text-gray-800">{{ $content['about_us']['mission_title'] ?? 'Misi' }}</h3>
