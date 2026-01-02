@@ -8,6 +8,17 @@
         <div class="mb-4 p-3 bg-green-50 border border-green-200 text-green-800">{{ session('status') }}</div>
     @endif
 
+    @if($errors->any())
+        <div class="mb-4 p-3 bg-red-50 border border-red-200 text-red-800">
+            <strong>Ada masalah saat menyimpan:</strong>
+            <ul class="mt-2 list-disc ml-5">
+                @foreach($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('fptk.store') }}" class="space-y-4 bg-white p-4 rounded shadow-sm">
         @csrf
             <div class="grid grid-cols-12 gap-4">
