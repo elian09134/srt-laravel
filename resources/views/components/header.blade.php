@@ -36,7 +36,7 @@
                     <a href="{{ route('admin.dashboard') }}" class="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-700 rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 hover:shadow-lg">Admin Panel</a>
                 @elseif(auth()->user()->role == 'operasional')
                     <!-- Tampilan jika operasional login -->
-                    <a href="{{ route('fptk.index') }}" class="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-yellow-600 to-yellow-700 rounded-xl hover:from-yellow-700 hover:to-yellow-800 transition-all duration-300 hover:shadow-lg">Buat FPTK</a>
+                    <a href="{{ route('fptk.index') }}" class="px-5 py-2.5 text-sm font-semibold text-blue bg-gradient-to-r from-yellow-600 to-yellow-700 rounded-xl hover:from-yellow-700 hover:to-yellow-800 transition-all duration-300 hover:shadow-lg">Buat FPTK</a>
                 @else
                     <!-- Tampilan jika user biasa login -->
                     <a href="/profile" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Profil Saya</a>
