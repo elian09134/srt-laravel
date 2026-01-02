@@ -179,7 +179,7 @@
         </div>
 
         <div class="bg-gray-50 px-6 py-4 flex justify-end border-t border-gray-200">
-            <button type="submit" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition hover:scale-105 shadow-md">
+            <button type="button" onclick="openSignatureModal()" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition hover:scale-105 shadow-md">
                 <span class="flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/></svg>
                     Kirim Permohonan FPTK
@@ -297,6 +297,115 @@
                 kinput.value = kinput.value.slice(0,start) + normalized + kinput.value.slice(end);
             }
         });
+    });
+    </script>
+
+    <!-- Signature Modal -->
+    <div id="signatureModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-xl p-4">
+                <h3 class="text-xl font-bold text-white">Tanda Tangan Digital</h3>
+                <p class="text-blue-100 text-sm mt-1">Bubuhkan tanda tangan Anda untuk mengajukan FPTK</p>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
+                    <input type="text" id="signerName" value="{{ Auth::user()->name }}" readonly class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-50">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tanda Tangan</label>
+                    <div class="border-2 border-gray-300 rounded-lg overflow-hidden">
+                        <canvas id="signaturePad" width="400" height="200" class="w-full touch-none" style="cursor: crosshair;"></canvas>
+                    </div>
+                    <div class="flex justify-between mt-2">
+                        <button type="button" onclick="clearSignature()" class="text-sm text-gray-600 hover:text-gray-800">
+                            <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                            </svg>
+                            Bersihkan
+                        </button>
+                        <span class="text-xs text-gray-500">Gambar tanda tangan di area kotak</span>
+                    </div>
+                </div>
+                <div class="flex space-x-3">
+                    <button type="button" onclick="closeSignatureModal()" class="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg transition">
+                        Batal
+                    </button>
+                    <button type="button" onclick="submitWithSignature()" class="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg transition">
+                        Kirim FPTK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+    <script>
+    let signaturePad;
+    const fptkForm = document.querySelector('form[action="{{ route('fptk.store') }}"]');
+
+    function openSignatureModal() {
+        // Validate form first
+        if (!fptkForm.checkValidity()) {
+            fptkForm.reportValidity();
+            return;
+        }
+
+        const modal = document.getElementById('signatureModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        if (!signaturePad) {
+            const canvas = document.getElementById('signaturePad');
+            signaturePad = new SignaturePad(canvas, {
+                backgroundColor: 'rgb(255, 255, 255)',
+                penColor: 'rgb(0, 0, 0)'
+            });
+        }
+    }
+
+    function closeSignatureModal() {
+        const modal = document.getElementById('signatureModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+    function clearSignature() {
+        if (signaturePad) {
+            signaturePad.clear();
+        }
+    }
+
+    function submitWithSignature() {
+        if (signaturePad.isEmpty()) {
+            alert('Silakan bubuhkan tanda tangan Anda terlebih dahulu!');
+            return;
+        }
+        
+        const signatureData = signaturePad.toDataURL('image/png');
+        
+        // Add signature data to form
+        let sigInput = document.createElement('input');
+        sigInput.type = 'hidden';
+        sigInput.name = 'signature';
+        sigInput.value = signatureData;
+        fptkForm.appendChild(sigInput);
+
+        let nameInput = document.createElement('input');
+        nameInput.type = 'hidden';
+        nameInput.name = 'signer_name';
+        nameInput.value = document.getElementById('signerName').value;
+        fptkForm.appendChild(nameInput);
+        
+        // Submit form
+        fptkForm.submit();
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('signatureModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeSignatureModal();
+        }
     });
     </script>
 </div>

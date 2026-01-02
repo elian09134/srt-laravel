@@ -41,21 +41,20 @@ class FptkController extends Controller
         return redirect()->route('admin.fptk.index')->with('status', 'FPTK rejected');
     }
 
-    public function exportPdf(Request $request, Fptk $fptk)
+    public function exportPdf(Fptk $fptk)
     {
-        $request->validate([
-            'signer_name' => 'required|string|max:255',
-            'signature' => 'required|string'
-        ]);
-        
         $notes = is_array($fptk->notes) ? $fptk->notes : (is_string($fptk->notes) ? json_decode($fptk->notes, true) : []);
         $notes = $notes ?: [];
         
-        $signatureData = [
-            'name' => $request->signer_name,
-            'signature' => $request->signature,
-            'date' => now()->format('d F Y')
-        ];
+        // Extract signature data from notes
+        $signatureData = null;
+        if (isset($notes['signature']) && isset($notes['signer_name'])) {
+            $signatureData = [
+                'name' => $notes['signer_name'],
+                'signature' => $notes['signature'],
+                'date' => isset($notes['signature_date']) ? date('d F Y', strtotime($notes['signature_date'])) : date('d F Y', strtotime($fptk->created_at))
+            ];
+        }
         
         $pdf = Pdf::loadView('admin.fptk.pdf', compact('fptk', 'notes', 'signatureData'));
         $pdf->setPaper('a4', 'portrait');

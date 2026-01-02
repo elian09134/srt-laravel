@@ -44,6 +44,8 @@ class FptkController extends Controller
             'pengalaman' => 'nullable|string|max:2000',
             'uraian' => 'nullable|string|max:4000',
             'notes' => 'nullable|string|max:2000',
+            'signature' => 'required|string',
+            'signer_name' => 'required|string|max:255',
         ]);
 
         // Pack all extra fields into notes JSON temporarily until ALTER TABLE is run
@@ -66,6 +68,9 @@ class FptkController extends Controller
             'qty_male' => $male,
             'qty_female' => $female,
             'notes_text' => $data['notes'] ?? null,
+            'signature' => $data['signature'],
+            'signer_name' => $data['signer_name'],
+            'signature_date' => now()->format('Y-m-d'),
         ];
 
         $fptk = Fptk::create([
