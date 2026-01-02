@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Fptk;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class FptkController extends Controller
 {
@@ -38,5 +39,17 @@ class FptkController extends Controller
         $fptk->admin_note = $request->input('admin_note');
         $fptk->save();
         return redirect()->route('admin.fptk.index')->with('status', 'FPTK rejected');
+    }
+
+    public function exportPdf(Fptk $fptk)
+    {
+        $notes = is_array($fptk->notes) ? $fptk->notes : (is_string($fptk->notes) ? json_decode($fptk->notes, true) : []);
+        $notes = $notes ?: [];
+        
+        $pdf = Pdf::loadView('admin.fptk.pdf', compact('fptk', 'notes'));
+        $pdf->setPaper('a4', 'portrait');
+        
+        $filename = 'FPTK-' . $fptk->id . '-' . str_replace(' ', '-', $fptk->position) . '.pdf';
+        return $pdf->download($filename);
     }
 }

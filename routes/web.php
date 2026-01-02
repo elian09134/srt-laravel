@@ -81,6 +81,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // FPTK management for admin
     Route::get('/fptk', [App\Http\Controllers\Admin\FptkController::class, 'index'])->name('admin.fptk.index');
     Route::get('/fptk/{fptk}', [App\Http\Controllers\Admin\FptkController::class, 'show'])->name('admin.fptk.show');
+    Route::get('/fptk/{fptk}/pdf', [App\Http\Controllers\Admin\FptkController::class, 'exportPdf'])->name('admin.fptk.pdf');
     Route::post('/fptk/{fptk}/approve', [App\Http\Controllers\Admin\FptkController::class, 'approve'])->name('admin.fptk.approve');
     Route::post('/fptk/{fptk}/reject', [App\Http\Controllers\Admin\FptkController::class, 'reject'])->name('admin.fptk.reject');
         // Employee management routes removed — site is recruitment-only
