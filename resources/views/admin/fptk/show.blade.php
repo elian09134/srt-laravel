@@ -26,7 +26,7 @@
             <p class="text-gray-500 ml-9">Informasi lengkap permintaan tenaga kerja</p>
         </div>
         <div class="flex items-center space-x-3">
-            <a href="{{ route('admin.fptk.pdf', $fptk->id) }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition transform hover:scale-105">
+            <a href="{{ route('admin.fptk.pdf', $fptk->id) }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-blue font-medium rounded-lg shadow-md hover:shadow-lg transition transform hover:scale-105">
                 <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd"/>
                 </svg>
