@@ -13,6 +13,19 @@
             @method('PUT')
         @endif
 
+        <div>
+            <label for="fptk_id" class="block text-sm font-medium text-gray-700">Link ke FPTK (Opsional)</label>
+            <select name="fptk_id" id="fptk_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                <option value="">-- Pilih FPTK (jika ada) --</option>
+                @foreach($fptks ?? [] as $fptk)
+                    <option value="{{ $fptk->id }}" @if(old('fptk_id', $job->fptk_id ?? '') == $fptk->id) selected @endif>
+                        FPTK #{{ $fptk->id }} - {{ $fptk->position }} ({{ $fptk->qty }} orang) - {{ $fptk->user->name }}
+                    </option>
+                @endforeach
+            </select>
+            <p class="mt-1 text-xs text-gray-500">Link job posting ini dengan FPTK yang sudah disetujui agar pengaju dapat melihat jumlah pelamar</p>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 <label for="title" class="block text-sm font-medium text-gray-700">Posisi Lowongan</label>

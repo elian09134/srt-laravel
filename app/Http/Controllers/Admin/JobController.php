@@ -22,7 +22,11 @@ class JobController extends Controller
      */
     public function create()
     {
-        return view('admin.jobs.form');
+        $fptks = \App\Models\Fptk::where('status', 'approved')
+            ->whereDoesntHave('job')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('admin.jobs.form', compact('fptks'));
     }
 
     /**
@@ -38,6 +42,7 @@ class JobController extends Controller
             'jobdesk' => 'required|string',
             'requirement' => 'required|string',
             'benefits' => 'nullable|string',
+            'fptk_id' => 'nullable|exists:fptks,id',
         ]);
 
         Job::create([
@@ -48,6 +53,7 @@ class JobController extends Controller
             'jobdesk' => $validated['jobdesk'],
             'requirement' => json_encode(array_filter(array_map('trim', explode("\n", $validated['requirement'])))),
             'benefits' => json_encode(array_filter(array_map('trim', explode("\n", $validated['benefits'])))),
+            'fptk_id' => $validated['fptk_id'] ?? null,
         ]);
 
         return redirect()->route('admin.jobs.index')->with('success', 'Lowongan berhasil ditambahkan.');
@@ -58,7 +64,14 @@ class JobController extends Controller
      */
     public function edit(Job $job)
     {
-        return view('admin.jobs.form', compact('job'));
+        $fptks = \App\Models\Fptk::where('status', 'approved')
+            ->where(function($q) use ($job) {
+                $q->whereDoesntHave('job')
+                  ->orWhere('id', $job->fptk_id);
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('admin.jobs.form', compact('job', 'fptks'));
     }
 
     /**
@@ -74,6 +87,7 @@ class JobController extends Controller
             'jobdesk' => 'required|string',
             'requirement' => 'required|string',
             'benefits' => 'nullable|string',
+            'fptk_id' => 'nullable|exists:fptks,id',
         ]);
 
         $job->update([
@@ -84,6 +98,7 @@ class JobController extends Controller
             'jobdesk' => $validated['jobdesk'],
             'requirement' => json_encode(array_filter(array_map('trim', explode("\n", $validated['requirement'])))),
             'benefits' => json_encode(array_filter(array_map('trim', explode("\n", $validated['benefits'])))),
+            'fptk_id' => $validated['fptk_id'] ?? null,
         ]);
 
         return redirect()->route('admin.jobs.index')->with('success', 'Lowongan berhasil diperbarui.');

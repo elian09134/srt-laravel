@@ -53,6 +53,11 @@ class Fptk extends Model
         return $this->belongsTo(User::class, 'admin_id');
     }
 
+    public function job()
+    {
+        return $this->hasOne(Job::class);
+    }
+
     // decode notes JSON if stored as JSON
     public function getNotesDecodedAttribute()
     {

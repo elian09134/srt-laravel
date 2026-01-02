@@ -17,6 +17,21 @@ class FptkController extends Controller
         return view('fptk.index');
     }
 
+    public function myFptk(Request $request)
+    {
+        $user = $request->user();
+        if (! $user || $user->role !== 'operasional') {
+            abort(403);
+        }
+
+        $fptks = Fptk::where('user_id', $user->id)
+            ->with(['job.applications'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('fptk.my-fptk', compact('fptks'));
+    }
+
     public function store(Request $request)
     {
         $user = $request->user();

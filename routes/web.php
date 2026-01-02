@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
     // FPTK (Form Permintaan Tenaga Kerja) landing for operasional users
     Route::get('/fptk', [App\Http\Controllers\FptkController::class, 'index'])->name('fptk.index');
     Route::post('/fptk', [App\Http\Controllers\FptkController::class, 'store'])->name('fptk.store');
+    Route::get('/my-fptk', [App\Http\Controllers\FptkController::class, 'myFptk'])->name('fptk.my');
     // User application history
     Route::get('/applications', [App\Http\Controllers\User\ApplicationController::class, 'index'])->name('applications.index');
     Route::get('/applications/{application}', [App\Http\Controllers\User\ApplicationController::class, 'show'])->name('applications.show');
