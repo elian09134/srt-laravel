@@ -6,16 +6,23 @@
     <h1 class="text-2xl font-bold mb-4">Detail FPTK #{{ $fptk->id }}</h1>
 
     <div class="bg-white p-4 rounded shadow">
+        @php
+            $notes = is_array($fptk->notes) ? $fptk->notes : (is_string($fptk->notes) ? json_decode($fptk->notes, true) : []);
+            $notes = $notes ?: [];
+        @endphp
         <p><strong>Pengaju:</strong> {{ $fptk->user->name }} ({{ $fptk->user->email }})</p>
         <p><strong>Posisi:</strong> {{ $fptk->position }}</p>
         <p><strong>Lokasi:</strong> {{ $fptk->locations }}</p>
-        <p><strong>Jumlah (Pria/Wanita):</strong> {{ $fptk->qty_male ?? 0 }} / {{ $fptk->qty_female ?? 0 }} (Total: {{ $fptk->qty ?? (($fptk->qty_male ?? 0) + ($fptk->qty_female ?? 0)) }})</p>
-        <p><strong>Divisi:</strong> {{ $fptk->division }}</p>
+        <p><strong>Jumlah (Pria/Wanita):</strong> {{ $notes['qty_male'] ?? 0 }} / {{ $notes['qty_female'] ?? 0 }} (Total: {{ $fptk->qty }})</p>
+        <p><strong>Divisi:</strong> {{ $notes['division'] ?? '-' }}</p>
         <p><strong>Dasar Permintaan:</strong>
-            @php $das = $fptk->dasar_permintaan_list ?? []; @endphp
-            @if(count($das))
+            @php 
+                $das = $notes['dasar_permintaan'] ?? null;
+                $dasList = is_array($das) ? $das : [];
+            @endphp
+            @if(count($dasList))
                 <ul class="ml-4 list-disc">
-                @foreach($das as $d)
+                @foreach($dasList as $d)
                     <li>{{ $d }}</li>
                 @endforeach
                 </ul>
@@ -23,24 +30,30 @@
                 -
             @endif
         </p>
-        <p><strong>Tanggal Kebutuhan:</strong> {{ $fptk->date_needed ? $fptk->date_needed->format('Y-m-d') : '-' }}</p>
-        <p><strong>Golongan / Gaji:</strong> {{ $fptk->golongan_gaji }} / {{ $fptk->gaji ? number_format($fptk->gaji,0,',','.') : '-' }}</p>
-        <p><strong>Penempatan:</strong> {{ $fptk->penempatan }}</p>
-        <p><strong>Pendidikan:</strong> {{ $fptk->pendidikan }}</p>
-        <p><strong>Pengalaman:</strong> {{ $fptk->pengalaman }}</p>
+        <p><strong>Tanggal Kebutuhan:</strong> {{ $notes['date_needed'] ?? '-' }}</p>
+        <p><strong>Golongan / Gaji:</strong> {{ $notes['golongan_gaji'] ?? '-' }} / {{ isset($notes['gaji']) ? 'Rp ' . number_format($notes['gaji'],0,',','.') : '-' }}</p>
+        <p><strong>Penempatan:</strong> {{ $notes['penempatan'] ?? '-' }}</p>
+        <p><strong>Pendidikan:</strong> {{ $notes['pendidikan'] ?? '-' }}</p>
+        <p><strong>Pengalaman:</strong> {{ $notes['pengalaman'] ?? '-' }}</p>
         <p><strong>Kualifikasi / Keterampilan:</strong>
-            @php $ks = $fptk->keterampilan_list ?? []; @endphp
-            @if(count($ks))
+            @php 
+                $k = $notes['keterampilan'] ?? null;
+                $kList = $k ? array_filter(array_map('trim', explode(',', $k))) : [];
+            @endphp
+            @if(count($kList))
                 <ul class="ml-4 list-disc">
-                @foreach($ks as $k)
-                    <li>{{ $k }}</li>
+                @foreach($kList as $item)
+                    <li>{{ $item }}</li>
                 @endforeach
                 </ul>
             @else
                 -
             @endif
         </p>
-        <p><strong>Uraian Tugas:</strong><br>{!! nl2br(e($fptk->uraian ?? '')) !!}</p>
+        <p><strong>Uraian Tugas:</strong><br>{!! nl2br(e($notes['uraian'] ?? '')) !!}</p>
+        @if(!empty($notes['notes_text']))
+            <p><strong>Catatan Pengaju:</strong><br>{{ $notes['notes_text'] }}</p>
+        @endif
         <p class="mt-2"><strong>Status:</strong> {{ ucfirst($fptk->status) }}</p>
         @if($fptk->admin_note)
             <p><strong>Catatan Admin:</strong><br>{{ $fptk->admin_note }}</p>

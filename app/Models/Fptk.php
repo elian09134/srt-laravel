@@ -29,13 +29,14 @@ class Fptk extends Model
         'keterampilan',
         'pengalaman',
         'uraian',
+        'notes',
         'status',
         'admin_id',
         'admin_note',
     ];
 
     protected $casts = [
-        'notes' => 'array',
+        'notes' => 'json',
         'date_needed' => 'date',
         'gaji' => 'integer',
         'qty_male' => 'integer',

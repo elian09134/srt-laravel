@@ -73,6 +73,7 @@ class FptkController extends Controller
             'position' => $data['position'],
             'locations' => $data['locations'] ?? null,
             'qty' => ($male + $female),
+            'notes' => json_encode($extra, JSON_UNESCAPED_UNICODE),
             'status' => 'pending',
         ]);
 
