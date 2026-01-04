@@ -4,6 +4,10 @@
     <meta charset="utf-8">
     <title>FPTK #{{ $fptk->id }}</title>
     <style>
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -11,94 +15,94 @@
         }
         body {
             font-family: Arial, sans-serif;
-            font-size: 11pt;
-            line-height: 1.4;
+            font-size: 7pt;
+            line-height: 1.2;
             color: #333;
-            padding: 20px;
+            padding: 5px;
         }
         .header {
             text-align: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #2563eb;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #2563eb;
         }
         .header h1 {
-            font-size: 18pt;
+            font-size: 11pt;
             color: #1e40af;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
         }
         .header .subtitle {
-            font-size: 10pt;
+            font-size: 7pt;
             color: #666;
         }
         .meta-info {
             background: #f3f4f6;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 4px;
+            padding: 4px;
+            margin-bottom: 6px;
+            border-radius: 2px;
         }
         .meta-info table {
             width: 100%;
         }
         .meta-info td {
-            padding: 3px 5px;
-            font-size: 10pt;
+            padding: 1px 3px;
+            font-size: 7pt;
         }
         .meta-info .label {
             font-weight: bold;
-            width: 30%;
+            width: 22%;
             color: #555;
         }
         .section {
-            margin-bottom: 15px;
+            margin-bottom: 6px;
             page-break-inside: avoid;
         }
         .section-title {
             background: #2563eb;
             color: white;
-            padding: 8px 12px;
-            font-size: 12pt;
+            padding: 3px 6px;
+            font-size: 8pt;
             font-weight: bold;
-            margin-bottom: 10px;
-            border-radius: 4px;
+            margin-bottom: 4px;
+            border-radius: 2px;
         }
         .field-group {
-            margin-bottom: 8px;
+            margin-bottom: 3px;
         }
         .field-label {
             font-weight: bold;
             color: #555;
-            font-size: 10pt;
-            margin-bottom: 3px;
+            font-size: 7pt;
+            margin-bottom: 1px;
         }
         .field-value {
             color: #333;
-            font-size: 10pt;
-            padding-left: 10px;
+            font-size: 7pt;
+            padding-left: 5px;
         }
         .grid-2 {
             display: table;
             width: 100%;
-            margin-bottom: 10px;
+            margin-bottom: 4px;
         }
         .grid-col {
             display: table-cell;
             width: 50%;
-            padding: 5px;
+            padding: 2px;
         }
         ul {
-            margin-left: 20px;
-            margin-top: 5px;
+            margin-left: 12px;
+            margin-top: 2px;
         }
         ul li {
-            margin-bottom: 3px;
-            font-size: 10pt;
+            margin-bottom: 1px;
+            font-size: 7pt;
         }
         .status-badge {
             display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 9pt;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 6pt;
             font-weight: bold;
         }
         .status-pending {
@@ -115,16 +119,16 @@
         }
         .notes-box {
             background: #fef3c7;
-            border-left: 4px solid #f59e0b;
-            padding: 10px;
-            margin-top: 8px;
-            font-size: 10pt;
+            border-left: 2px solid #f59e0b;
+            padding: 4px;
+            margin-top: 3px;
+            font-size: 7pt;
         }
         .footer {
-            margin-top: 30px;
-            padding-top: 15px;
-            border-top: 2px solid #e5e7eb;
-            font-size: 9pt;
+            margin-top: 8px;
+            padding-top: 4px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 6pt;
             color: #666;
             text-align: center;
         }
@@ -305,71 +309,71 @@
     @endif
 
     <!-- Signature Section -->
-    <div class="section" style="margin-top: 30px; page-break-inside: avoid;">
+    <div class="section" style="margin-top: 8px; page-break-inside: avoid;">
         <div class="section-title">PERSETUJUAN</div>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+        <table style="width: 100%; border-collapse: collapse; margin-top: 4px;">
             <thead>
                 <tr style="background: #f3f4f6;">
-                    <th style="border: 1px solid #ddd; padding: 8px; font-size: 10pt; text-align: center; width: 25%;">DIMINTA Oleh</th>
-                    <th style="border: 1px solid #ddd; padding: 8px; font-size: 10pt; text-align: center; width: 25%;" colspan="2">Disetujui/Ditolak oleh</th>
-                    <th style="border: 1px solid #ddd; padding: 8px; font-size: 10pt; text-align: center; width: 25%;">Diterima Oleh</th>
+                    <th style="border: 1px solid #ddd; padding: 3px; font-size: 7pt; text-align: center; width: 25%;">DIMINTA Oleh</th>
+                    <th style="border: 1px solid #ddd; padding: 3px; font-size: 7pt; text-align: center; width: 25%;" colspan="2">Disetujui/Ditolak oleh</th>
+                    <th style="border: 1px solid #ddd; padding: 3px; font-size: 7pt; text-align: center; width: 25%;">Diterima Oleh</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <!-- Diminta Oleh (Operasional) -->
-                    <td style="border: 1px solid #ddd; padding: 10px; vertical-align: top; height: 120px;">
+                    <td style="border: 1px solid #ddd; padding: 4px; vertical-align: top; height: 60px;">
                         @if(isset($signatureData))
                         <div style="text-align: center;">
-                            <img src="{{ $signatureData['signature'] }}" style="max-width: 150px; max-height: 60px; display: block; margin: 0 auto;">
-                            <div style="margin-top: 5px; padding-top: 5px; border-top: 1px solid #333; font-size: 9pt;">
+                            <img src="{{ $signatureData['signature'] }}" style="max-width: 80px; max-height: 30px; display: block; margin: 0 auto;">
+                            <div style="margin-top: 2px; padding-top: 2px; border-top: 1px solid #333; font-size: 6pt;">
                                 <strong>{{ $signatureData['name'] }}</strong><br>
-                                <span style="font-size: 8pt; color: #666;">Supervisor Divisi</span>
+                                <span style="font-size: 5pt; color: #666;">Supervisor Divisi</span>
                             </div>
                         </div>
                         @else
-                        <div style="text-align: center; color: #999; font-size: 9pt; padding-top: 40px;">
+                        <div style="text-align: center; color: #999; font-size: 6pt; padding-top: 20px;">
                             Belum ditandatangani
                         </div>
                         @endif
                     </td>
                     
                     <!-- Manager Divisi -->
-                    <td style="border: 1px solid #ddd; padding: 10px; vertical-align: bottom; text-align: center; height: 120px;">
-                        <div style="margin-top: 80px; padding-top: 5px; border-top: 1px solid #333; font-size: 9pt;">
-                            <strong>________________</strong><br>
-                            <span style="font-size: 8pt; color: #666;">Manager Divisi</span>
+                    <td style="border: 1px solid #ddd; padding: 4px; vertical-align: bottom; text-align: center; height: 60px;">
+                        <div style="margin-top: 30px; padding-top: 2px; border-top: 1px solid #333; font-size: 6pt;">
+                            <strong>____________</strong><br>
+                            <span style="font-size: 5pt; color: #666;">Manager Divisi</span>
                         </div>
                     </td>
                     
                     <!-- Direktur -->
-                    <td style="border: 1px solid #ddd; padding: 10px; vertical-align: bottom; text-align: center; height: 120px;">
-                        <div style="margin-top: 80px; padding-top: 5px; border-top: 1px solid #333; font-size: 9pt;">
-                            <strong>________________</strong><br>
-                            <span style="font-size: 8pt; color: #666;">Direktur</span>
+                    <td style="border: 1px solid #ddd; padding: 4px; vertical-align: bottom; text-align: center; height: 60px;">
+                        <div style="margin-top: 30px; padding-top: 2px; border-top: 1px solid #333; font-size: 6pt;">
+                            <strong>____________</strong><br>
+                            <span style="font-size: 5pt; color: #666;">Direktur</span>
                         </div>
                     </td>
                     
                     <!-- HR Manager -->
-                    <td style="border: 1px solid #ddd; padding: 10px; vertical-align: bottom; text-align: center; height: 120px;">
-                        <div style="margin-top: 80px; padding-top: 5px; border-top: 1px solid #333; font-size: 9pt;">
-                            <strong>________________</strong><br>
-                            <span style="font-size: 8pt; color: #666;">HR Manager</span>
+                    <td style="border: 1px solid #ddd; padding: 4px; vertical-align: bottom; text-align: center; height: 60px;">
+                        <div style="margin-top: 30px; padding-top: 2px; border-top: 1px solid #333; font-size: 6pt;">
+                            <strong>____________</strong><br>
+                            <span style="font-size: 5pt; color: #666;">HR Manager</span>
                         </div>
                     </td>
                 </tr>
                 <tr style="background: #f9fafb;">
-                    <td style="border: 1px solid #ddd; padding: 5px; text-align: center; font-size: 8pt;">
-                        Tanggal: <strong>{{ $signatureData['date'] ?? '___________' }}</strong>
+                    <td style="border: 1px solid #ddd; padding: 2px; text-align: center; font-size: 6pt;">
+                        Tanggal: <strong>{{ $signatureData['date'] ?? '_______' }}</strong>
                     </td>
-                    <td style="border: 1px solid #ddd; padding: 5px; text-align: center; font-size: 8pt;">
-                        Tanggal: ___________
+                    <td style="border: 1px solid #ddd; padding: 2px; text-align: center; font-size: 6pt;">
+                        Tanggal: _______
                     </td>
-                    <td style="border: 1px solid #ddd; padding: 5px; text-align: center; font-size: 8pt;">
-                        Tanggal: ___________
+                    <td style="border: 1px solid #ddd; padding: 2px; text-align: center; font-size: 6pt;">
+                        Tanggal: _______
                     </td>
-                    <td style="border: 1px solid #ddd; padding: 5px; text-align: center; font-size: 8pt;">
-                        Tanggal: ___________
+                    <td style="border: 1px solid #ddd; padding: 2px; text-align: center; font-size: 6pt;">
+                        Tanggal: _______
                     </td>
                 </tr>
             </tbody>
