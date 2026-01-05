@@ -13,7 +13,7 @@
                     <h1 class="text-4xl md:text-6xl font-bold leading-tight bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                         {{ $content['hero']['title'] ?? 'Judul Default' }}
                     </h1>
-                    <p class="mt-6 text-lg text-gray-600 max-w-lg mx-auto md:mx-0">
+                    <p class="mt-6 text-lg text-justify text-gray-600 max-w-lg mx-auto md:mx-0">
                         {{ $content['hero']['description'] ?? 'Deskripsi default.' }}
                     </p>
                     <div class="mt-10 flex justify-center md:justify-start space-x-4">
