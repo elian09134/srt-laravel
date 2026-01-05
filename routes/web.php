@@ -23,15 +23,15 @@ Route::view('/privacy', 'privacy')->name('privacy');
 // Terms & Conditions
 Route::view('/terms', 'terms')->name('terms');
 // Submit application (user must be authenticated)
-Route::post('/karir/{job}/apply', [App\Http\Controllers\ApplicationController::class, 'store'])->name('karir.apply')->middleware('auth');
+Route::post('/karir/{job}/apply', [App\Http\Controllers\ApplicationController::class, 'store'])->name('karir.apply')->middleware(['auth', 'throttle:10,1']);
 // API: job search (AJAX)
-Route::get('/api/jobs/search', [App\Http\Controllers\Api\JobSearchController::class, 'search'])->name('api.jobs.search');
+Route::get('/api/jobs/search', [App\Http\Controllers\Api\JobSearchController::class, 'search'])->name('api.jobs.search')->middleware('throttle:60,1');
 
 // --- RUTE PENDAFTARAN KARYAWAN BARU ---
 Route::get('/employee/register', [EmployeeRegisterController::class, 'showCodeForm'])->name('employee.register.code');
-Route::post('/employee/register/verify', [EmployeeRegisterController::class, 'verifyCode'])->name('employee.register.verify');
+Route::post('/employee/register/verify', [EmployeeRegisterController::class, 'verifyCode'])->name('employee.register.verify')->middleware('throttle:5,1');
 Route::get('/employee/register/{code}', [EmployeeRegisterController::class, 'showRegistrationForm'])->name('employee.register.form');
-Route::post('/employee/register', [EmployeeRegisterController::class, 'store'])->name('employee.register.store');
+Route::post('/employee/register', [EmployeeRegisterController::class, 'store'])->name('employee.register.store')->middleware('throttle:3,1');
 
 // --- RUTE UNTUK PENGGUNA YANG SUDAH LOGIN ---
 Route::middleware('auth')->group(function () {
@@ -40,7 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     // FPTK (Form Permintaan Tenaga Kerja) landing for operasional users
     Route::get('/fptk', [App\Http\Controllers\FptkController::class, 'index'])->name('fptk.index');
-    Route::post('/fptk', [App\Http\Controllers\FptkController::class, 'store'])->name('fptk.store');
+    Route::post('/fptk', [App\Http\Controllers\FptkController::class, 'store'])->name('fptk.store')->middleware('throttle:5,1');
     Route::get('/my-fptk', [App\Http\Controllers\FptkController::class, 'myFptk'])->name('fptk.my');
     Route::get('/fptk/{fptk}', [App\Http\Controllers\FptkController::class, 'showDetail'])->name('fptk.detail');
     // User application history
