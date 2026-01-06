@@ -314,21 +314,21 @@
         <table style="width: 100%; border-collapse: collapse; margin-top: 4px;">
             <thead>
                 <tr style="background: #f3f4f6;">
-                    <th style="border: 1px solid #ddd; padding: 3px; font-size: 7pt; text-align: center; width: 25%;">DIMINTA Oleh</th>
-                    <th style="border: 1px solid #ddd; padding: 3px; font-size: 7pt; text-align: center; width: 25%;" colspan="2">Disetujui/Ditolak oleh</th>
-                    <th style="border: 1px solid #ddd; padding: 3px; font-size: 7pt; text-align: center; width: 25%;">Diterima Oleh</th>
+                    <th style="border: 1px solid #ddd; padding: 3px; font-size: 7pt; text-align: center; width: 25%;">Divisi</th>
+                    <th style="border: 1px solid #ddd; padding: 3px; font-size: 7pt; text-align: center; width: 25%;">Manager Divisi</th>
+                    <th style="border: 1px solid #ddd; padding: 3px; font-size: 7pt; text-align: center; width: 25%;">HR Manager</th>
+                    <th style="border: 1px solid #ddd; padding: 3px; font-size: 7pt; text-align: center; width: 25%;">Direktur</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <!-- Diminta Oleh (Operasional) -->
+                    <!-- Divisi (tanpa jabatan) -->
                     <td style="border: 1px solid #ddd; padding: 4px; vertical-align: top; height: 60px;">
                         @if(isset($signatureData))
                         <div style="text-align: center;">
                             <img src="{{ $signatureData['signature'] }}" style="max-width: 80px; max-height: 30px; display: block; margin: 0 auto;">
                             <div style="margin-top: 2px; padding-top: 2px; border-top: 1px solid #333; font-size: 6pt;">
-                                <strong>{{ $signatureData['name'] }}</strong><br>
-                                <span style="font-size: 5pt; color: #666;">Supervisor Divisi</span>
+                                <strong>{{ $signatureData['name'] }}</strong>
                             </div>
                         </div>
                         @else
@@ -341,24 +341,21 @@
                     <!-- Manager Divisi -->
                     <td style="border: 1px solid #ddd; padding: 4px; vertical-align: bottom; text-align: center; height: 60px;">
                         <div style="margin-top: 30px; padding-top: 2px; border-top: 1px solid #333; font-size: 6pt;">
-                            <strong>____________</strong><br>
-                            <span style="font-size: 5pt; color: #666;">Manager Divisi</span>
-                        </div>
-                    </td>
-                    
-                    <!-- Direktur -->
-                    <td style="border: 1px solid #ddd; padding: 4px; vertical-align: bottom; text-align: center; height: 60px;">
-                        <div style="margin-top: 30px; padding-top: 2px; border-top: 1px solid #333; font-size: 6pt;">
-                            <strong>____________</strong><br>
-                            <span style="font-size: 5pt; color: #666;">Direktur</span>
+                            <strong>____________</strong>
                         </div>
                     </td>
                     
                     <!-- HR Manager -->
                     <td style="border: 1px solid #ddd; padding: 4px; vertical-align: bottom; text-align: center; height: 60px;">
                         <div style="margin-top: 30px; padding-top: 2px; border-top: 1px solid #333; font-size: 6pt;">
-                            <strong>____________</strong><br>
-                            <span style="font-size: 5pt; color: #666;">HR Manager</span>
+                            <strong>____________</strong>
+                        </div>
+                    </td>
+                    
+                    <!-- Direktur (paling kanan) -->
+                    <td style="border: 1px solid #ddd; padding: 4px; vertical-align: bottom; text-align: center; height: 60px;">
+                        <div style="margin-top: 30px; padding-top: 2px; border-top: 1px solid #333; font-size: 6pt;">
+                            <strong>____________</strong>
                         </div>
                     </td>
                 </tr>

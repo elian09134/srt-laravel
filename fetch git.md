@@ -23,7 +23,7 @@ b x b g o x e k c m s l f s b o
     role: "operasional",
     updated_at: "2025-12-31 06:18:45",
     created_at: "2025-12-31 06:18:45",
-
+}
     <?php
 use App\Models\User;
 // create operasional user (replace email and phone as needed)
