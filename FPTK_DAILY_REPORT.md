@@ -44,6 +44,10 @@ STATUS SAAT INI
 - Tidak ada bug atau masalah kritis
 - Sistem siap digunakan
 
+PROBLEM
+- masalah di tandatangan, karena bertingkat ke beberapa layer (Major)
+- perlu diskusi terkait flow penandatanganan FPTK 
+
 LANGKAH SELANJUTNYA (Enhancement Masa Depan)
 - Sistem notifikasi email untuk update status FPTK
 - Dashboard reporting dengan metrik approval
