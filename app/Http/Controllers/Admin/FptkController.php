@@ -23,11 +23,17 @@ class FptkController extends Controller
 
     public function approve(Request $request, Fptk $fptk)
     {
-        $request->validate(['admin_note' => 'nullable|string|max:2000']);
+        $request->validate([
+            'admin_note' => 'nullable|string|max:2000',
+            'admin_signature' => 'required|string'
+        ]);
+        
         $fptk->status = 'approved';
         $fptk->admin_id = Auth::id();
         $fptk->admin_note = $request->input('admin_note');
+        $fptk->admin_signature = $request->input('admin_signature');
         $fptk->save();
+        
         return redirect()->route('admin.fptk.index')->with('status', 'FPTK approved');
     }
 
@@ -46,7 +52,7 @@ class FptkController extends Controller
         $notes = is_array($fptk->notes) ? $fptk->notes : (is_string($fptk->notes) ? json_decode($fptk->notes, true) : []);
         $notes = $notes ?: [];
         
-        // Extract signature data from notes
+        // Extract signature data from notes (pengaju)
         $signatureData = null;
         if (isset($notes['signature']) && isset($notes['signer_name'])) {
             $signatureData = [
@@ -56,7 +62,17 @@ class FptkController extends Controller
             ];
         }
         
-        $pdf = Pdf::loadView('admin.fptk.pdf', compact('fptk', 'notes', 'signatureData'));
+        // Admin signature data (HR Manager)
+        $adminSignatureData = null;
+        if ($fptk->admin_signature && $fptk->admin) {
+            $adminSignatureData = [
+                'name' => $fptk->admin->name,
+                'signature' => $fptk->admin_signature,
+                'date' => $fptk->updated_at ? date('d F Y', strtotime($fptk->updated_at)) : date('d F Y')
+            ];
+        }
+        
+        $pdf = Pdf::loadView('admin.fptk.pdf', compact('fptk', 'notes', 'signatureData', 'adminSignatureData'));
         $pdf->setPaper('a4', 'portrait');
         
         $filename = 'FPTK-' . $fptk->id . '-' . str_replace(' ', '-', $fptk->position) . '.pdf';

@@ -249,10 +249,29 @@
             @if($fptk->status === 'pending')
             <div class="bg-white rounded-xl shadow-lg p-6 sticky top-6">
                 <h3 class="text-lg font-bold text-gray-800 mb-4">Tindakan</h3>
-                <form method="POST" action="{{ route('admin.fptk.approve', $fptk->id) }}" class="mb-4">
+                <form method="POST" action="{{ route('admin.fptk.approve', $fptk->id) }}" id="approveForm" class="mb-4">
                     @csrf
                     <label class="block text-sm font-medium text-gray-700 mb-2">Catatan (opsional)</label>
                     <textarea name="admin_note" rows="3" placeholder="Tambahkan catatan persetujuan..." class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent transition"></textarea>
+                    
+                    <!-- Signature Pad -->
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tanda Tangan HR Manager <span class="text-red-500">*</span></label>
+                        <div class="border-2 border-gray-300 rounded-lg bg-gray-50">
+                            <canvas id="signaturePadApprove" class="w-full" style="height: 150px; touch-action: none;"></canvas>
+                        </div>
+                        <div class="flex items-center justify-between mt-2">
+                            <button type="button" id="clearSignatureApprove" class="text-sm text-red-600 hover:text-red-800 font-medium">
+                                <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                                </svg>
+                                Hapus Tanda Tangan
+                            </button>
+                            <span class="text-xs text-gray-500">Tanda tangan wajib diisi</span>
+                        </div>
+                        <input type="hidden" name="admin_signature" id="adminSignatureInput">
+                    </div>
+
                     <button type="submit" class="w-full mt-3 inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition transform hover:scale-105">
                         <svg class="w-5 h-5 mr-2 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -284,4 +303,47 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize signature pad for approve
+    const canvasApprove = document.getElementById('signaturePadApprove');
+    if (canvasApprove) {
+        const signaturePadApprove = new SignaturePad(canvasApprove, {
+            backgroundColor: 'rgb(255, 255, 255)',
+            penColor: 'rgb(0, 0, 0)'
+        });
+
+        // Resize canvas
+        function resizeCanvas() {
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvasApprove.width = canvasApprove.offsetWidth * ratio;
+            canvasApprove.height = canvasApprove.offsetHeight * ratio;
+            canvasApprove.getContext('2d').scale(ratio, ratio);
+            signaturePadApprove.clear();
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Clear button
+        document.getElementById('clearSignatureApprove').addEventListener('click', function() {
+            signaturePadApprove.clear();
+        });
+
+        // Form submit validation
+        document.getElementById('approveForm').addEventListener('submit', function(e) {
+            if (signaturePadApprove.isEmpty()) {
+                e.preventDefault();
+                alert('Mohon tanda tangan terlebih dahulu sebelum menyetujui FPTK.');
+                return false;
+            }
+            // Save signature data to hidden input
+            document.getElementById('adminSignatureInput').value = signaturePadApprove.toDataURL();
+        });
+    }
+});
+</script>
+@endpush
 @endsection

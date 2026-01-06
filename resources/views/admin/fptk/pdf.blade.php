@@ -346,10 +346,19 @@
                     </td>
                     
                     <!-- HR Manager -->
-                    <td style="border: 1px solid #ddd; padding: 4px; vertical-align: bottom; text-align: center; height: 60px;">
-                        <div style="margin-top: 30px; padding-top: 2px; border-top: 1px solid #333; font-size: 6pt;">
-                            <strong>____________</strong>
+                    <td style="border: 1px solid #ddd; padding: 4px; vertical-align: top; height: 60px;">
+                        @if(isset($adminSignatureData))
+                        <div style="text-align: center;">
+                            <img src="{{ $adminSignatureData['signature'] }}" style="max-width: 80px; max-height: 30px; display: block; margin: 0 auto;">
+                            <div style="margin-top: 2px; padding-top: 2px; border-top: 1px solid #333; font-size: 6pt;">
+                                <strong>{{ $adminSignatureData['name'] }}</strong>
+                            </div>
                         </div>
+                        @else
+                        <div style="text-align: center; color: #999; font-size: 6pt; padding-top: 20px;">
+                            Belum ditandatangani
+                        </div>
+                        @endif
                     </td>
                     
                     <!-- Direktur (paling kanan) -->
@@ -367,7 +376,7 @@
                         Tanggal: _______
                     </td>
                     <td style="border: 1px solid #ddd; padding: 2px; text-align: center; font-size: 6pt;">
-                        Tanggal: _______
+                        Tanggal: <strong>{{ $adminSignatureData['date'] ?? '_______' }}</strong>
                     </td>
                     <td style="border: 1px solid #ddd; padding: 2px; text-align: center; font-size: 6pt;">
                         Tanggal: _______

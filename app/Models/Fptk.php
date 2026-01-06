@@ -33,6 +33,7 @@ class Fptk extends Model
         'status',
         'admin_id',
         'admin_note',
+        'admin_signature',
     ];
 
     protected $casts = [
