@@ -118,17 +118,31 @@
     </div>
 
     <script>
-        // Add error handling for login form
+        // Simple form validation and loading state - use normal form submit for proper cookie handling
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('loginForm');
-            const errorAlert = document.getElementById('errorAlert');
-            const errorMessage = document.getElementById('errorMessage');
             const submitButton = form.querySelector('button[type="submit"]');
+            const errorAlert = document.getElementById('errorAlert');
+            
+            // Show server-side validation errors if any
+            @if($errors->any())
+                errorAlert.classList.remove('hidden');
+                document.getElementById('errorMessage').textContent = '{{ $errors->first() }}';
+            @endif
             
             form.addEventListener('submit', function(e) {
-                e.preventDefault();
+                // Don't prevent default - let form submit normally for proper cookie handling
+                // Just show loading state
+                const originalText = submitButton.innerHTML;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Logging in...';
                 
-                // Show loading state
+                // Form will submit normally - browser will handle cookies and redirect
+            });
+        });
+    </script>
+</body>
+</html>
                 const originalText = submitButton.innerHTML;
                 submitButton.disabled = true;
                 submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Logging in...';
