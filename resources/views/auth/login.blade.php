@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Login - TERANG By SRT</title>
     
     <!-- Vite-built CSS/JS -->
@@ -138,15 +139,20 @@
                 // Get form data
                 const formData = new FormData(form);
                 
+                // Get fresh CSRF token from meta tag
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                
                 // Send AJAX request
                 fetch(form.action, {
                     method: 'POST',
                     body: formData,
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
                     },
-                    credentials: 'same-origin'
+                    credentials: 'same-origin',
+                    cache: 'no-cache'
                 })
                 .then(response => {
                     console.log('Response status:', response.status);

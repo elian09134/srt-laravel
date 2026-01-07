@@ -1,4 +1,4 @@
-const CACHE_NAME = 'terang-srt-v1';
+const CACHE_NAME = 'terang-srt-v2';
 const urlsToCache = [
   '/',
   '/css/app.css',
@@ -30,6 +30,29 @@ self.addEventListener('fetch', event => {
   
   // Skip chrome extensions and other schemes
   if (!event.request.url.startsWith('http')) return;
+  
+  // DO NOT cache auth pages, login, register, or pages with CSRF tokens
+  const url = new URL(event.request.url);
+  const skipCachePatterns = [
+    '/login',
+    '/register',
+    '/password',
+    '/logout',
+    '/auth',
+    '/admin',
+    '/profile',
+    '/dashboard',
+    '/api'
+  ];
+  
+  const shouldSkipCache = skipCachePatterns.some(pattern => url.pathname.includes(pattern));
+  
+  if (shouldSkipCache) {
+    // For auth pages, always fetch from network (never cache)
+    return event.respondWith(
+      fetch(event.request).catch(() => caches.match('/offline.html'))
+    );
+  }
 
   event.respondWith(
     caches.match(event.request)
