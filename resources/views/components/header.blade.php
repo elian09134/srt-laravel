@@ -52,6 +52,12 @@
                 <a href="/login" class="px-5 py-2.5 text-sm font-semibold text-blue-600 bg-blue-50 rounded-xl hover:bg-blue-100 transition-all duration-300">Login</a>
                 <a href="/karir" class="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover:shadow-lg">Lihat Lowongan</a>
             @endauth
+            
+            <!-- PWA Install Button (hidden by default, shown when installable) -->
+            <button id="pwa-install-btn" style="display: none;" class="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all duration-300 hover:shadow-lg flex items-center gap-2">
+                <i class="fas fa-download"></i>
+                <span>Install App</span>
+            </button>
         </div>
 
         <!-- Tombol Menu (Mobile) -->
@@ -85,6 +91,12 @@
                 <a href="/login" class="block text-center py-2 font-medium text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50">Login</a>
                 <a href="/karir" class="block mt-2 text-center py-2 font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">Lihat Lowongan</a>
             @endauth
+            
+            <!-- PWA Install Button (Mobile, hidden by default) -->
+            <button id="pwa-install-btn-mobile" style="display: none;" class="mt-2 w-full text-center py-2 font-medium text-white bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg hover:from-purple-700 hover:to-blue-700 flex items-center justify-center gap-2">
+                <i class="fas fa-download"></i>
+                <span>Install App</span>
+            </button>
         </div>
     </div>
 </header>
@@ -100,5 +112,62 @@
                 mobileMenu.classList.toggle('hidden');
             });
         }
+        
+        // PWA Install Button Handler
+        let deferredPrompt;
+        const installBtn = document.getElementById('pwa-install-btn');
+        const installBtnMobile = document.getElementById('pwa-install-btn-mobile');
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            // Update UI notify the user they can install the PWA
+            if (installBtn) {
+                installBtn.style.display = 'flex';
+            }
+            if (installBtnMobile) {
+                installBtnMobile.style.display = 'flex';
+            }
+        });
+        
+        // Handle install button click
+        const handleInstallClick = async () => {
+            if (!deferredPrompt) {
+                return;
+            }
+            // Show the install prompt
+            deferredPrompt.prompt();
+            // Wait for the user to respond to the prompt
+            const { outcome } = await deferredPrompt.userChoice;
+            // We've used the prompt, and can't use it again, throw it away
+            deferredPrompt = null;
+            // Hide the install button
+            if (installBtn) {
+                installBtn.style.display = 'none';
+            }
+            if (installBtnMobile) {
+                installBtnMobile.style.display = 'none';
+            }
+        };
+        
+        if (installBtn) {
+            installBtn.addEventListener('click', handleInstallClick);
+        }
+        if (installBtnMobile) {
+            installBtnMobile.addEventListener('click', handleInstallClick);
+        }
+        
+        // Hide button when PWA is installed
+        window.addEventListener('appinstalled', () => {
+            if (installBtn) {
+                installBtn.style.display = 'none';
+            }
+            if (installBtnMobile) {
+                installBtnMobile.style.display = 'none';
+            }
+            deferredPrompt = null;
+        });
     });
 </script>
