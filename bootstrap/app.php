@@ -16,10 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
         'block.suspicious' => \App\Http\Middleware\BlockSuspiciousIps::class,
     ]);
     
-    // Apply IP blocking to all web routes
-    $middleware->web(append: [
-        \App\Http\Middleware\BlockSuspiciousIps::class,
-    ]);
+    // IP blocking middleware temporarily disabled - causing 500 errors with cache
+    // $middleware->web(append: [
+    //     \App\Http\Middleware\BlockSuspiciousIps::class,
+    // ]);
 })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
