@@ -54,7 +54,7 @@
             @endauth
             
             <!-- PWA Install Button (hidden by default, shown when installable) -->
-            <button id="pwa-install-btn" style="display: none;" class="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all duration-300 hover:shadow-lg flex items-center gap-2">
+            <button id="pwa-install-btn" style="display: none;" class="px-5 py-2.5 text-sm font-semibold text-white bg-purple-600 rounded-xl hover:bg-purple-700 transition-all duration-300 hover:shadow-lg shadow-md flex items-center gap-2">
                 <i class="fas fa-download"></i>
                 <span>Install App</span>
             </button>
@@ -93,7 +93,7 @@
             @endauth
             
             <!-- PWA Install Button (Mobile, hidden by default) -->
-            <button id="pwa-install-btn-mobile" style="display: none;" class="mt-2 w-full text-center py-2 font-medium text-white bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg hover:from-purple-700 hover:to-blue-700 flex items-center justify-center gap-2">
+            <button id="pwa-install-btn-mobile" style="display: none;" class="mt-2 w-full text-center py-2.5 font-semibold text-white bg-purple-600 rounded-lg hover:bg-purple-700 shadow-md flex items-center justify-center gap-2">
                 <i class="fas fa-download"></i>
                 <span>Install App</span>
             </button>
