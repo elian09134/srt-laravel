@@ -40,8 +40,19 @@
                 <!-- Session Status -->
                 <x-auth-session-status class="mb-4" :status="session('status')" />
 
-                <form method="POST" action="{{ route('login') }}" class="mt-8 space-y-6">
+                <form method="POST" action="{{ route('login') }}" class="mt-8 space-y-6" id="loginForm">
                     @csrf
+
+                    <!-- Error Alert (hidden by default) -->
+                    <div id="errorAlert" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl relative" role="alert">
+                        <div class="flex items-start">
+                            <i class="fas fa-exclamation-circle mt-0.5 mr-2"></i>
+                            <div>
+                                <strong class="font-semibold">Error!</strong>
+                                <span class="block sm:inline" id="errorMessage"></span>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Email Address -->
                     <div>
@@ -104,5 +115,112 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Add error handling for login form
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
+            const submitButton = form.querySelector('button[type="submit"]');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Show loading state
+                const originalText = submitButton.innerHTML;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Logging in...';
+                
+                // Hide previous errors
+                errorAlert.classList.add('hidden');
+                
+                // Get form data
+                const formData = new FormData(form);
+                
+                // Send AJAX request
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    console.log('Response headers:', [...response.headers.entries()]);
+                    
+                    // Log response for debugging
+                    return response.text().then(text => {
+                        console.log('Response body:', text);
+                        
+                        // Try to parse as JSON, otherwise use text
+                        try {
+                            const data = JSON.parse(text);
+                            return { ok: response.ok, status: response.status, data: data, text: text };
+                        } catch (e) {
+                            return { ok: response.ok, status: response.status, data: null, text: text };
+                        }
+                    });
+                })
+                .then(result => {
+                    console.log('Parsed result:', result);
+                    
+                    if (result.ok) {
+                        // Success - redirect
+                        if (result.data && result.data.redirect) {
+                            window.location.href = result.data.redirect;
+                        } else {
+                            window.location.href = '/dashboard';
+                        }
+                    } else {
+                        // Error - show message
+                        let errorMsg = 'Login failed. ';
+                        
+                        if (result.status === 419) {
+                            errorMsg += 'Session expired. Please refresh the page and try again.';
+                            console.error('CSRF Token Error - Page needs refresh');
+                        } else if (result.status === 500) {
+                            errorMsg += 'Server error (500). Check server logs. ';
+                            if (result.text) {
+                                console.error('Server error details:', result.text);
+                                // Try to extract error message from HTML
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(result.text, 'text/html');
+                                const errorTitle = doc.querySelector('.exception-message, h1');
+                                if (errorTitle) {
+                                    errorMsg += errorTitle.textContent;
+                                }
+                            }
+                        } else if (result.data && result.data.message) {
+                            errorMsg += result.data.message;
+                        } else if (result.data && result.data.errors) {
+                            errorMsg += Object.values(result.data.errors).flat().join(' ');
+                        } else {
+                            errorMsg += `HTTP ${result.status} error. Check console for details.`;
+                        }
+                        
+                        errorMessage.textContent = errorMsg;
+                        errorAlert.classList.remove('hidden');
+                        
+                        // Restore button
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = originalText;
+                    }
+                })
+                .catch(error => {
+                    console.error('Network error:', error);
+                    errorMessage.textContent = 'Network error: ' + error.message + '. Check your connection and server status.';
+                    errorAlert.classList.remove('hidden');
+                    
+                    // Restore button
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalText;
+                });
+            });
+        });
+    </script>
 </body>
 </html>

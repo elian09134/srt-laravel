@@ -41,13 +41,29 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        \Log::info('Attempting authentication', [
+            'email' => $this->email,
+            'has_password' => !empty($this->password),
+            'remember' => $this->boolean('remember')
+        ]);
+
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
+
+            \Log::warning('Authentication failed', [
+                'email' => $this->email,
+                'ip' => $this->ip()
+            ]);
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
             ]);
         }
+
+        \Log::info('Authentication successful', [
+            'email' => $this->email,
+            'user_id' => Auth::id()
+        ]);
 
         RateLimiter::clear($this->throttleKey());
     }
