@@ -7,9 +7,26 @@
 
         <title>{{ config('app.name', 'TERANG By SRT') }}</title>
         
+        <!-- PWA Meta Tags -->
+        <meta name="theme-color" content="#2563eb">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="TERANG SRT">
+        <meta name="description" content="Sistem Rekrutmen dan Manajemen Talent PT Sarana Reksa Tama">
+        
         <!-- Favicon -->
         <link rel="icon" type="image/png" href="{{ asset('images/terang.png') }}">
         <link rel="shortcut icon" href="{{ asset('images/terang.png') }}">
+        
+        <!-- PWA Manifest -->
+        <link rel="manifest" href="{{ asset('manifest.json') }}">
+        
+        <!-- Apple Touch Icons -->
+        <link rel="apple-touch-icon" href="{{ asset('images/icon-192x192.png') }}">
+        <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('images/icon-152x152.png') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/icon-192x192.png') }}">
+        <link rel="apple-touch-icon" sizes="167x167" href="{{ asset('images/icon-192x192.png') }}">
 
         <!-- Tailwind CSS should be built via Vite; do not use CDN in production -->
         
@@ -53,5 +70,71 @@
         <!-- Footer Komponen -->
         <x-footer />
         
+        <!-- PWA Service Worker Registration -->
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(registration => {
+                            console.log('Service Worker registered successfully:', registration.scope);
+                            
+                            // Check for updates
+                            registration.addEventListener('updatefound', () => {
+                                const newWorker = registration.installing;
+                                newWorker.addEventListener('statechange', () => {
+                                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                        // New update available
+                                        if (confirm('Update tersedia! Refresh halaman untuk mendapatkan versi terbaru?')) {
+                                            window.location.reload();
+                                        }
+                                    }
+                                });
+                            });
+                        })
+                        .catch(error => {
+                            console.log('Service Worker registration failed:', error);
+                        });
+                });
+            }
+
+            // PWA Install Prompt
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                // Show install banner/button (optional)
+                const installBtn = document.getElementById('pwa-install-btn');
+                if (installBtn) {
+                    installBtn.style.display = 'block';
+                    installBtn.addEventListener('click', () => {
+                        deferredPrompt.prompt();
+                        deferredPrompt.userChoice.then((choiceResult) => {
+                            if (choiceResult.outcome === 'accepted') {
+                                console.log('User accepted the install prompt');
+                            }
+                            deferredPrompt = null;
+                        });
+                    });
+                }
+            });
+
+            // Detect if app is installed
+            window.addEventListener('appinstalled', () => {
+                console.log('PWA installed successfully');
+                deferredPrompt = null;
+            });
+
+            // Online/Offline detection
+            window.addEventListener('online', () => {
+                console.log('Back online');
+                // Show notification or update UI
+            });
+
+            window.addEventListener('offline', () => {
+                console.log('Connection lost');
+                // Show offline notification
+            });
+        </script>
     </body>
 </html>

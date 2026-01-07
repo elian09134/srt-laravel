@@ -7,9 +7,26 @@
 
         <title>{{ config('app.name', 'TERANG By SRT') }}</title>
         
+        <!-- PWA Meta Tags -->
+        <meta name="theme-color" content="#2563eb">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="TERANG SRT">
+        <meta name="description" content="Sistem Rekrutmen dan Manajemen Talent PT Sarana Reksa Tama">
+        
         <!-- Favicon -->
         <link rel="icon" type="image/png" href="{{ asset('images/terang.png') }}">
         <link rel="shortcut icon" href="{{ asset('images/terang.png') }}">
+        
+        <!-- PWA Manifest -->
+        <link rel="manifest" href="{{ asset('manifest.json') }}">
+        
+        <!-- Apple Touch Icons -->
+        <link rel="apple-touch-icon" href="{{ asset('images/icon-192x192.png') }}">
+        <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('images/icon-152x152.png') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/icon-192x192.png') }}">
+        <link rel="apple-touch-icon" sizes="167x167" href="{{ asset('images/icon-192x192.png') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -30,5 +47,16 @@
                 {{ $slot }}
             </div>
         </div>
+        
+        <!-- PWA Service Worker Registration -->
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(registration => console.log('SW registered'))
+                        .catch(error => console.log('SW registration failed:', error));
+                });
+            }
+        </script>
     </body>
 </html>
