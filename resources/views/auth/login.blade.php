@@ -41,6 +41,24 @@
                 <!-- Session Status -->
                 <x-auth-session-status class="mb-4" :status="session('status')" />
 
+                <!-- Debug Info (remove in production) -->
+                @if(config('app.debug'))
+                <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm">
+                    <strong>Debug Info:</strong><br>
+                    Session ID: {{ session()->getId() }}<br>
+                    CSRF Token: {{ csrf_token() }}<br>
+                    @if(session('error'))
+                    Error: {{ session('error') }}<br>
+                    @endif
+                    @if($errors->count() > 0)
+                    Validation Errors: {{ $errors->count() }}<br>
+                    @foreach($errors->all() as $error)
+                        - {{ $error }}<br>
+                    @endforeach
+                    @endif
+                </div>
+                @endif
+
                 <form method="POST" action="{{ route('login') }}" class="mt-8 space-y-6" id="loginForm">
                     @csrf
 
