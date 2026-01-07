@@ -36,8 +36,8 @@ class AuthenticatedSessionController extends Controller
             $request->session()->regenerate();
 
             \Log::info('Login successful', [
-                'user_id' => auth()->id(),
-                'email' => auth()->user()->email
+                'user_id' => Auth::id(),
+                'email' => Auth::user()->email
             ]);
 
             // Redirect to dashboard which will handle role-based routing
