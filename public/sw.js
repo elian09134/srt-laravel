@@ -1,8 +1,6 @@
-const CACHE_NAME = 'terang-srt-v2';
+const CACHE_NAME = 'terang-srt-v3';
 const urlsToCache = [
-  '/',
-  '/css/app.css',
-  '/js/app.js',
+  '/offline.html',
   '/images/terang.png',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css'
@@ -53,7 +51,30 @@ self.addEventListener('fetch', event => {
       fetch(event.request).catch(() => caches.match('/offline.html'))
     );
   }
+  
+  // Network-first strategy for HTML pages to get fresh auth state
+  if (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html')) {
+    return event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          // Clone and cache successful responses
+          if (response && response.status === 200) {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
+          // Fallback to cache if network fails
+          return caches.match(event.request)
+            .then(response => response || caches.match('/offline.html'));
+        })
+    );
+  }
 
+  // Cache-first for static assets
   event.respondWith(
     caches.match(event.request)
       .then(response => {
