@@ -138,122 +138,18 @@
     </div>
 
     <script>
-        // Simple form validation and loading state - use normal form submit for proper cookie handling
+        // Simple loading state - let form submit normally for proper cookie handling
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('loginForm');
             const submitButton = form ? form.querySelector('button[type="submit"]') : null;
             
             if (form && submitButton) {
                 form.addEventListener('submit', function() {
-                    // Show loading state
-                    const originalText = submitButton.innerHTML;
+                    // Just show loading state, don't prevent default
                     submitButton.disabled = true;
                     submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Logging in...';
-                    
-                    // Form will submit normally - browser will handle cookies and redirect
                 });
             }
-        });
-    </script>
-</body>
-</html>
-                const originalText = submitButton.innerHTML;
-                submitButton.disabled = true;
-                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Logging in...';
-                
-                // Hide previous errors
-                errorAlert.classList.add('hidden');
-                
-                // Get form data
-                const formData = new FormData(form);
-                
-                // Get fresh CSRF token from meta tag
-                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                
-                // Send AJAX request
-                fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    credentials: 'same-origin',
-                    cache: 'no-cache'
-                })
-                .then(response => {
-                    console.log('Response status:', response.status);
-                    console.log('Response headers:', [...response.headers.entries()]);
-                    
-                    // Log response for debugging
-                    return response.text().then(text => {
-                        console.log('Response body:', text);
-                        
-                        // Try to parse as JSON, otherwise use text
-                        try {
-                            const data = JSON.parse(text);
-                            return { ok: response.ok, status: response.status, data: data, text: text };
-                        } catch (e) {
-                            return { ok: response.ok, status: response.status, data: null, text: text };
-                        }
-                    });
-                })
-                .then(result => {
-                    console.log('Parsed result:', result);
-                    
-                    if (result.ok) {
-                        // Success - redirect
-                        if (result.data && result.data.redirect) {
-                            window.location.href = result.data.redirect;
-                        } else {
-                            window.location.href = '/dashboard';
-                        }
-                    } else {
-                        // Error - show message
-                        let errorMsg = 'Login failed. ';
-                        
-                        if (result.status === 419) {
-                            errorMsg += 'Session expired. Please refresh the page and try again.';
-                            console.error('CSRF Token Error - Page needs refresh');
-                        } else if (result.status === 500) {
-                            errorMsg += 'Server error (500). Check server logs. ';
-                            if (result.text) {
-                                console.error('Server error details:', result.text);
-                                // Try to extract error message from HTML
-                                const parser = new DOMParser();
-                                const doc = parser.parseFromString(result.text, 'text/html');
-                                const errorTitle = doc.querySelector('.exception-message, h1');
-                                if (errorTitle) {
-                                    errorMsg += errorTitle.textContent;
-                                }
-                            }
-                        } else if (result.data && result.data.message) {
-                            errorMsg += result.data.message;
-                        } else if (result.data && result.data.errors) {
-                            errorMsg += Object.values(result.data.errors).flat().join(' ');
-                        } else {
-                            errorMsg += `HTTP ${result.status} error. Check console for details.`;
-                        }
-                        
-                        errorMessage.textContent = errorMsg;
-                        errorAlert.classList.remove('hidden');
-                        
-                        // Restore button
-                        submitButton.disabled = false;
-                        submitButton.innerHTML = originalText;
-                    }
-                })
-                .catch(error => {
-                    console.error('Network error:', error);
-                    errorMessage.textContent = 'Network error: ' + error.message + '. Check your connection and server status.';
-                    errorAlert.classList.remove('hidden');
-                    
-                    // Restore button
-                    submitButton.disabled = false;
-                    submitButton.innerHTML = originalText;
-                });
-            });
         });
     </script>
 </body>
