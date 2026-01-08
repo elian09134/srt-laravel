@@ -49,7 +49,6 @@
                     <option @if(old('type', $job->type ?? '') == 'Part Time') selected @endif>Part Time</option>
                     <option @if(old('type', $job->type ?? '') == 'Contract') selected @endif>Contract</option>
                     <option @if(old('type', $job->type ?? '') == 'Internship') selected @endif>Internship</option>
-                    <option @if(old('type', $job->type ?? '') == 'Mitra') selected @endif>Mitra</option>
                 </select>
             </div>
             <div>
