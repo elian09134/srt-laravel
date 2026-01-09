@@ -14,7 +14,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="apple-mobile-web-app-title" content="TERANG SRT">
-        <meta name="description" content="Sistem Rekrutmen dan Manajemen Talent PT Sarana Reksa Tama">
+        <meta name="description" content="Sistem Rekrutmen dan Manajemen Talent PT Mandala Karya Sentosa">
         
         <!-- Favicon -->
         <link rel="icon" type="image/png" href="{{ asset('images/terang.png') }}">
