@@ -14,7 +14,22 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         <meta name="apple-mobile-web-app-title" content="TERANG SRT">
-        <meta name="description" content="Sistem Rekrutmen dan Manajemen Talent PT Mandala Karya Sentosa">
+        <meta name="description" content="Sistem Rekrutmen dan Manajemen Talent PT. Mandala Karya Sentosa">
+        
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:title" content="{{ config('app.name', 'TERANG By SRT') }}">
+        <meta property="og:description" content="Sistem Rekrutmen dan Manajemen Talent PT. Mandala Karya Sentosa">
+        <meta property="og:site_name" content="PT. Mandala Karya Sentosa">
+        <meta property="og:image" content="{{ asset('images/terang.png') }}">
+        
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="{{ url()->current() }}">
+        <meta property="twitter:title" content="{{ config('app.name', 'TERANG By SRT') }}">
+        <meta property="twitter:description" content="Sistem Rekrutmen dan Manajemen Talent PT. Mandala Karya Sentosa">
+        <meta property="twitter:image" content="{{ asset('images/terang.png') }}">
         
         <!-- Favicon -->
         <link rel="icon" type="image/png" href="{{ asset('images/terang.png') }}">
