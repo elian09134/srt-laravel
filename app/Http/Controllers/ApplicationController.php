@@ -26,16 +26,22 @@ class ApplicationController extends Controller
             ->where('user_id', $user->id)
             ->exists();
 
+        // Check verification limit (Max 2 active applications)
+        $applicationCount = Application::where('user_id', $user->id)->count();
+        if ($applicationCount >= 2) {
+            return redirect()->back()->with('error', 'Anda hanya dapat melamar maksimal 2 lowongan pekerjaan.');
+        }
+
         if ($exists) {
             return redirect()->back()->with('error', 'Anda telah mengirimkan lamaran untuk posisi ini.');
         }
 
         $profile = $user->profile ?? null;
         $workExperiences = $user->workExperiences ?? collect();
-        
+
         // Ambil pengalaman kerja terakhir
         $lastExperience = $workExperiences->first();
-        
+
         // Build snapshot data lengkap
         $snapshotData = [
             'name' => $user->name,
@@ -52,7 +58,7 @@ class ApplicationController extends Controller
             'expected_salary' => $profile->expected_salary ?? null,
             'cv_path' => $profile->cv_path ?? null,
             'photo_path' => $profile->photo_path ?? null,
-            'work_experiences' => $workExperiences->map(function($exp) {
+            'work_experiences' => $workExperiences->map(function ($exp) {
                 return [
                     'company_name' => $exp->company_name,
                     'duration' => $exp->duration,
