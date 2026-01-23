@@ -8,9 +8,11 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('applications', function (Blueprint $table) {
-            $table->date('join_date')->nullable()->after('status');
-        });
+        if (!Schema::hasColumn('applications', 'join_date')) {
+            Schema::table('applications', function (Blueprint $table) {
+                $table->date('join_date')->nullable()->after('status');
+            });
+        }
     }
 
     public function down()

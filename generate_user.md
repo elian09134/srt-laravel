@@ -1,3 +1,7 @@
+-- Prerequisites: Add division column if not exists
+-- Run this if the migration failed or hasn't been run
+ALTER TABLE users ADD COLUMN division VARCHAR(255) NULL AFTER role;
+
 -- Clean up previous attempts (Drop Users)
 DELETE FROM users WHERE email IN (
     'divisiminimarket@gmail.com', 'divisiwrapping@gmail.com', 'hansmks.hlp@gmail.com',
@@ -68,8 +72,8 @@ VALUES (
 -- Generate User FnB
 INSERT INTO users (name, email, password, role, division, created_at, updated_at)
 VALUES (
-    'FnB',
-    'divisifnb@gmail.com',
+    'FnB Manager',
+    'officefnb126@gmail.com',
     '$2y$12$pimydU0dZtqtf9FloJpDautxjsTN8cgWfCsYqXJFl9dVp3YPmBV52', -- Password: FnB2026!
     'operasional',
     'fnb',
