@@ -30,7 +30,16 @@ class ApplicantController extends Controller
         // Query dasar untuk mengambil data lamaran
         $query = Application::with(['user.profile', 'job']);
 
-        // Terapkan filter jika ada
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('applicant_name', 'like', '%' . $search . '%')
+                  ->orWhereHas('job', function ($jq) use ($search) {
+                      $jq->where('title', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+
         if ($request->filled('job_id')) {
             $query->where('job_id', $request->job_id);
         }

@@ -9,7 +9,11 @@
 
     <!-- Filter Form -->
     <div class="mb-6 bg-white p-4 rounded-md shadow-sm">
-        <form action="{{ route('admin.applicants.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <form action="{{ route('admin.applicants.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+            <div>
+                <label for="search" class="block text-sm font-medium text-gray-700">Cari Nama / Posisi</label>
+                <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Cari..." class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+            </div>
             <div>
                 <label for="job_id" class="block text-sm font-medium text-gray-700">Filter Posisi</label>
                 <select name="job_id" id="job_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
@@ -33,7 +37,7 @@
                 </select>
             </div>
             <div class="md:col-span-2 flex items-end space-x-2">
-                <button type="submit" class="w-full md:w-auto px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">Filter</button>
+                <button type="submit" class="w-full md:w-auto px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">Cari & Filter</button>
                 <a href="{{ route('admin.applicants.index') }}" class="w-full md:w-auto px-6 py-2 text-center text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">Reset</a>
             </div>
         </form>
