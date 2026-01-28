@@ -101,6 +101,6 @@
         </table>
     </div>
     <div class="mt-6">
-        {{ $applications->links() }}
+        {{ $applications->appends(request()->query())->links() }}
     </div>
 @endsection
