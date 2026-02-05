@@ -74,9 +74,9 @@ class ApplicationController extends Controller
             'cover_letter' => $request->cover_letter,
             'applicant_name' => $user->name,
             'applicant_email' => $user->email,
-            'applicant_phone' => $profile?->phone_number,
-            'applicant_last_position' => $lastExperience?->job_description ?? $profile?->last_position,
-            'applicant_last_education' => $profile?->education_level ?? $profile?->last_education,
+            'applicant_phone' => $profile?->phone_number ?? '-',
+            'applicant_last_position' => $lastExperience?->job_description ?? ($profile?->last_position ?? '-'),
+            'applicant_last_education' => $profile?->education_level ?? ($profile?->last_education ?? '-'),
             'snapshot_data' => json_encode($snapshotData),
         ]);
 
