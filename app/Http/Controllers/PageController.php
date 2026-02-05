@@ -6,6 +6,7 @@ use App\Models\SiteContent;
 use App\Models\Gallery; // Tambahkan ini
 use Illuminate\Http\Request;
 use App\Models\Job;
+use App\Models\Application;
 
 class PageController extends Controller
 {
@@ -61,8 +62,14 @@ class PageController extends Controller
 
     public function showJob(Job $job)
     {
+        $applicationCount = 0;
+        if (auth()->check()) {
+            $applicationCount = Application::where('user_id', auth()->id())->count();
+        }
+
         return view('karir_show', [
-            'job' => $job
+            'job' => $job,
+            'applicationCount' => $applicationCount
         ]);
     }
 }

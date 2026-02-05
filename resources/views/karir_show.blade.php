@@ -84,6 +84,12 @@
                                             <button disabled class="w-full inline-block text-center px-4 py-2 bg-gray-300 text-gray-700 rounded-xl cursor-not-allowed">Sudah Melamar</button>
                                             <a href="{{ route('applications.index') }}" class="w-full inline-block text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50">Lihat Riwayat Lamaran</a>
                                         </div>
+                                    @elseif($applicationCount >= 2)
+                                        <div class="space-y-2">
+                                            <button disabled class="w-full inline-block text-center px-4 py-2 bg-red-100 text-red-600 rounded-xl cursor-not-allowed">Batas Lamaran Tercapai</button>
+                                            <p class="text-xs text-red-500 text-center">Anda hanya dapat memiliki maksimal 2 lamaran aktif.</p>
+                                            <a href="{{ route('applications.index') }}" class="w-full inline-block text-center px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50">Lihat Riwayat Lamaran</a>
+                                        </div>
                                     @else
                                         <form method="post" action="{{ route('karir.apply', $job) }}">
                                             @csrf
