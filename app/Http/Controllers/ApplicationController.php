@@ -7,6 +7,7 @@ use App\Models\Job;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ApplicationStatusHistory;
+use Illuminate\Support\Facades\Log;
 
 class ApplicationController extends Controller
 {
@@ -86,6 +87,14 @@ class ApplicationController extends Controller
             'status' => 'Baru',
             'note' => 'Lamaran dikirim oleh pelamar',
             'changed_by' => $user->id,
+        ]);
+
+        Log::info('User applied for job', [
+            'user_id' => $user->id,
+            'email' => $user->email,
+            'job_id' => $job->id,
+            'job_title' => $job->title,
+            'application_id' => $application->id
         ]);
 
         return redirect()->back()->with('success', 'Lamaran berhasil dikirim. Terima kasih!');
