@@ -76,7 +76,7 @@ class ApplicationController extends Controller
             'applicant_name' => $user->name,
             'applicant_email' => $user->email,
             'applicant_phone' => $profile?->phone_number ?? '-',
-            'applicant_last_position' => $lastExperience?->job_description ?? ($profile?->last_position ?? '-'),
+            'applicant_last_position' => \Illuminate\Support\Str::limit($lastExperience?->job_description ?? ($profile?->last_position ?? '-'), 250),
             'applicant_last_education' => $profile?->education_level ?? ($profile?->last_education ?? '-'),
             'snapshot_data' => json_encode($snapshotData),
         ]);
