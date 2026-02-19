@@ -46,19 +46,25 @@ class GoogleController extends Controller
                 }
                 
                 Auth::login($finduser);
-                return redirect()->intended('dashboard');
+                
+                // Redirect based on role
+                if (in_array($finduser->role, ['admin', 'superadmin'])) {
+                    return redirect()->intended(route('admin.dashboard'));
+                }
+                
+                return redirect()->intended(route('home'));
             }else{
                 $newUser = User::create([
                     'name' => $user->name,
                     'email' => $user->email,
                     'google_id'=> $user->id,
                     'avatar' => $user->avatar,
-                    'password' => Hash::make(Str::random(16)), // Better than dummy password
-                    'role' => 'karyawan', // Default role for social login
+                    'password' => Hash::make(Str::random(16)),
+                    'role' => 'karyawan',
                 ]);
 
                 Auth::login($newUser);
-                return redirect()->intended('dashboard');
+                return redirect()->intended(route('home'));
             }
         } catch (Exception $e) {
             return redirect()->route('login')->with('error', 'Gagal masuk dengan Google: ' . $e->getMessage());
