@@ -82,7 +82,6 @@
                 <div class="space-y-2">
                     <label for="email" class="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1 uppercase tracking-wider text-[10px]">Alamat Email</label>
                     <div class="relative flex items-center group">
-                        <span class="material-symbols-outlined absolute left-4 text-slate-400 group-focus-within:text-primary transition-colors">mail</span>
                         <input id="email" 
                                name="email" 
                                type="email" 
