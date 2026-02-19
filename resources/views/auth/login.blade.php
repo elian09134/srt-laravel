@@ -39,7 +39,7 @@
                     Menerangi Langkah Bisnis Anda dengan Solusi Terpadu.
                 </h2>
                 <p class="text-xl text-slate-100 max-w-md font-medium leading-relaxed opacity-90">
-                    Akses dasbor profesional Anda untuk memantau performa dan pertumbuhan strategi bisnis secara real-time.
+                    Akses akun Anda untuk memantau status lamaran dan update peluang karir terbaru secara real-time.
                 </p>
             </div>
             <div class="text-sm font-bold opacity-60 uppercase tracking-widest">
@@ -90,7 +90,6 @@
                                required 
                                autofocus 
                                autocomplete="username"
-                               placeholder="nama@perusahaan.com"
                                class="w-full pl-12 pr-4 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all outline-none text-slate-900 dark:text-white font-medium">
                     </div>
                 </div>
@@ -105,14 +104,12 @@
                             </a>
                         @endif
                     </div>
-                    <div class="relative flex items-center group">
-                        <span class="material-symbols-outlined absolute left-4 text-slate-400 group-focus-within:text-primary transition-colors">lock</span>
+                    <div class="relative flex items-center group">                      
                         <input id="password" 
                                name="password" 
                                type="password" 
                                required 
                                autocomplete="current-password"
-                               placeholder="••••••••"
                                class="w-full pl-12 pr-12 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all outline-none text-slate-900 dark:text-white font-medium">
                         <button type="button" onclick="togglePassword()" class="absolute right-4 text-slate-400 hover:text-primary transition-colors">
                             <span class="material-symbols-outlined" id="pwIcon">visibility</span>
@@ -179,12 +176,9 @@
 
     document.getElementById('loginForm').addEventListener('submit', function() {
         const btn = document.getElementById('submitBtn');
-        const icon = document.getElementById('btnIcon');
         btn.disabled = true;
         btn.classList.add('opacity-50', 'cursor-not-allowed');
         btn.querySelector('span:first-child').innerText = 'Memproses...';
-        icon.innerText = 'sync';
-        icon.classList.add('animate-spin');
     });
 </script>
 </body>
