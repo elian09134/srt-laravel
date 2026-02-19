@@ -17,3 +17,4 @@ b x b g o x e k c m s l f s b o
 
 
 tail -f /home/hcmsrt/terangbysrt/storage/logs/laravel.log
+

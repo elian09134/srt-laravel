@@ -10,9 +10,13 @@ use App\Http\Controllers\Admin\ImageController;
 // use App\Http\Controllers\Admin\EmployeeInvitationController;
 use App\Http\Controllers\Auth\EmployeeRegisterController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AI\AgentController;
 
+// Google Authentication Routes
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 // Rute untuk halaman utama
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/karir', [PageController::class, 'karir'])->name('karir'); // Tambahkan baris ini
