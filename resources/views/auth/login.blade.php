@@ -130,8 +130,7 @@
 
                 <!-- Submit Button -->
                 <button type="submit" id="submitBtn" class="w-full bg-primary hover:shadow-2xl hover:shadow-primary/30 text-white font-black py-5 rounded-2xl shadow-xl shadow-primary/20 transform active:scale-[0.98] transition-all flex justify-center items-center gap-2 uppercase tracking-widest text-sm">
-                    <span>Masuk Ke Dasbor</span>
-                    <span class="material-symbols-outlined text-xl" id="btnIcon">arrow_forward</span>
+                    <span>Masuk</span>
                 </button>
             </form>
 
