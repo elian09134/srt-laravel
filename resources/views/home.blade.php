@@ -3,31 +3,74 @@
         <!-- =================================================================== -->
         <!-- HERO SECTION -->
         <!-- =================================================================== -->
-        <section id="home" class="relative bg-gradient-to-br from-blue-50 via-white to-blue-50 overflow-hidden">
-            <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
-            <div class="container mx-auto px-6 py-20 md:py-28 flex flex-col md:flex-row items-center relative z-10">
-                <div class="md:w-1/2 text-center md:text-left">
-                    <div class="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-6">
-                        ✨ Bergabung dengan Tim Terbaik
+        <section id="home" class="relative bg-white text-slate-900 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-20">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <!-- Content Left -->
+                    <div class="flex flex-col items-start space-y-8 max-w-xl">
+                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
+                            <span class="text-primary text-sm font-bold">{{ $content['hero']['badge_text'] ?? '✨ Bergabung dengan Tim Terbaik' }}</span>
+                        </div>
+                        <h1 class="text-5xl lg:text-6xl font-extrabold leading-[1.15] text-slate-900 tracking-tight">
+                            {!! $content['hero']['title'] ?? 'Bangun Karir <span class="text-primary">Impian Anda</span> Bersama SRT Corp' !!}
+                        </h1>
+                        <p class="text-lg text-slate-600 leading-relaxed font-normal">
+                            {{ $content['hero']['description'] ?? 'Tempat terbaik untuk mengasah potensi dan membangun masa depan yang solid. Jelajahi peluang karier yang dirancang khusus untuk pertumbuhan profesional Anda.' }}
+                        </p>
+                        <div class="flex flex-wrap gap-4 w-full sm:w-auto">
+                            <a href="/karir" class="flex-1 sm:flex-none px-8 py-4 bg-primary text-white font-bold rounded-lg shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all text-center">
+                                {{ $content['hero']['button_text'] ?? 'Lihat Lowongan' }}
+                            </a>
+                            <a href="#about-us" class="flex-1 sm:flex-none px-8 py-4 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg hover:bg-slate-50 transition-all text-center">
+                                Tentang Kami
+                            </a>
+                        </div>
+                        <!-- Stats/Social Proof (Embedded in Hero Grid) -->
+                        <div class="pt-8 grid grid-cols-3 gap-6 w-full border-t border-slate-100">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2 text-primary">
+                                    <span class="material-symbols-outlined text-xl">groups</span>
+                                    <span class="text-2xl font-bold text-slate-900">{{ $content['hero']['stats_employees'] ?? '1000+' }}</span>
+                                </div>
+                                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Karyawan</p>
+                            </div>
+                            <div class="space-y-1 border-x border-slate-100 px-6">
+                                <div class="flex items-center gap-2 text-primary">
+                                    <span class="material-symbols-outlined text-xl">verified</span>
+                                    <span class="text-xl font-bold text-slate-900 leading-none">{{ $content['hero']['stats_security'] ?? 'Terpercaya' }}</span>
+                                </div>
+                                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Keamanan</p>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2 text-primary">
+                                    <span class="material-symbols-outlined text-xl">public</span>
+                                    <span class="text-xl font-bold text-slate-900 leading-none">{{ $content['hero']['stats_global'] ?? 'Global' }}</span>
+                                </div>
+                                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Jangkauan</p>
+                            </div>
+                        </div>
                     </div>
-                    <h1 class="text-4xl md:text-6xl font-bold leading-tight bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                        {{ $content['hero']['title'] ?? 'Judul Default' }}
-                    </h1>
-                    <p class="mt-6 text-lg text-justify text-gray-600 max-w-lg mx-auto md:mx-0">
-                        {{ $content['hero']['description'] ?? 'Deskripsi default.' }}
-                    </p>
-                    <div class="mt-10 flex justify-center md:justify-start space-x-4">
-                        <a href="/karir" class="px-8 py-4 font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 transform transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg">Lihat Lowongan</a>
-                        <a href="#about-us" class="px-8 py-4 font-semibold text-blue-700 bg-white border-2 border-blue-200 rounded-xl hover:bg-blue-50 transform transition-all duration-300 hover:scale-105 shadow-lg">Tentang Kami</a>
-                    </div>
-                </div>
-                <div class="md:w-1/2 mt-12 md:mt-0 flex justify-center">
-                    <div class="relative">
-                        <div class="absolute -inset-4 bg-gradient-to-r from-blue-400 to-blue-600 rounded-2xl blur-2xl opacity-20 animate-pulse"></div>
-                        @php
-                            $heroImage = !empty($content['hero']['image']) ? asset('storage/' . $content['hero']['image']) : asset('images/office_building.svg');
-                        @endphp
-                        <img src="{{ $heroImage }}" alt="Tim TERANG" class="relative rounded-2xl shadow-2xl w-full max-w-md lg:max-w-lg object-cover ring-4 ring-blue-100 animate-float">
+                    <!-- Hero Image Right -->
+                    <div class="relative group">
+                        <!-- Decorative background element -->
+                        <div class="absolute -inset-4 bg-primary/5 rounded-2xl blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+                        <div class="relative overflow-hidden rounded-xl aspect-[4/3] shadow-2xl">
+                             @php
+                                $heroImage = !empty($content['hero']['image']) ? asset('storage/' . $content['hero']['image']) : 'https://lh3.googleusercontent.com/aida-public/AB6AXuDIPs6WZqBK5ndm49ovZKlqcj99hWH-JxeJoNDXz8rxyxaAlJGnAKmE7KNiCyuChrkPPxO89LxDdMofmcIUEyjmzQCmYg78H5WeyPROkyR-dY2vQ31I_Vn53VS1aZBlphSOLdG9hUV3RFpt-ZWVpn9x42mlTh3VfWo5c6Cu3jxPIYCsbpXWfbi9sQi8D1mEkRNUwDh_UxN54jnkFxbuGXv2zA94oS-c27E1zNlBOPmqNBmay-NsVYaCg6AXoIQ7WO_efcvOlHP-kQc';
+                            @endphp
+                            <div class="w-full h-full bg-slate-200 bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="Modern collaborative glass office building interior with professional growth vibe" style="background-image: url('{{ $heroImage }}');">
+                            </div>
+                            <!-- Floating Card Element -->
+                            <div class="absolute bottom-6 left-6 right-6 p-4 bg-white/90 backdrop-blur-md rounded-lg border border-white/20 shadow-lg flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                    <span class="material-symbols-outlined">trending_up</span>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-900">{{ $content['hero']['floating_card_title'] ?? 'Pertumbuhan Karir Cepat' }}</p>
+                                    <p class="text-xs text-slate-500">{{ $content['hero']['floating_card_desc'] ?? 'Mulai perjalanan profesionalmu hari ini' }}</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

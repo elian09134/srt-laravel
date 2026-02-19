@@ -29,7 +29,7 @@ class IsAdmin
             return redirect('/');
         }
 
-        if (Auth::user()->role !== 'admin') {
+        if (Auth::user()->role !== 'admin' && Auth::user()->role !== 'superadmin') {
             Log::warning('IsAdmin middleware - Non-admin access attempt', [
                 'user_id' => Auth::id(),
                 'user_role' => Auth::user()->role,

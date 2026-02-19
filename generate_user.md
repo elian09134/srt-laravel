@@ -61,7 +61,7 @@ VALUES (
 INSERT INTO users (name, email, password, role, division, created_at, updated_at)
 VALUES (
     'Celluller',
-    'divisicelluller@gmail.com',
+    'cellulardivisi@gmail.com',
     '$2y$12$msTfM12P.43hEs6tR1V8aenVeial64fL0FdWUHNVHiewyIC8uPvAe', -- Password: Celluller2026!
     'operasional',
     'celluller',
@@ -89,6 +89,18 @@ VALUES (
     '$2y$12$M5YtduxVGg0VsGaviWQEqukCqsO0mJ2pRovDCv1/F2D7cj6WLBxhS', -- Password: MoneyChanger2026!
     'operasional',
     'money changer',
+    NOW(),
+    NOW()
+);
+
+-- Generate User FAT
+INSERT INTO users (name, email, password, role, division, created_at, updated_at)
+VALUES (
+    'Division FAT',
+    'fat.holding@gmail.com',
+    '$2y$12$motxn44BThf5UMiIGTN.MOvm5nnstsDFaa5mlO5SzGl1xSY/h.EjK', -- Password: FAT2026!
+    'operasional',
+    'FAT',
     NOW(),
     NOW()
 );

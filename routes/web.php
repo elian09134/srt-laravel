@@ -97,7 +97,7 @@ require __DIR__.'/auth.php';
 // Rute untuk halaman dashboard - redirect berdasarkan role user
 Route::get('/dashboard', function () {
     $role = request()->user()?->role;
-    if ($role === 'admin') {
+    if ($role === 'admin' || $role === 'superadmin') {
         return redirect('/admin');
     }
     // Operasional redirect ke homepage, bukan /fptk

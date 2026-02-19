@@ -33,6 +33,49 @@
                     <label for="hero_description" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
                     <textarea name="content[hero][description]" id="hero_description" rows="3" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="Deskripsi singkat untuk hero section...">{{ old('content.hero.description', $content['hero']['description'] ?? '') }}</textarea>
                 </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label for="hero_badge_text" class="block text-sm font-medium text-gray-700 mb-2">Teks Badge (Atas Judul)</label>
+                        <input type="text" name="content[hero][badge_text]" id="hero_badge_text" value="{{ old('content.hero.badge_text', $content['hero']['badge_text'] ?? '✨ Bergabung dengan Tim Terbaik') }}" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                    </div>
+                    <div>
+                        <label for="hero_button_text" class="block text-sm font-medium text-gray-700 mb-2">Teks Tombol Utama</label>
+                        <input type="text" name="content[hero][button_text]" id="hero_button_text" value="{{ old('content.hero.button_text', $content['hero']['button_text'] ?? 'Lihat Lowongan') }}" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-100 pt-4">
+                    <h3 class="text-sm font-medium text-gray-900 mb-3">Statistik</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="hero_stats_employees" class="block text-xs font-medium text-gray-700 mb-1">Jumlah Karyawan</label>
+                            <input type="text" name="content[hero][stats_employees]" id="hero_stats_employees" value="{{ old('content.hero.stats_employees', $content['hero']['stats_employees'] ?? '1000+') }}" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="hero_stats_security" class="block text-xs font-medium text-gray-700 mb-1">Label Keamanan</label>
+                            <input type="text" name="content[hero][stats_security]" id="hero_stats_security" value="{{ old('content.hero.stats_security', $content['hero']['stats_security'] ?? 'Terpercaya') }}" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="hero_stats_global" class="block text-xs font-medium text-gray-700 mb-1">Label Jangkauan</label>
+                            <input type="text" name="content[hero][stats_global]" id="hero_stats_global" value="{{ old('content.hero.stats_global', $content['hero']['stats_global'] ?? 'Global') }}" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-100 pt-4">
+                    <h3 class="text-sm font-medium text-gray-900 mb-3">Kartu Melayang (Floating Card)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="hero_floating_card_title" class="block text-xs font-medium text-gray-700 mb-1">Judul Kartu</label>
+                            <input type="text" name="content[hero][floating_card_title]" id="hero_floating_card_title" value="{{ old('content.hero.floating_card_title', $content['hero']['floating_card_title'] ?? 'Pertumbuhan Karir Cepat') }}" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="hero_floating_card_desc" class="block text-xs font-medium text-gray-700 mb-1">Deskripsi Kartu</label>
+                            <input type="text" name="content[hero][floating_card_desc]" id="hero_floating_card_desc" value="{{ old('content.hero.floating_card_desc', $content['hero']['floating_card_desc'] ?? 'Mulai perjalanan profesionalmu hari ini') }}" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Anggota Tim HR - Form Biasa -->
                 <div class="pt-4 border-t border-gray-100">

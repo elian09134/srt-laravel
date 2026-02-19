@@ -31,7 +31,7 @@
         <!-- Tombol CTA (Desktop) -->
         <div class="hidden md:flex items-center space-x-3">
                 @auth
-                @if(auth()->user()->role == 'admin')
+                @if(auth()->user()->role == 'admin' || auth()->user()->role == 'superadmin')
                     <!-- Tampilan jika admin login -->
                     <a href="{{ route('admin.dashboard') }}" class="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-700 rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 hover:shadow-lg">Admin Panel</a>
                 @elseif(auth()->user()->role == 'operasional')
@@ -74,7 +74,7 @@
         <a href="{{ route('karir') }}" class="block py-2 text-gray-600 hover:text-blue-600">Karir</a>
         <div class="mt-4 pt-4 border-t">
              @auth
-                      @if (auth()->user()->role == 'admin')
+                      @if (auth()->user()->role == 'admin' || auth()->user()->role == 'superadmin')
                           <a href="{{ route('admin.dashboard') }}" class="block text-center py-2 font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">Admin Panel</a>
                 @elseif(auth()->user()->role == 'operasional')
                           <a href="{{ route('fptk.my') }}" class="block text-center py-2 font-medium text-gray-700 border border-gray-400 rounded-lg hover:bg-gray-50 mb-2">FPTK Saya</a>
