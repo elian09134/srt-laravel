@@ -11,6 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('password_reset_requests')) {
+            return;
+        }
+
         Schema::create('password_reset_requests', function (Blueprint $table) {
             $table->id();
             $table->string('email')->nullable();
