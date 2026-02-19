@@ -139,7 +139,8 @@
                 </div>
             </div>
 
-            <!-- Social Logins (LinkedIn Removed) -->
+            <!-- Social Logins (Temporarily Hidden) -->
+            {{-- 
             <div class="grid grid-cols-1 gap-4">
                 <a href="{{ route('auth.google') }}" class="flex items-center justify-center gap-3 py-4 px-4 bg-slate-50 hover:bg-white dark:bg-slate-800 dark:hover:bg-slate-700 border border-transparent hover:border-slate-200 dark:hover:border-slate-600 rounded-2xl transition-all font-bold text-slate-700 dark:text-slate-300 shadow-sm">
                     <svg class="w-5 h-5" viewbox="0 0 24 24">
@@ -151,6 +152,7 @@
                     <span class="text-sm">Lanjutkan dengan Google</span>
                 </a>
             </div>
+            --}}
 
             <p class="mt-12 text-center text-sm font-bold text-slate-400">
                 Belum punya akun? 
