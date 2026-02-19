@@ -76,137 +76,226 @@
             </div>
         </section>
         <!-- =================================================================== -->
-        <!-- SEKSI DEPARTEMEN HR -->
+        <!-- MEMBER TIM SECTION -->
         <!-- =================================================================== -->
-        <section id="hr-department" class="py-20 md:py-24 bg-white reveal" data-reveal>
-            <div class="container mx-auto px-6">
-                <div class="text-center">
-                    <h2 class="text-3xl font-bold text-gray-900">{{ $content['hr_department']['team_title'] ?? $content['hr_department']['title'] ?? 'Meet Our Team' }}</h2>
-                    <p class="mt-4 max-w-2xl mx-auto text-gray-600">{{ $content['hr_department']['description'] ?? '' }}</p>
-                </div>
-                <div class="mt-12">
-                    <div class="w-full">
-                        @php
-                            $membersJson = $content['hr_department']['members'] ?? null;
-                            try {
-                                $members = (is_array($membersJson) ? $membersJson : json_decode($membersJson, true)) ?: [];
-                            } catch (\Throwable $e) {
-                                $members = [];
-                            }
-                        @endphp
+        @php
+            $membersJson = $content['hr_department']['members'] ?? null; // Assuming 'hr_department' still holds the members data
+            try {
+                $members = (is_array($membersJson) ? $membersJson : json_decode($membersJson, true)) ?: [];
+            } catch (\Throwable $e) {
+                $members = [];
+            }
+        @endphp
+        <section id="team" class="flex flex-col items-center text-center mb-20">
+            <span class="text-primary font-bold tracking-[0.2em] uppercase text-[10px] mb-4 bg-primary/10 px-4 py-1.5 rounded-full">Our Excellence</span>
+            <h1 class="text-slate-900 dark:text-white text-4xl md:text-6xl font-black leading-[1.1] tracking-tight mb-8 max-w-4xl">
+                Meet the Minds Behind <span class="text-primary">TERANG By SRT</span>
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 text-xl font-medium leading-relaxed max-w-2xl">
+                Our dedicated professionals are committed to driving innovation and excellence in every project, blending strategy with seamless execution.
+            </p>
+            
+            <div class="mt-14 flex flex-wrap justify-center gap-3 w-full mb-12">
+                <button onclick="filterTeam('all')" class="filter-btn active px-8 py-2.5 text-sm font-bold rounded-full transition-all border border-transparent shadow-lg shadow-primary/25 bg-primary text-white" data-filter="all">All Departments</button>
+                <button onclick="filterTeam('HR')" class="filter-btn px-8 py-2.5 text-sm font-bold rounded-full transition-all border border-slate-100 text-slate-500 hover:text-primary hover:bg-slate-50" data-filter="HR">HR & HCM</button>
+                <button onclick="filterTeam('Digital Technology')" class="filter-btn px-8 py-2.5 text-sm font-bold rounded-full transition-all border border-slate-100 text-slate-500 hover:text-primary hover:bg-slate-50" data-filter="Digital Technology">Digital Technology</button>
+                <button onclick="filterTeam('General Affairs')" class="filter-btn px-8 py-2.5 text-sm font-bold rounded-full transition-all border border-slate-100 text-slate-500 hover:text-primary hover:bg-slate-50" data-filter="General Affairs">General Affairs</button>
+                <button onclick="filterTeam('Legal')" class="filter-btn px-8 py-2.5 text-sm font-bold rounded-full transition-all border border-slate-100 text-slate-500 hover:text-primary hover:bg-slate-50" data-filter="Legal">Legal</button>
+            </div>
 
-                        @if(!empty($members))
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                                @foreach($members as $member)
-                                    @php
-                                        $photo = $member['photo'] ?? null;
-                                        $photoUrl = $photo ? asset('storage/' . ltrim($photo, '/')) : asset('images/avatar-placeholder.png');
-                                        $bio = $member['bio'] ?? '';
-                                        $email = $member['email'] ?? '';
-                                        $phone = $member['phone'] ?? '';
-                                        $social = $member['social'] ?? [];
-                                    @endphp
-                                    <div class="group relative bg-gradient-to-br from-white via-blue-50/30 to-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden h-80 border border-blue-100/50">
-                                        <!-- Decorative Elements -->
-                                        <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-transparent rounded-bl-full"></div>
-                                        <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-blue-400/10 to-transparent rounded-tr-full"></div>
-                                        
-                                        <!-- Front Card -->
-                                        <div class="absolute inset-0 p-6 flex flex-col justify-center items-center text-center transition-opacity duration-300 group-hover:opacity-0">
-                                            <div class="mx-auto w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-xl mb-4 ring-2 ring-blue-200/50">
-                                                <img src="{{ $photoUrl }}" alt="{{ $member['name'] ?? 'Team' }}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500">
-                                            </div>
-                                            <h3 class="text-lg font-bold text-gray-900 mb-1">{{ $member['name'] ?? '-' }}</h3>
-                                            <p class="text-sm text-blue-600 font-medium">{{ $member['role'] ?? '' }}</p>
-                                            <div class="mt-3 w-16 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full"></div>
-                                        </div>
-                                        
-                                        <!-- Hover Card -->
-                                        <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 p-6 flex flex-col justify-start items-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 overflow-y-auto">
-                                            <div class="w-16 h-16 rounded-full overflow-hidden border-3 border-white mb-3 flex-shrink-0">
-                                                <img src="{{ $photoUrl }}" alt="{{ $member['name'] ?? 'Team' }}" class="w-full h-full object-cover">
-                                            </div>
-                                            <h3 class="text-base font-bold flex-shrink-0">{{ $member['name'] ?? '-' }}</h3>
-                                            <p class="text-xs opacity-90 mb-3 flex-shrink-0">{{ $member['role'] ?? '' }}</p>
-                                            @if($bio)
-                                                <p class="text-xs text-center mb-3 leading-relaxed">{{ $bio }}</p>
-                                            @endif
-                                            <div class="flex flex-col items-center space-y-1 mb-3 flex-shrink-0">
-                                                @if($email)
-                                                    <a href="mailto:{{ $email }}" class="text-xs hover:underline break-all">✉ {{ $email }}</a>
-                                                @endif
-                                                @if($phone)
-                                                    <a href="tel:{{ $phone }}" class="text-xs hover:underline">📱 {{ $phone }}</a>
-                                                @endif
-                                            </div>
-                                            @if(!empty($social['linkedin']) || !empty($social['instagram']) || !empty($social['twitter']))
-                                                <div class="flex space-x-3 mt-auto pt-3 flex-shrink-0">
-                                                    @if(!empty($social['linkedin']))
-                                                        <a href="{{ $social['linkedin'] }}" target="_blank" class="text-white hover:text-blue-200 transition-colors">
-                                                            <i class="fab fa-linkedin text-xl"></i>
-                                                        </a>
-                                                    @endif
-                                                    @if(!empty($social['instagram']))
-                                                        <a href="https://instagram.com/{{ ltrim($social['instagram'], '@') }}" target="_blank" class="text-white hover:text-blue-200 transition-colors">
-                                                            <i class="fab fa-instagram text-xl"></i>
-                                                        </a>
-                                                    @endif
-                                                    @if(!empty($social['twitter']))
-                                                        <a href="{{ $social['twitter'] }}" target="_blank" class="text-white hover:text-blue-200 transition-colors">
-                                                            <i class="fab fa-twitter text-xl"></i>
-                                                        </a>
-                                                    @endif
-                                                </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endforeach
+            <!-- Team Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12 w-full max-w-7xl px-6">
+                @foreach($members as $member)
+                    @php
+                        $photo = $member['photo'] ?? null;
+                        $photoUrl = $photo ? asset('storage/' . ltrim($photo, '/')) : asset('images/avatar-placeholder.png');
+                        $department = $member['department'] ?? 'Other';
+                    @endphp
+                    <div class="team-member-card group relative bg-white/70 backdrop-blur-xl rounded-[2rem] p-8 transition-all duration-500 border border-white/50 hover:shadow-[0_20px_50px_rgba(6,123,249,0.15)] hover:-translate-y-3" data-department="{{ $department }}">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="relative mb-8">
+                                <div class="absolute inset-0 bg-primary/20 rounded-full blur-2xl group-hover:bg-primary/40 transition-all duration-500"></div>
+                                <div class="size-40 rounded-full overflow-hidden border-[6px] border-white shadow-xl relative z-10">
+                                    <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" src="{{ $photoUrl }}" alt="{{ $member['name'] ?? 'Team Member' }}">
+                                </div>
                             </div>
-                        @else
-                            <div class="text-center py-8">
-                                <p class="text-gray-500">Belum ada data anggota tim. Silakan tambahkan melalui admin panel.</p>
+                            <h3 class="text-2xl font-black text-slate-900 mb-2">{{ $member['name'] ?? 'Nama Anggota' }}</h3>
+                            <p class="text-primary font-bold text-xs tracking-widest uppercase mb-4">{{ $member['department'] ?? 'Departemen' }}</p>
+                            
+                            <!-- Bio & Social Container with Transition -->
+                            <div class="relative w-full h-[80px] flex items-center justify-center">
+                                <!-- Bio (Visible by default, hidden on hover) -->
+                                <p class="text-slate-500 text-sm leading-relaxed px-4 font-medium absolute inset-0 transition-all duration-500 opacity-100 group-hover:opacity-0 group-hover:-translate-y-4 flex items-center justify-center">{{ $member['bio'] ?? 'Dedicated professional committed to excellence.' }}</p>
+                                
+                                <!-- Social Links (Hidden by default, visible on hover) -->
+                                <div class="flex gap-4 absolute inset-0 items-center justify-center transition-all duration-500 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0">
+                                    @if(!empty($member['social']['linkedin']))
+                                        <a href="{{ $member['social']['linkedin'] }}" target="_blank" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 hover:bg-[#0077b5] hover:text-white transition-all duration-300" title="LinkedIn"><span class="material-symbols-outlined text-lg">work</span></a>
+                                    @endif
+                                    @if(!empty($member['social']['instagram']))
+                                        <a href="https://instagram.com/{{ ltrim($member['social']['instagram'], '@') }}" target="_blank" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 hover:bg-[#E1306C] hover:text-white transition-all duration-300" title="Instagram"><span class="material-symbols-outlined text-lg">photo_camera</span></a>
+                                    @endif
+                                    @if(!empty($member['email']))
+                                        <a href="mailto:{{ $member['email'] }}" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 hover:bg-red-500 hover:text-white transition-all duration-300" title="Email"><span class="material-symbols-outlined text-lg">mail</span></a>
+                                    @endif
+                                    @if(!empty($member['phone']))
+                                        <a href="https://wa.me/{{ preg_replace('/^0/', '62', preg_replace('/[^0-9]/', '', $member['phone'])) }}" target="_blank" class="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 hover:bg-green-500 hover:text-white transition-all duration-300" title="WhatsApp/Phone"><span class="material-symbols-outlined text-lg">call</span></a>
+                                    @endif
+                                </div>
                             </div>
-                        @endif
+
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            
+            @if(empty($members))
+                <div class="text-center py-8 w-full">
+                    <p class="text-gray-500">Belum ada data anggota tim. Silakan tambahkan melalui admin panel.</p>
+                </div>
+            @endif
+        </section>
+
+        <script>
+            function filterTeam(category) {
+                // Update buttons
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    if (btn.dataset.filter === category) {
+                        btn.className = 'filter-btn active px-8 py-2.5 text-sm font-bold rounded-full transition-all border border-transparent shadow-lg shadow-primary/25 bg-primary text-white';
+                    } else {
+                        btn.className = 'filter-btn px-8 py-2.5 text-sm font-bold rounded-full transition-all border border-slate-100 text-slate-500 hover:text-primary hover:bg-slate-50';
+                    }
+                });
+
+                // Filter cards
+                document.querySelectorAll('.team-member-card').forEach(card => {
+                    const dept = card.dataset.department;
+                    const isHR = category === 'HR' && (dept.includes('HR') || dept.includes('HCM') || dept.includes('Personalia'));
+                    
+                    if (category === 'all' || dept === category || isHR) {
+                        card.style.display = 'block';
+                        // Add animation class if needed
+                        card.classList.add('animate-fade-in');
+                    } else {
+                        card.style.display = 'none';
+                        card.classList.remove('animate-fade-in');
+                    }
+                });
+            }
+        </script>
+
+        <!-- =================================================================== -->
+        <!-- =================================================================== -->
+        <!-- SECTION 1: SEJARAH SINGKAT (Asymmetrical Layout) -->
+        <!-- =================================================================== -->
+        <section id="about-us" class="py-24 bg-white dark:bg-slate-900/50 reveal">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="grid lg:grid-cols-12 gap-12 items-center">
+                    <div class="lg:col-span-5 order-2 lg:order-1">
+                        <div class="relative">
+                            <div class="absolute -inset-4 bg-primary/10 rounded-xl -rotate-3"></div>
+                            @php
+                                $aboutImage = !empty($content['about_us']['image']) ? asset('storage/' . $content['about_us']['image']) : 'https://lh3.googleusercontent.com/aida-public/AB6AXuBdl06xMZPdYLu3ENIliWEoihy8DQIbGXooFor8FDt5sB2MBvFmHkFWfXT7Gi15urmVf_51UqDYzKoda4X1qUM0VQXlQWA5HCnzOHvIA5OVnZAtPtepb2rlxERpuC24acGvj4vrxtDtWVnSBS45J6kyZKkqgSafm91dUMJHwGRKzSfo4tzOLxlsYqKospqKLoPyiUujxp4q8NnpVN24DaeoYrtUrbV9duJo75Ogf5OYZegq02y7SA0_YOkYemLWzpi5PG4Rs4eqtlg';
+                            @endphp
+                            <img alt="About Image" class="relative z-10 rounded-xl shadow-lg w-full" src="{{ $aboutImage }}">
+                        </div>
+                    </div>
+                    <div class="lg:col-span-7 order-1 lg:order-2">
+                        <h2 class="text-3xl font-bold mb-6 flex items-center gap-4 text-slate-900">
+                            <span class="w-12 h-1 bg-primary rounded-full"></span>
+                            {{ $content['about_us']['history_title'] ?? 'Sejarah Singkat' }}
+                        </h2>
+                        <div class="space-y-6 text-slate-600 dark:text-slate-400 text-lg leading-relaxed text-justify">
+                           <p>{!! nl2br(e($content['about_us']['history_text'] ?? 'Berawal dari visi kecil untuk mempermudah akses energi di daerah berkembang, Terang By SRT didirikan sebagai penyedia solusi kelistrikan terintegrasi yang fokus pada efisiensi dan keberlanjutan.')) !!}</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- =================================================================== -->
-        <!-- TENTANG TERANG SECTION -->
+        <!-- SECTION 2: VISI (Minimalist Wide Section) -->
         <!-- =================================================================== -->
-        <section id="about-us" class="py-20 md:py-24 bg-white reveal reveal-stagger" data-reveal>
-            <div class="container mx-auto px-6">
-                <div class="text-center">
-                    <h2 class="text-3xl font-bold text-gray-900">{{ $content['about_us']['title'] ?? 'Sekilas Tentang Kami' }}</h2>
-                    <p class="mt-4 max-w-2xl mx-auto text-gray-600">{{ $content['about_us']['description'] ?? '' }}</p>
-                </div>
-                <div class="mt-12 flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-                    <div class="lg:w-5/12">
-                        @php
-                            $aboutImage = !empty($content['about_us']['image']) ? asset('storage/' . $content['about_us']['image']) : asset('images/office_building.svg');
-                        @endphp
-                        <img src="{{ $aboutImage }}" alt="Gedung kantor TERANG" class="rounded-lg shadow-2xl w-full">
+        <section class="relative py-32 bg-slate-900 text-white overflow-hidden reveal">
+            <div class="absolute inset-0 opacity-20">
+                <img alt="Airport Runway" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1473862170180-84427c485aca?q=80&w=2070&auto=format&fit=crop">
+            </div>
+            <div class="max-w-4xl mx-auto px-6 relative z-10 text-center">
+                <span class="material-symbols-outlined text-primary text-6xl mb-6">visibility</span>
+                <h2 class="text-2xl font-bold tracking-widest uppercase text-primary/80 mb-8">{{ $content['about_us']['vision_title'] ?? 'Visi Kami' }}</h2>
+                <blockquote class="text-3xl md:text-5xl font-extrabold italic leading-tight">
+                    "{{ $content['about_us']['vision_text'] ?? 'Menjadi pionir solusi energi cerdas yang memberikan dampak nyata bagi pembangunan bangsa yang mandiri dan berkelanjutan.' }}"
+                </blockquote>
+            </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- SECTION 3: MISI (Floating Cards) -->
+        <!-- =================================================================== -->
+        <section class="py-32 px-6 reveal">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+                    <div class="max-w-2xl">
+                        <h2 class="text-4xl font-black mb-6 text-slate-900">{{ $content['about_us']['mission_title'] ?? 'Misi Perusahaan' }}</h2>
+                        <p class="text-slate-600 dark:text-slate-400 text-lg">Langkah nyata kami untuk mewujudkan masa depan yang lebih terang melalui tiga pilar utama pelayanan.</p>
+                        <!-- Dynamic Mission List (if available) -->
                     </div>
-                    <div class="lg:w-7/12">
-                        <div class="space-y-6">
-                            <div>
-                                <h3 class="text-2xl font-bold text-gray-800">{{ $content['about_us']['history_title'] ?? 'Sejarah Singkat' }}</h3>
-                                <p class="text-justify mt-2 text-gray-600">{{ $content['about_us']['history_text'] ?? 'Teks default.' }}</p>
+                    <div class="hidden md:block">
+                        <span class="text-8xl font-black text-primary/5 select-none">MISSION</span>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    @php
+                        $missions = json_decode($content['about_us']['mission_text'] ?? '[]');
+                        $icons = ['verified', 'handshake', 'eco', 'bolt', 'group', 'star'];
+                    @endphp
+
+                    @forelse($missions as $index => $mission)
+                        <div class="group p-10 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 {{ $index > 0 ? 'md:mt-' . ($index % 2 == 0 ? '0' : '12') : '' }}">
+                            <div class="size-16 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-8 group-hover:bg-primary group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-3xl">{{ $icons[$index % count($icons)] }}</span>
                             </div>
-                            <div>
-                                <h3 class="text-2xl font-bold text-gray-800">{{ $content['about_us']['vision_title'] ?? 'Visi' }}</h3>
-                                <p class="text-justify mt-2 text-gray-600">{{ $content['about_us']['vision_text'] ?? 'Teks default.' }}</p>
-                            </div>
-                            <div>
-                                <h3 class="text-2xl font-bold text-gray-800">{{ $content['about_us']['mission_title'] ?? 'Misi' }}</h3>
-                                <ul class="mt-2 list-disc list-inside text-gray-600 space-y-2">
-                                    @foreach (json_decode($content['about_us']['mission_text'] ?? '[]') as $mission)
-                                        <li>{{ $mission }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
+                            <h3 class="text-xl font-bold mb-4 text-slate-900">Misi {{ $index + 1 }}</h3>
+                            <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                                {{ $mission }}
+                            </p>
                         </div>
+                    @empty
+                        <!-- Fallback if no data -->
+                         <div class="group p-10 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                            <div class="size-16 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-8 group-hover:bg-primary group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-3xl">precision_manufacturing</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-4 text-slate-900">Inovasi Teknologi</h3>
+                            <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                                Mengintegrasikan teknologi kelistrikan terbaru untuk memberikan solusi yang lebih efisien, hemat energi, dan aman digunakan dalam jangka panjang.
+                            </p>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- CLOSING CTA SECTION -->
+        <!-- =================================================================== -->
+        <section class="max-w-7xl mx-auto px-6 mb-24 reveal">
+            <div class="relative rounded-3xl overflow-hidden bg-primary px-8 py-16 md:p-20 text-center">
+                <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                    <svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+                        <path d="M0 100 L100 0 L100 100 Z" fill="white"></path>
+                    </svg>
+                </div>
+                <div class="relative z-10">
+                    <h2 class="text-3xl md:text-5xl font-black text-white mb-8">Siap Memiliki Karir Baru?</h2>
+                    <p class="text-white/80 text-lg mb-12 max-w-2xl mx-auto">
+                        Bergabunglah dengan tim kami dan bangun masa depan yang lebih cerah bersama kami.
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <a href="/contact" class="bg-white text-primary px-8 py-4 rounded-full font-bold shadow-xl hover:bg-slate-50 transition-colors">
+                            Apply Sekarang
+                        </a>
                     </div>
                 </div>
             </div>
@@ -307,28 +396,38 @@
                 </div>
                 <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @forelse($jobs as $job)
-                        <div class="group bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:border-blue-200 reveal">
-                            <div class="p-4 bg-gradient-to-r from-blue-500 to-blue-600">
-                                <span class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-xs font-semibold rounded-full">{{ $job->type }}</span>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{{ $job->title }}</h3>
-                                <p class="text-blue-600 text-sm font-medium mt-1">{{ $job->division }}</p>
-                                <ul class="mt-4 text-sm text-gray-600 space-y-1">
-                                    <li><i class="fas fa-briefcase mr-2 text-blue-500"></i> {{ $job->employment_type ?? 'Full-time' }}</li>
-                                    <li><i class="fas fa-clock mr-2 text-blue-500"></i> Closing: {{ optional($job->closing_date)->format('d M Y') ?? '-' }}</li>
-                                </ul>
-                                <div class="mt-4 space-y-2">
-                                    <p class="text-gray-600 text-sm flex items-center"><i class="fas fa-map-marker-alt mr-2 text-blue-500"></i>{{ $job->location }}</p>
-                                    @if(!empty($job->salary_range))
-                                        <p class="text-gray-600 text-sm flex items-center"><i class="fas fa-money-bill-wave mr-2 text-blue-500"></i>{{ $job->salary_range }}</p>
-                                    @endif
-                                </div>
-                                <a href="/karir/{{ $job->id }}" data-job-id="{{ $job->id }}" class="job-detail-btn mt-6 inline-flex items-center font-semibold text-blue-600 hover:text-blue-700 group">
-                                    Lihat Detail <i class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
-                                </a>
-                            </div>
+                    <div class="group bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-hidden hover:shadow-2xl hover:shadow-slate-200/50 dark:hover:shadow-none transition-all duration-300">
+                        @if($job->show_image && $job->image)
+                        <div class="relative aspect-video">
+                            <img alt="{{ $job->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="{{ Storage::url($job->image) }}" />
+                            <span class="absolute top-3 left-3 px-3 py-1 bg-primary text-white text-[10px] font-bold uppercase rounded-md shadow-lg">{{ $job->division ?? 'Umum' }}</span>
                         </div>
+                        @else
+                        <!-- Fallback/No Image Header -->
+                        <div class="bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 aspect-[3/1] relative overflow-hidden">
+                             <span class="absolute top-3 left-3 px-3 py-1 bg-primary text-white text-[10px] font-bold uppercase rounded-md shadow-lg">{{ $job->division ?? 'Umum' }}</span>
+                        </div>
+                        @endif
+                        
+                        <div class="p-5 flex flex-col gap-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">{{ $job->title }}</h3>
+                                <div class="flex items-center gap-1.5 mt-2 text-slate-500 dark:text-slate-400 text-sm">
+                                    <span class="material-symbols-outlined text-base">location_on</span>
+                                    {{ $job->location }}
+                                </div>
+                            </div>
+                            
+                            @if($job->salary_range)
+                            <div class="flex items-center justify-between py-3 border-y border-slate-50 dark:border-slate-800">
+                                <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Salary Range</span>
+                                <span class="text-sm font-bold text-slate-900 dark:text-white">{{ $job->salary_range }}</span>
+                            </div>
+                            @endif
+
+                            <a href="{{ route('karir.show', $job->id) }}" class="w-full py-3 bg-primary/10 text-primary font-bold rounded-xl group-hover:bg-primary group-hover:text-white transition-all text-center">Lihat Detail</a>
+                        </div>
+                    </div>
                     @empty
                         <p class="col-span-3 text-center text-gray-500">Saat ini belum ada lowongan yang tersedia.</p>
                     @endforelse
@@ -343,65 +442,21 @@
         <!-- =================================================================== -->
         <!-- GALERI PERUSAHAAN SECTION -->
         <!-- =================================================================== -->
-        <section id="gallery" class="py-20 md:py-24 bg-white">
+        {{-- 
+            @section('gallery') --}}
+        {{--
+        <!-- =================================================================== -->
+        <!-- GALERI PERUSAHAAN SECTION -->
+        <!-- =================================================================== -->
+        <section id="gallery" class="py-20 md:py-24 bg-white" style="display: none;">
             <div class="container mx-auto px-6">
                 <div class="text-center">
                     <h2 class="text-3xl font-bold text-gray-900">{{ $content['gallery']['title'] ?? 'Galeri Perusahaan' }}</h2>
                     <p class="mt-4 max-w-2xl mx-auto text-gray-600">{{ $content['gallery']['description'] ?? 'Deskripsi default galeri.' }}</p>
                 </div>
-                <div class="mt-12">
-                    @if($gallery->isNotEmpty())
-                        <div class="gallery-masonry">
-                            @php
-                                // Sort gallery: prioritize horizontal/landscape images first
-                                $sortedGallery = $gallery->sortByDesc(function($img) {
-                                    $imagePath = storage_path('app/public/' . $img->file_path);
-                                    if (file_exists($imagePath)) {
-                                        list($width, $height) = getimagesize($imagePath);
-                                        return $width / $height; // Higher ratio = more horizontal
-                                    }
-                                    return 1; // Default ratio if image not found
-                                });
-                            @endphp
-                            
-                            @foreach($sortedGallery as $img)
-                                <figure class="gallery-item reveal" style="break-inside:avoid">
-                                    <img src="{{ asset('storage/' . $img->file_path) }}" alt="{{ $img->alt_text }}">
-                                    <figcaption class="gallery-overlay">
-                                        <div>
-                                            <h4>{{ $img->alt_text ?? 'TERANG Event' }}</h4>
-                                        </div>
-                                    </figcaption>
-                                </figure>
-                            @endforeach
-                            {{-- Tambahkan selalu elemen HR Department di galeri agar tidak hilang --}}
-                            <figure class="gallery-item reveal" style="break-inside:avoid">
-                                @php
-                                    $hrImage = !empty($content['hr_department']['image']) ? asset('storage/' . $content['hr_department']['image']) : asset('images/gallery/office2.svg');
-                                @endphp
-                                <img src="{{ $hrImage }}" alt="HR Department">
-                                <figcaption class="gallery-overlay"><h4>{{ $content['hr_department']['title'] ?? 'HR Department' }}</h4></figcaption>
-                            </figure>
-                        </div>
-                    @else
-                        <div class="gallery-masonry">
-                            <figure class="gallery-item">
-                                <img src="{{ asset('images/gallery/office1.svg') }}" alt="Office team">
-                                <figcaption class="gallery-overlay"><h4>Team brainstorming</h4></figcaption>
-                            </figure>
-                            {{-- HR Department element already ditampilkan di atas ketika galeri berisi item --}}
-                            <figure class="gallery-item">
-                                <img src="{{ asset('images/gallery/office3.svg') }}" alt="Meeting room">
-                                <figcaption class="gallery-overlay"><h4>Meeting room</h4></figcaption>
-                            </figure>
-                            <figure class="gallery-item">
-                                <img src="{{ asset('images/gallery/office4.svg') }}" alt="Rooftop event">
-                                <figcaption class="gallery-overlay"><h4>Rooftop event</h4></figcaption>
-                            </figure>
-                        </div>
-                    @endif
-                </div>
+                <!-- ... content hidden ... -->
             </div>
         </section>
+        --}}
     </main>
 </x-app-layout>

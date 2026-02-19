@@ -70,7 +70,8 @@ class ContentController extends Controller
                             'linkedin' => $member['linkedin'] ?? '',
                             'instagram' => $member['instagram'] ?? '',
                             'twitter' => $member['twitter'] ?? '',
-                        ])
+                        ]),
+                        'department' => $member['department'] ?? '',
                     ]);
                 }
             }

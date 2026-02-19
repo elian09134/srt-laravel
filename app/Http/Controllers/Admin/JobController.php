@@ -43,6 +43,7 @@ class JobController extends Controller
             'requirement' => 'required|string',
             'benefits' => 'nullable|string',
             'fptk_id' => 'nullable|exists:fptks,id',
+            'image' => 'nullable|image|max:2048',
         ]);
 
         Job::create([
@@ -54,6 +55,8 @@ class JobController extends Controller
             'requirement' => json_encode(array_filter(array_map('trim', explode("\n", $validated['requirement'])))),
             'benefits' => json_encode(array_filter(array_map('trim', explode("\n", $validated['benefits'])))),
             'fptk_id' => $validated['fptk_id'] ?? null,
+            'image' => $request->hasFile('image') ? $request->file('image')->store('jobs', 'public') : null,
+            'show_image' => $request->has('show_image'),
         ]);
 
         return redirect()->route('admin.jobs.index')->with('success', 'Lowongan berhasil ditambahkan.');
@@ -88,9 +91,10 @@ class JobController extends Controller
             'requirement' => 'required|string',
             'benefits' => 'nullable|string',
             'fptk_id' => 'nullable|exists:fptks,id',
+            'image' => 'nullable|image|max:2048', // Allow only images max 2MB
         ]);
 
-        $job->update([
+        $data = [
             'title' => $validated['title'],
             'location' => $validated['location'],
             'type' => $validated['type'],
@@ -99,7 +103,18 @@ class JobController extends Controller
             'requirement' => json_encode(array_filter(array_map('trim', explode("\n", $validated['requirement'])))),
             'benefits' => json_encode(array_filter(array_map('trim', explode("\n", $validated['benefits'])))),
             'fptk_id' => $validated['fptk_id'] ?? null,
-        ]);
+            'show_image' => $request->has('show_image'),
+        ];
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($job->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($job->image)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($job->image);
+            }
+            $data['image'] = $request->file('image')->store('jobs', 'public');
+        }
+
+        $job->update($data);
 
         return redirect()->route('admin.jobs.index')->with('success', 'Lowongan berhasil diperbarui.');
     }

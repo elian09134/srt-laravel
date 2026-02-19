@@ -3,250 +3,265 @@
 @section('title', 'Detail Pelamar')
 
 @section('content')
-<div class="max-w-5xl mx-auto py-8">
-    <div class="bg-white shadow sm:rounded-lg">
-        <div class="px-4 py-5 sm:px-6 border-b">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Detail Pelamar</h3>
-            <p class="mt-1 max-w-2xl text-sm text-gray-500">Informasi lengkap pelamar untuk lowongan: {{ $application->job->title ?? '—' }}</p>
-        </div>
+<div class="mb-6">
+    <a href="{{ route('admin.applicants.index') }}" class="text-slate-500 hover:text-blue-600 text-sm mb-2 inline-flex items-center transition-colors">
+        <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar
+    </a>
+    <h1 class="text-2xl font-bold text-slate-800">Detail Pelamar</h1>
+</div>
 
-        <div class="px-4 py-5 sm:p-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="md:col-span-1">
-                    <div class="flex items-center space-x-4">
-                        @if($application->user && $application->user->profile && $application->user->profile->photo_path)
-                            <img class="h-24 w-24 rounded-full object-cover" src="{{ asset('storage/' . $application->user->profile->photo_path) }}" alt="Foto">
-                        @else
-                            <div class="h-24 w-24 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">—</div>
-                        @endif
-                        <div>
-                            <div class="font-medium text-lg">{{ $application->user->name ?? 'Pengguna Terhapus' }}</div>
-                            <div class="text-sm text-gray-500">{{ $application->user->email ?? '—' }}</div>
-                        </div>
-                    </div>
-
-                    @php
-                        $rawPhone = $application->applicant_phone ?? optional($application->user->profile)->phone_number ?? null;
-                        $waNumber = null;
-                        if ($rawPhone) {
-                            // remove non-digit characters
-                            $num = preg_replace('/\D+/', '', $rawPhone);
-                            // if starts with 0, assume Indonesian number and replace with 62
-                            if (strlen($num) > 0 && $num[0] === '0') {
-                                $num = '62' . substr($num, 1);
-                            }
-                            // strip leading plus if any (preg_replace removed it)
-                            $waNumber = $num;
-                        }
-                        $waMessage = '';
-                        if ($waNumber) {
-                            $name = $application->applicant_name ?? ($application->user->name ?? 'Kandidat');
-                            $waMessage = urlencode("Halo $name, saya dari tim Recruitment TERANG By SRT ingin berdiskusi mengenai lamaran Anda.");
-                        }
-                    @endphp
-
-                    @if($waNumber)
-                        <div class="mt-4">
-                            <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessage }}" target="_blank" rel="noopener" class="inline-flex items-center px-3 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-                                Hubungi via WhatsApp
-                            </a>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-12">
+    <!-- Left Column: Profile & Summary -->
+    <div class="lg:col-span-1 space-y-6">
+        <!-- Profile Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="h-24 bg-gradient-to-r from-blue-600 to-indigo-700"></div>
+            <div class="px-6 pb-6">
+                <div class="relative flex justify-center -mt-12 mb-4">
+                    @if($application->user && $application->user->profile && $application->user->profile->photo_path)
+                        <img class="h-24 w-24 rounded-2xl object-cover ring-4 ring-white shadow-md" src="{{ asset('storage/' . $application->user->profile->photo_path) }}" alt="Foto">
+                    @else
+                        <div class="h-24 w-24 rounded-2xl bg-slate-100 ring-4 ring-white shadow-md flex items-center justify-center text-slate-400 font-bold text-2xl border border-slate-100">
+                            {{ substr($application->user->name ?? $application->applicant_name, 0, 1) }}
                         </div>
                     @endif
-
-                    <div class="mt-6">
-                        <h4 class="text-sm font-semibold text-gray-600">Status Lamaran</h4>
-                        <div class="mt-2 text-sm text-gray-800">{{ $application->status }}</div>
-                    </div>
-
-                    <div class="mt-6">
-                        <h4 class="text-sm font-semibold text-gray-600">Diterima Pada</h4>
-                        <div class="mt-2 text-sm text-gray-800">{{ optional($application->created_at)->format('d M Y H:i') ?? '-' }}</div>
-                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <h2 class="text-xl font-bold text-slate-800">{{ $application->user->name ?? $application->applicant_name ?? 'Pengguna Terhapus' }}</h2>
+                    <p class="text-sm text-slate-500">{{ $application->user->email ?? $application->applicant_email ?? '—' }}</p>
                 </div>
 
-                <div class="md:col-span-2">
-                    <h4 class="text-sm font-semibold text-gray-600">Informasi Lowongan</h4>
-                    <div class="mt-2 text-sm text-gray-800 mb-4">
-                        <div class="font-medium">{{ $application->job->title ?? '—' }}</div>
-                        <div class="text-gray-500">{{ $application->job->company ?? '' }} • {{ $application->job->location ?? '' }}</div>
-                    </div>
+                @php
+                    $rawPhone = $application->applicant_phone ?? optional($application->user->profile)->phone_number ?? null;
+                    $waNumber = null;
+                    if ($rawPhone) {
+                        $num = preg_replace('/\D+/', '', $rawPhone);
+                        if (strlen($num) > 0 && $num[0] === '0') $num = '62' . substr($num, 1);
+                        $waNumber = $num;
+                    }
+                    $waMessage = '';
+                    if ($waNumber) {
+                        $name = $application->applicant_name ?? ($application->user->name ?? 'Kandidat');
+                        $waMessage = urlencode("Halo $name, saya dari tim Recruitment TERANG By SRT ingin berdiskusi mengenai lamaran Anda.");
+                    }
+                @endphp
 
-                    <h4 class="text-sm font-semibold text-gray-600">Surat Lamaran</h4>
-                    <div class="mt-2 bg-gray-50 border p-4 rounded text-sm text-gray-800 whitespace-pre-wrap">{{ $application->cover_letter ?? '—' }}</div>
-
+                <div class="mt-6 flex flex-col gap-2">
+                    @if($waNumber)
+                        <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessage }}" target="_blank" class="flex items-center justify-center px-4 py-2.5 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-all font-medium border-b-4 border-green-700 active:border-b-0 active:translate-y-1 shadow-md">
+                            <i class="fab fa-whatsapp mr-2 text-lg"></i> Hubungi WhatsApp
+                        </a>
+                    @endif
+                    
                     @php
                         $snapshot = json_decode($application->snapshot_data, true) ?? [];
                         $cvPath = $snapshot['cv_path'] ?? optional($application->user->profile)->cv_path;
                     @endphp
 
                     @if($cvPath)
-                        <div class="mt-4">
-                            <a href="{{ asset('storage/' . $cvPath) }}" target="_blank" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                <svg class="mr-2 -ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                                Lihat CV Kandidat
-                            </a>
-                        </div>
+                        <a href="{{ asset('storage/' . $cvPath) }}" target="_blank" class="flex items-center justify-center px-4 py-2.5 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition-all font-medium border border-blue-100 shadow-sm">
+                            <i class="fas fa-file-pdf mr-2"></i> Lihat CV / Resume
+                        </a>
                     @endif
+                </div>
+            </div>
+        </div>
 
-                    <h4 class="text-sm font-semibold text-gray-600 mt-6">Data Pendaftaran (Snapshot)</h4>
-                    <div class="mt-2 text-sm text-gray-800 space-y-2">
-                        <div><strong>Nama saat daftar:</strong> {{ $application->applicant_name ?? ($application->user->name ?? '—') }}</div>
-                        <div><strong>Email saat daftar:</strong> {{ $application->applicant_email ?? ($application->user->email ?? '—') }}</div>
-                        <div><strong>Telepon saat daftar:</strong> {{ $application->applicant_phone ?? optional($application->user->profile)->phone_number ?? '—' }}</div>
-                        <div><strong>Pendidikan terakhir saat daftar:</strong> {{ $application->applicant_last_education ?? optional($application->user->profile)->education_level ?? '—' }}</div>
-                        <div><strong>Posisi terakhir saat daftar:</strong> {{ $application->applicant_last_position ?? optional($application->user->profile)->last_position ?? '—' }}</div>
-                        <div><strong>Sedang Bekerja saat daftar:</strong> {{ optional($application->user->profile)->currently_employed ? 'Ya' : 'Tidak' }}</div>
-                        <div><strong>Ekspektasi Gaji saat daftar:</strong> {{ optional($application->user->profile)->expected_salary ? number_format(optional($application->user->profile)->expected_salary,0,',','.') . ' IDR' : '—' }}</div>
+        <!-- Status Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Status Saat Ini</h3>
+            
+            <div class="flex items-center justify-between mb-4">
+                 @php
+                    $statusColors = [
+                        'Baru' => 'bg-blue-100 text-blue-700 border-blue-200',
+                        'Diterima' => 'bg-green-100 text-green-700 border-green-200',
+                        'Ditolak' => 'bg-red-100 text-red-700 border-red-200',
+                        'Shortlist' => 'bg-purple-100 text-purple-700 border-purple-200',
+                        'Offering' => 'bg-amber-100 text-amber-700 border-amber-200',
+                    ];
+                    $badgeClass = $statusColors[$application->status] ?? 'bg-slate-100 text-slate-700 border-slate-200';
+                @endphp
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border {{ $badgeClass }}">
+                    {{ strtoupper($application->status) }}
+                </span>
+                <span class="text-[10px] text-slate-400 font-medium">Updated: {{ $application->updated_at->diffForHumans() }}</span>
+            </div>
 
-                        @php
-                            $regExps = $application->user->workExperiences ?? collect();
-                        @endphp
-                        @if($regExps->isNotEmpty())
-                            <div class="pt-2">
-                                <div class="font-medium">Riwayat Pekerjaan saat Daftar</div>
-                                <ul class="mt-2 list-disc list-inside text-sm text-gray-700">
-                                    @foreach($regExps->take(5) as $we)
-                                        @php
-                                            $parts = $we->job_description ? explode(' — ', $we->job_description) : [];
-                                            $pos = $parts[0] ?? null;
-                                            $desc = $parts[1] ?? null;
-                                        @endphp
-                                        <li>
-                                            <strong>{{ $we->company_name }}</strong>@if($pos) — {{ $pos }}@endif @if($we->duration) ({{ $we->duration }})@endif
-                                            @if($desc)<div class="text-xs text-gray-600">{{ $desc }}</div>@endif
-                                        </li>
-                                    @endforeach
-                                </ul>
+            <div class="space-y-4">
+                <div class="flex items-start">
+                    <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center mr-3 text-slate-400">
+                        <i class="fas fa-calendar-alt text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Tgl Daftar</p>
+                        <p class="text-sm text-slate-700 font-medium">{{ optional($application->created_at)->format('d M Y') ?? '-' }}</p>
+                    </div>
+                </div>
+                
+                @if($application->status == 'Diterima')
+                <div class="flex items-start">
+                    <div class="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center mr-3 text-green-500">
+                        <i class="fas fa-check-circle text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Tgl Bergabung</p>
+                        <p class="text-sm text-green-600 font-bold">{{ $application->join_date ? \Carbon\Carbon::parse($application->join_date)->format('d M Y') : '-' }}</p>
+                    </div>
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: Details & Timeline -->
+    <div class="lg:col-span-2 space-y-6">
+        <!-- Application Content -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="border-b border-slate-50 bg-slate-50/50 px-6 py-4">
+                <h3 class="text-lg font-bold text-slate-800">Review Lamaran</h3>
+            </div>
+            
+            <div class="p-6 space-y-8">
+                <!-- Applied Position -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Posisi Dilamar</h4>
+                    <div class="flex items-center p-4 bg-blue-50/50 rounded-2xl border border-blue-100/50">
+                        <div class="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white mr-4 shadow-blue-200 shadow-lg">
+                            <i class="fas fa-briefcase text-lg"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-800 text-lg">{{ $application->job->title ?? '—' }}</div>
+                            <div class="text-sm text-blue-600 font-medium">{{ $application->job->location ?? 'Head Office' }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cover Letter -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Surat Lamaran</h4>
+                    <div class="p-6 bg-slate-50 rounded-2xl text-slate-700 text-sm leading-relaxed whitespace-pre-wrap border border-slate-100 italic quill-style">
+                        {{ $application->cover_letter ?? 'Tidak ada surat lamaran dilampirkan.' }}
+                    </div>
+                </div>
+
+                <!-- Snapshot Info -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Informasi Saat Daftar</h4>
+                        <div class="space-y-3 bg-white p-4 rounded-xl border border-slate-100">
+                             <div class="flex justify-between text-sm py-1 border-b border-slate-50">
+                                <span class="text-slate-500">Pendidikan</span>
+                                <span class="font-medium text-slate-800">{{ $application->applicant_last_education ?? '—' }}</span>
                             </div>
-                        @endif
+                            <div class="flex justify-between text-sm py-1 border-b border-slate-50">
+                                <span class="text-slate-500">Posisi Terakhir</span>
+                                <span class="font-medium text-slate-800 text-right">{{ $application->applicant_last_position ?? '—' }}</span>
+                            </div>
+                            <div class="flex justify-between text-sm py-1">
+                                <span class="text-slate-500">Ekspektasi Gaji</span>
+                                <span class="font-bold text-blue-600">{{ optional($application->user->profile)->expected_salary ? number_format(optional($application->user->profile)->expected_salary,0,',','.') . ' IDR' : '—' }}</span>
+                            </div>
+                        </div>
                     </div>
-
-                    <h4 class="text-sm font-semibold text-gray-600 mt-6">Profil Pelamar (Terkini)</h4>
-                    <div class="mt-2 text-sm text-gray-800 space-y-2">
-                        <div><strong>Telepon:</strong> {{ optional($application->user->profile)->phone ?? '—' }}</div>
-                        <div><strong>Alamat:</strong> {{ optional($application->user->profile)->address ?? '—' }}</div>
-                        <div><strong>Pendidikan Terakhir:</strong> {{ optional($application->user->profile)->last_education ?? '—' }}</div>
-                        <div><strong>Posisi Terakhir:</strong> {{ optional($application->user->profile)->last_position ?? '—' }}</div>
+                    <div>
+                         <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Kontak Info</h4>
+                         <div class="space-y-3 bg-white p-4 rounded-xl border border-slate-100">
+                             <div class="flex items-center text-sm py-1">
+                                <i class="fas fa-envelope w-6 text-slate-400"></i>
+                                <span class="text-slate-700">{{ $application->applicant_email ?? ($application->user->email ?? '—') }}</span>
+                            </div>
+                            <div class="flex items-center text-sm py-1">
+                                <i class="fas fa-phone w-6 text-slate-400"></i>
+                                <span class="text-slate-700">{{ $application->applicant_phone ?? '—' }}</span>
+                            </div>
+                            <div class="flex items-center text-sm py-1">
+                                <i class="fas fa-map-marker-alt w-6 text-slate-400"></i>
+                                <span class="text-slate-700 break-words line-clamp-1">{{ optional($application->user->profile)->address ?? '—' }}</span>
+                            </div>
+                        </div>
                     </div>
+                </div>
 
-                    <h4 class="text-sm font-semibold text-gray-600 mt-6">Timeline Status</h4>
-                    <div class="mt-4">
+                <!-- Timeline -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Timeline Perubahan Status</h4>
+                    <div class="relative pl-6 space-y-6 before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-100">
                         @php
-                            $steps = [
-                                'Baru',
-                                'Lamaran Dilihat',
-                                'Psikotest',
-                                'Wawancara HR',
-                                'Wawancara User',
-                                'Offering Letter',
-                                'Shortlist',
-                                'Diterima',
-                                'Tidak Lanjut',
-                            ];
+                            $steps = ['Baru', 'Lamaran Dilihat', 'Psikotest', 'Wawancara HR', 'Wawancara User', 'Offering Letter', 'Shortlist', 'Diterima', 'Tidak Lanjut'];
                             $currentIndex = array_search($application->status, $steps);
-                            if ($currentIndex === false) {
-                                // if status not in defined steps, set to -1
-                                $currentIndex = -1;
-                            }
+                            if ($currentIndex === false) $currentIndex = -1;
                         @endphp
 
-                        <ol class="border-l border-gray-200">
-                            @foreach($steps as $i => $step)
-                                @php
-                                    $state = 'future';
-                                    if ($i < $currentIndex) $state = 'done';
-                                    if ($i === $currentIndex) $state = 'current';
-                                @endphp
-
-                                <li class="mb-6 ml-6">
-                                    <span class="-left-3.5 absolute mt-1 flex items-center justify-center h-7 w-7 rounded-full text-white">
-                                    </span>
-                                    <div class="flex items-center space-x-3">
-                                        <div class="flex-shrink-0">
-                                            @if($state === 'done')
-                                                <div class="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center text-white">✓</div>
-                                            @elseif($state === 'current')
-                                                <div class="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white">●</div>
-                                            @else
-                                                <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-700">○</div>
-                                            @endif
+                        @foreach($steps as $i => $step)
+                            @php
+                                $state = 'future';
+                                if ($i < $currentIndex) $state = 'done';
+                                if ($i === $currentIndex) $state = 'current';
+                                if ($application->status === 'Ditolak' && $step === 'Tidak Lanjut') {
+                                    $state = 'current';
+                                }
+                            @endphp
+                            
+                            @if($state !== 'future' || $i <= $currentIndex + 1)
+                            <div class="relative">
+                                <div class="absolute -left-[20px] top-1 h-3 w-3 rounded-full border-2 border-white 
+                                    {{ $state === 'done' ? 'bg-green-500 shadow-[0_0_0_2px_#22c55e33]' : ($state === 'current' ? 'bg-blue-600 animate-pulse ring-4 ring-blue-100 shadow-[0_0_0_2px_#2563eb33]' : 'bg-slate-200') }}">
+                                </div>
+                                <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-1">
+                                    <div class="font-bold text-sm {{ $state === 'current' ? 'text-slate-800' : 'text-slate-500' }}">{{ $step }}</div>
+                                    @php $h = $application->statusHistories->firstWhere('status', $step); @endphp
+                                    @if($h)
+                                        <div class="text-[10px] text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-100">
+                                            {{ optional($h->created_at)->format('d M, H:i') }} • {{ $h->changer->name ?? 'System' }}
                                         </div>
-                                        <div class="flex-1">
-                                            <div class="font-medium @if($state === 'current') text-blue-600 @elseif($state === 'done') text-gray-700 @else text-gray-500 @endif">{{ $step }}</div>
-                                            @if($state === 'done' || $state === 'current')
-                                                @php
-                                                    $h = $application->statusHistories->firstWhere('status', $step);
-                                                @endphp
-                                                @if($h)
-                                                    <div class="text-xs text-gray-500">{{ optional($h->created_at)->format('d M Y H:i') ?? '' }}{{ $h->changer ? ' — oleh ' . $h->changer->name : '' }}</div>
-                                                    @if($h->note)
-                                                        <div class="text-sm text-gray-700 mt-1">{{ $h->note }}</div>
-                                                    @endif
-                                                @endif
-                                            @endif
-                                        </div>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ol>
+                                    @endif
+                                </div>
+                                @if($h && $h->note)
+                                    <p class="text-[11px] text-slate-500 mt-1 italic leading-tight bg-yellow-50/50 p-2 rounded-lg border-l-2 border-yellow-200">{{ $h->note }}</p>
+                                @endif
+                            </div>
+                            @endif
+                        @endforeach
                     </div>
+                </div>
 
-                    <div class="mt-6 flex flex-wrap gap-3">
-                        <form action="{{ route('admin.applicants.updateStatus', $application) }}" method="POST">
-                            @csrf
-                            @method('PATCH')
-                            <input type="hidden" name="status" value="Psikotest">
-                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">Psikotest</button>
-                        </form>
-
-                        <form action="{{ route('admin.applicants.updateStatus', $application) }}" method="POST">
-                            @csrf
-                            @method('PATCH')
-                            <input type="hidden" name="status" value="Wawancara HR">
-                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Interview HR</button>
-                        </form>
-
-                        <form action="{{ route('admin.applicants.updateStatus', $application) }}" method="POST">
-                            @csrf
-                            @method('PATCH')
-                            <input type="hidden" name="status" value="Wawancara User">
-                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Interview User</button>
-                        </form>
-
-                        <form action="{{ route('admin.applicants.updateStatus', $application) }}" method="POST">
-                            @csrf
-                            @method('PATCH')
-                            <input type="hidden" name="status" value="Offering Letter">
-                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700">Offering Letter</button>
-                        </form>
-
-                        <form id="mark-accepted-form" action="{{ route('admin.applicants.updateStatus', $application) }}" method="POST" class="inline-flex items-center">
-                            @csrf
-                            @method('PATCH')
-                            <input type="hidden" name="status" value="Diterima">
-                            <label for="join_date" class="sr-only">Tanggal Mulai</label>
-                            <input id="join_date" name="join_date" type="date" class="mr-2 px-3 py-2 border rounded" required />
-                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Tandai Diterima</button>
-                        </form>
-
-                        <form action="{{ route('admin.applicants.updateStatus', $application) }}" method="POST">
-                            @csrf
-                            @method('PATCH')
+                <!-- Quick Actions -->
+                <div class="pt-6 border-t border-slate-100">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Ganti Status Kandidat</h4>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach(['Psikotest' => 'bg-amber-100 text-amber-600', 'Wawancara HR' => 'bg-blue-100 text-blue-600', 'Wawancara User' => 'bg-indigo-100 text-indigo-600', 'Offering Letter' => 'bg-emerald-100 text-emerald-600'] as $st => $cls)
+                            <form action="{{ route('admin.applicants.updateStatus', $application) }}" method="POST">
+                                @csrf @method('PATCH')
+                                <input type="hidden" name="status" value="{{ $st }}">
+                                <button type="submit" class="px-3 py-1.5 {{ $cls }} text-[11px] font-bold rounded-lg hover:brightness-95 transition-all uppercase tracking-tight">
+                                    {{ $st }}
+                                </button>
+                            </form>
+                        @endforeach
+                        
+                        <form action="{{ route('admin.applicants.updateStatus', $application) }}" method="POST" class="inline-flex">
+                            @csrf @method('PATCH')
                             <input type="hidden" name="status" value="Tidak Lanjut">
-                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Tandai Ditolak</button>
+                            <button type="submit" class="px-3 py-1.5 bg-red-100 text-red-600 text-[11px] font-bold rounded-lg hover:brightness-95 transition-all uppercase tracking-tight">
+                                Tolak Kandidat
+                            </button>
                         </form>
-
-                        <form action="{{ route('admin.applicants.addToTalentPool', $application) }}" method="POST">
-                            @csrf
-                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900">Tambahkan ke Talent Pool</button>
-                        </form>
-
-                        <a href="{{ route('admin.applicants.index') }}" class="ml-auto inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded">Kembali</a>
                     </div>
 
+                    <!-- Acceptance Form -->
+                    <div class="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                        <p class="text-[11px] font-bold text-slate-500 uppercase mb-3">Tandai Diterima (Hired)</p>
+                        <form action="{{ route('admin.applicants.updateStatus', $application) }}" method="POST" class="flex flex-col sm:flex-row gap-2">
+                            @csrf @method('PATCH')
+                            <input type="hidden" name="status" value="Diterima">
+                            <input name="join_date" type="date" class="flex-1 rounded-xl border-slate-200 text-sm focus:ring-green-500 focus:border-green-500 shadow-sm" required />
+                            <button type="submit" class="px-6 py-2 bg-green-600 text-white text-sm font-bold rounded-xl hover:bg-green-700 shadow-sm shadow-green-200 transition-all">
+                                <i class="fas fa-check mr-2"></i> Konfirmasi Diterima
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

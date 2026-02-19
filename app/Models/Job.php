@@ -24,6 +24,8 @@ class Job extends Model
         'division',
         'closing_date',
         'fptk_id',
+        'image',
+        'show_image',
     ];
 
     public function applications()

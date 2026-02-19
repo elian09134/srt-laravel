@@ -188,6 +188,22 @@
                                        class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             </div>
                             
+                            <div>
+                                <label class="block text-xs font-medium text-gray-700 mb-1.5">Departemen</label>
+                                <select name="content[hr_department][members][{{ $index }}][department]"
+                                        class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="" {{ ($member['department'] ?? '') == '' ? 'selected' : '' }}>Pilih Departemen</option>
+                                    <option value="HCM Manager" {{ ($member['department'] ?? '') == 'HCM Manager' ? 'selected' : '' }}>HCM Manager</option>
+                                    <option value="Digital Technology" {{ ($member['department'] ?? '') == 'Digital Technology' ? 'selected' : '' }}>Digital Technology</option>
+                                    <option value="Personalia" {{ ($member['department'] ?? '') == 'Personalia' ? 'selected' : '' }}>Personalia</option>
+                                    <option value="Legal" {{ ($member['department'] ?? '') == 'Legal' ? 'selected' : '' }}>Legal</option>
+                                    <option value="HR Comben DM" {{ ($member['department'] ?? '') == 'HR Comben DM' ? 'selected' : '' }}>HR Comben DM</option>
+                                    <option value="HR Comben" {{ ($member['department'] ?? '') == 'HR Comben' ? 'selected' : '' }}>HR Comben</option>
+                                    <option value="HR Recruitment" {{ ($member['department'] ?? '') == 'HR Recruitment' ? 'selected' : '' }}>HR Recruitment</option>
+                                    <option value="General Affairs" {{ ($member['department'] ?? '') == 'General Affairs' ? 'selected' : '' }}>General Affairs</option>
+                                </select>
+                            </div>
+                            
                             <div class="md:col-span-2">
                                 <label class="block text-xs font-medium text-gray-700 mb-1.5">Bio Singkat</label>
                                 <textarea name="content[hr_department][members][{{ $index }}][bio]" 
@@ -514,6 +530,19 @@ document.addEventListener('DOMContentLoaded', function() {
                         <input type="text" name="content[hr_department][members][${index}][instagram]" 
                                placeholder="@username"
                                class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1.5">Departemen</label>
+                        <select name="content[hr_department][members][${index}][department]"
+                                class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Pilih Departemen</option>
+                            <option value="HCM">HCM</option>
+                            <option value="IT Development">IT Development</option>
+                            <option value="General Affair">General Affair</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Legal">Legal</option>
+                        </select>
                     </div>
                     
                     <div class="md:col-span-2">

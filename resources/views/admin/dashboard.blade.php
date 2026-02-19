@@ -1,128 +1,164 @@
 @extends('layouts.admin')
 
-@section('title', 'Dashboard Admin')
+@section('title', 'Dashboard')
 
 @section('content')
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">Dashboard</h1>
-        <p class="text-gray-600 mt-2">Ringkasan dan statistik aplikasi perekrutan</p>
-    </div>
-    
-    <!-- Lowongan Aktif -->
-    <div class="mb-8">
-        <h2 class="text-xl font-semibold mb-3">Lowongan Aktif</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            @forelse($active_jobs as $job)
-                <div class="bg-white p-4 rounded-lg shadow-sm border">
-                    <div class="flex items-start justify-between">
-                        <div>
-                            <a href="{{ route('admin.jobs.show', $job) }}" class="text-lg font-medium text-gray-900">{{ $job->title }}</a>
-                            <div class="text-sm text-gray-500">{{ $job->location ?? '-' }} • {{ $job->employment_type ?? '-' }}</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-sm text-gray-500">Pelamar</div>
-                            <div class="text-2xl font-bold text-gray-900">{{ $job->applications_count }}</div>
-                        </div>
-                    </div>
-                    <div class="mt-3 text-sm text-gray-600">{{ \Illuminate\Support\Str::limit(strip_tags($job->jobdesk ?? ''), 140) }}</div>
-                </div>
-            @empty
-                <div class="col-span-1">
-                    <div class="bg-white p-4 rounded-lg shadow-sm border text-gray-500">Tidak ada lowongan aktif ditemukan.</div>
-                </div>
-            @endforelse
-        </div>
-    </div>
-
-    <!-- Ringkasan Umum -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="group bg-white p-6 rounded-2xl shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                        <i class="fas fa-users text-2xl text-white"></i>
-                    </div>
-                </div>
-                <div class="ml-5 flex-grow">
-                    <p class="text-sm font-medium text-gray-600">Total Pelamar</p>
-                    <p class="text-3xl font-bold text-gray-900 mt-1">{{ $total_applicants }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="group bg-white p-6 rounded-2xl shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                        <i class="fas fa-briefcase text-2xl text-white"></i>
-                    </div>
-                </div>
-                <div class="ml-5 flex-grow">
-                    <p class="text-sm font-medium text-gray-600">Total Lowongan</p>
-                    <p class="text-3xl font-bold text-gray-900 mt-1">{{ $total_jobs }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="group bg-white p-6 rounded-2xl shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                        <i class="fas fa-database text-2xl text-white"></i>
-                    </div>
-                </div>
-                <div class="ml-5 flex-grow">
-                    <p class="text-sm font-medium text-gray-600">Kandidat di Talent Pool</p>
-                    <p class="text-3xl font-bold text-gray-900 mt-1">{{ $total_talent_pool }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Grafik -->
-    <div class="bg-white p-8 rounded-2xl shadow-md border border-gray-100">
-        <div class="flex items-center justify-between mb-6">
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Stat Card 1 -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex items-start justify-between hover:shadow-md transition-shadow">
             <div>
-                <h2 class="text-xl font-bold text-gray-900">Distribusi Status Pelamar</h2>
-                <p class="text-sm text-gray-600 mt-1">Visualisasi status aplikasi kandidat</p>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Total Pelamar</p>
+                <h3 class="text-2xl font-bold text-slate-800">{{ number_format($total_applicants) }}</h3>
+                <p class="text-xs text-green-600 mt-1 flex items-center">
+                    <i class="fas fa-arrow-up mr-1"></i> <span class="font-medium">+12%</span> <span class="text-slate-400 ml-1">bulan ini</span>
+                </p>
+            </div>
+            <div class="w-12 h-12 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+                <i class="fas fa-users"></i>
             </div>
         </div>
-        <div class="w-full h-80">
-            <canvas id="statusDistributionChart"></canvas>
+
+        <!-- Stat Card 2 -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex items-start justify-between hover:shadow-md transition-shadow">
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Lowongan Aktif</p>
+                <h3 class="text-2xl font-bold text-slate-800">{{ number_format($total_jobs) }}</h3>
+                <p class="text-xs text-slate-400 mt-1">Posisi tersedia</p>
+            </div>
+            <div class="w-12 h-12 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+                <i class="fas fa-briefcase"></i>
+            </div>
+        </div>
+
+        <!-- Stat Card 3 -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex items-start justify-between hover:shadow-md transition-shadow">
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Talent Pool</p>
+                <h3 class="text-2xl font-bold text-slate-800">{{ number_format($total_talent_pool) }}</h3>
+                <p class="text-xs text-slate-400 mt-1">Kandidat potensial</p>
+            </div>
+            <div class="w-12 h-12 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-xl">
+                <i class="fas fa-star"></i>
+            </div>
+        </div>
+
+        <!-- Stat Card 4 -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex items-start justify-between hover:shadow-md transition-shadow">
+            <div>
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">Pending FPTK</p>
+                @php $pendingFptk = \App\Models\Fptk::where('status', 'pending')->count(); @endphp
+                <h3 class="text-2xl font-bold text-slate-800">{{ $pendingFptk }}</h3>
+                 <p class="text-xs text-orange-500 mt-1 font-medium">Butuh approval</p>
+            </div>
+            <div class="w-12 h-12 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center text-xl">
+                <i class="fas fa-file-contract"></i>
+            </div>
         </div>
     </div>
 
-    <!-- Chart.js CDN -->
+    <!-- Main Grid: Chart & Active Jobs -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Column: Chart (Main Focus) -->
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-100 p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-bold text-slate-800">Distribusi Status Pelamar</h3>
+                 <select class="text-sm border-slate-200 rounded-lg text-slate-600 focus:ring-blue-500 focus:border-blue-500">
+                    <option>Bulan Ini</option>
+                    <option>Tahun Ini</option>
+                </select>
+            </div>
+            <div class="h-80 w-full">
+                <canvas id="statusDistributionChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Right Column: Recent/Active List -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 flex flex-col">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-slate-800">Lowongan Populer</h3>
+                <a href="{{ route('admin.jobs.index') }}" class="text-sm text-blue-600 hover:text-blue-700 font-medium">Lihat Semua</a>
+            </div>
+            <div class="p-0 flex-1 overflow-y-auto max-h-[400px]">
+                @forelse($active_jobs as $job)
+                <div class="p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors group">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">{{ $job->type }}</span>
+                        <span class="text-xs text-slate-400">{{ $job->created_at->diffForHumans() }}</span>
+                    </div>
+                    <a href="{{ route('admin.jobs.show', $job->id) }}" class="block font-semibold text-slate-800 group-hover:text-blue-600 transition-colors mb-1">
+                        {{ $job->title }}
+                    </a>
+                    <div class="flex items-center justify-between mt-2">
+                        <span class="text-xs text-slate-500"><i class="fas fa-map-marker-alt mr-1"></i> {{ \Illuminate\Support\Str::limit($job->location, 20) }}</span>
+                        <div class="flex items-center text-xs font-medium text-slate-700 bg-slate-100 px-2 py-1 rounded-md">
+                            <i class="fas fa-user-friends mr-1.5 text-slate-400"></i> {{ $job->applications_count }}
+                        </div>
+                    </div>
+                </div>
+                @empty
+                <div class="p-8 text-center text-slate-500">
+                    <p>Belum ada lowongan aktif.</p>
+                </div>
+                @endforelse
+            </div>
+             <div class="p-4 bg-slate-50 rounded-b-xl border-t border-slate-100 text-center">
+                <button onclick="window.location.href='{{ route('admin.jobs.create') }}'" class="w-full py-2 bg-white border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-sm text-sm">
+                    <i class="fas fa-plus mr-2 text-slate-400"></i> Buat Lowongan Baru
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const ctx = document.getElementById('statusDistributionChart').getContext('2d');
             const statusData = JSON.parse('<?php echo json_encode($status_distribution); ?>');
 
+            // Custom Chart Colors (Professional Palette)
+            const colors = {
+                bg: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444', '#64748b'], // Blue, Emerald, Amber, Violet, Red, Slate
+            };
+
             new Chart(ctx, {
-                type: 'doughnut',
+                type: 'bar', // Changed to bar for cleaner professional look
                 data: {
                     labels: Object.keys(statusData),
                     datasets: [{
                         label: 'Jumlah Pelamar',
                         data: Object.values(statusData),
-                        backgroundColor: [
-                            'rgba(54, 162, 235, 0.7)',
-                            'rgba(255, 206, 86, 0.7)',
-                            'rgba(75, 192, 192, 0.7)',
-                            'rgba(153, 102, 255, 0.7)',
-                            'rgba(255, 159, 64, 0.7)',
-                            'rgba(255, 99, 132, 0.7)',
-                            'rgba(100, 100, 100, 0.7)',
-                            'rgba(200, 150, 50, 0.7)',
-                        ],
-                        hoverOffset: 4
+                        backgroundColor: colors.bg,
+                        borderRadius: 6,
+                        barThickness: 40,
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'right',
+                        legend: { display: false }, // Hide legend for cleaner look
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            padding: 12,
+                            titleFont: { size: 13 },
+                            bodyFont: { size: 14 },
+                            cornerRadius: 8,
+                            displayColors: false,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                borderDash: [2, 2],
+                                color: '#e2e8f0'
+                            },
+                        },
+                        x: {
+                            grid: { display: false }
                         }
                     }
                 }
