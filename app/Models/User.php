@@ -20,8 +20,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', // Tambahkan 'role'
+        'role',
         'division',
+        'google_id',
+        'avatar',
     ];
 
     /**
