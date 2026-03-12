@@ -50,6 +50,7 @@ class RegisteredUserController extends Controller
             'formal_photo' => ['required', 'file', 'image', 'max:2048'],
             'ktp' => ['required', 'file', 'image', 'max:2048'],
             'kk' => ['required', 'file', 'image', 'max:2048'],
+            'npwp' => ['nullable', 'file', 'image', 'max:2048'],
             'ijazah' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
             'certificate' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
             'experience' => ['nullable', 'array'],
@@ -71,6 +72,10 @@ class RegisteredUserController extends Controller
             $formalPhotoPath = $request->file('formal_photo')->store('formal_photos', 'public');
             $ktpPath = $request->file('ktp')->store('ktps', 'public');
             $kkPath = $request->file('kk')->store('kks', 'public');
+            $npwpPath = null;
+            if ($request->hasFile('npwp')) {
+                $npwpPath = $request->file('npwp')->store('npwps', 'public');
+            }
             $ijazahPath = $request->file('ijazah')->store('ijazahs', 'public');
             
             $certificatePath = $request->hasFile('certificate') 
@@ -116,6 +121,7 @@ class RegisteredUserController extends Controller
                 'formal_photo_path' => $formalPhotoPath,
                 'ktp_path' => $ktpPath,
                 'kk_path' => $kkPath,
+                'npwp_path' => $npwpPath,
                 'ijazah_path' => $ijazahPath,
                 'certificate_path' => $certificatePath,
             ]);

@@ -48,6 +48,7 @@ class ProfileController extends Controller
             'formal_photo' => 'nullable|file|image|max:2048',
             'ktp' => 'nullable|file|image|max:2048',
             'kk' => 'nullable|file|image|max:2048',
+            'npwp' => 'nullable|file|image|max:2048',
             'ijazah' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             'certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
@@ -73,6 +74,11 @@ class ProfileController extends Controller
             $kkPath = $user->profile->kk_path;
             if ($request->hasFile('kk')) {
                 $kkPath = $request->file('kk')->store('kks', 'public');
+            }
+            
+            $npwpPath = $user->profile->npwp_path;
+            if ($request->hasFile('npwp')) {
+                $npwpPath = $request->file('npwp')->store('npwps', 'public');
             }
 
             $ijazahPath = $user->profile->ijazah_path;
@@ -105,6 +111,7 @@ class ProfileController extends Controller
                 'formal_photo_path' => $formalPhotoPath,
                 'ktp_path' => $ktpPath,
                 'kk_path' => $kkPath,
+                'npwp_path' => $npwpPath,
                 'ijazah_path' => $ijazahPath,
                 'certificate_path' => $certificatePath,
             ]);

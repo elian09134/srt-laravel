@@ -31,6 +31,7 @@ class UserProfile extends Model
         'formal_photo_path',
         'ktp_path',
         'kk_path',
+        'npwp_path',
         'ijazah_path',
         'certificate_path',
     ];

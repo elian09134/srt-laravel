@@ -210,6 +210,11 @@
                             <x-input-error :messages="$errors->get('kk')" class="mt-1" />
                         </div>
                         <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">NPWP (Opsional) - Maks 2MB</label>
+                            <input type="file" name="npwp" accept="image/*" class="block w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition">
+                            <x-input-error :messages="$errors->get('npwp')" class="mt-1" />
+                        </div>
+                        <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Ijazah Terakhir - Maks 2MB <span class="text-red-500">*</span></label>
                             <input type="file" name="ijazah" accept=".pdf,image/*" required class="block w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition">
                             <x-input-error :messages="$errors->get('ijazah')" class="mt-1" />

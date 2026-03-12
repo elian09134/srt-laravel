@@ -335,24 +335,42 @@
                     <x-input-error class="mt-2" :messages="$errors->get('ktp')" />
                 </div>
 
-                <!-- Foto KK -->
-                <div>
-                    <x-input-label for="kk" value="Foto Kartu Keluarga (Wajib saat lamar)" />
-                    @if($user->profile->kk_path ?? false)
-                        <div class="mt-1 flex items-center text-sm font-medium text-green-600 mb-2">
-                            <i class="fas fa-check-circle mr-1"></i> Sudah terunggah
-                        </div>
-                    @else
-                        <div class="mt-1 flex items-center text-sm font-medium text-red-500 mb-2">
-                            <i class="fas fa-exclamation-circle mr-1"></i> Belum ada foto KK
-                        </div>
-                    @endif
-                    <input type="file" id="kk" name="kk" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition" />
-                    <x-input-error class="mt-2" :messages="$errors->get('kk')" />
-                </div>
+                <!-- KK -->
+            <div>
+                <x-input-label for="kk" :value="__('Kartu Keluarga (KK)')" />
+                @if($user->profile && $user->profile->kk_path)
+                    <div class="mt-1 flex items-center space-x-2 text-sm text-green-600">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Sudah terunggah <a href="{{ asset('storage/' . $user->profile->kk_path) }}" target="_blank" class="text-blue-500 hover:text-blue-700 text-xs">(Lihat)</a></span>
+                    </div>
+                @else
+                    <div class="mt-1 text-sm text-red-500 mb-2">Belum ada foto KK. Wajib diunggah.</div>
+                @endif
+                <input id="kk" name="kk" type="file" class="mt-1 block w-full text-sm text-gray-500 border border-gray-300 rounded-md shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" accept="image/*" />
+                <x-input-error class="mt-2" :messages="$errors->get('kk')" />
+            </div>
 
-                <!-- Ijazah -->
-                <div>
+            <!-- NPWP -->
+            <div>
+                <x-input-label for="npwp" :value="__('NPWP (Opsional)')" />
+                @if($user->profile && $user->profile->npwp_path)
+                    <div class="mt-1 flex items-center space-x-2 text-sm text-green-600">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Sudah terunggah <a href="{{ asset('storage/' . $user->profile->npwp_path) }}" target="_blank" class="text-blue-500 hover:text-blue-700 text-xs">(Lihat)</a></span>
+                    </div>
+                @else
+                    <div class="mt-1 text-sm text-gray-500 mb-2">Belum ada NPWP (Opsional).</div>
+                @endif
+                <input id="npwp" name="npwp" type="file" class="mt-1 block w-full text-sm text-gray-500 border border-gray-300 rounded-md shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" accept="image/*" />
+                <x-input-error class="mt-2" :messages="$errors->get('npwp')" />
+            </div>
+
+            <!-- Ijazah -->
+            <div>
                     <x-input-label for="ijazah" value="Ijazah Terakhir (Wajib saat lamar)" />
                     @if($user->profile->ijazah_path ?? false)
                         <div class="mt-1 flex items-center text-sm font-medium text-green-600 mb-2">
