@@ -43,7 +43,13 @@ class ProfileController extends Controller
             'skills' => 'nullable|string',
             'languages' => 'nullable|string',
             'job_interest' => 'nullable|string',
+            'expected_salary' => 'required|numeric|min:0',
             'photo' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'formal_photo' => 'nullable|file|image|max:2048',
+            'ktp' => 'nullable|file|image|max:2048',
+            'kk' => 'nullable|file|image|max:2048',
+            'ijazah' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
         DB::beginTransaction();
@@ -52,6 +58,31 @@ class ProfileController extends Controller
             $photoPath = $user->profile->photo_path;
             if ($request->hasFile('photo')) {
                 $photoPath = $request->file('photo')->store('photos', 'public');
+            }
+            
+            $formalPhotoPath = $user->profile->formal_photo_path;
+            if ($request->hasFile('formal_photo')) {
+                $formalPhotoPath = $request->file('formal_photo')->store('formal_photos', 'public');
+            }
+
+            $ktpPath = $user->profile->ktp_path;
+            if ($request->hasFile('ktp')) {
+                $ktpPath = $request->file('ktp')->store('ktps', 'public');
+            }
+
+            $kkPath = $user->profile->kk_path;
+            if ($request->hasFile('kk')) {
+                $kkPath = $request->file('kk')->store('kks', 'public');
+            }
+
+            $ijazahPath = $user->profile->ijazah_path;
+            if ($request->hasFile('ijazah')) {
+                $ijazahPath = $request->file('ijazah')->store('ijazahs', 'public');
+            }
+
+            $certificatePath = $user->profile->certificate_path;
+            if ($request->hasFile('certificate')) {
+                $certificatePath = $request->file('certificate')->store('certificates', 'public');
             }
 
             // 2. Update profil user
@@ -69,7 +100,13 @@ class ProfileController extends Controller
                 'skills' => $request->skills,
                 'languages' => $request->languages,
                 'job_interest' => $request->job_interest,
+                'expected_salary' => $request->expected_salary,
                 'photo_path' => $photoPath,
+                'formal_photo_path' => $formalPhotoPath,
+                'ktp_path' => $ktpPath,
+                'kk_path' => $kkPath,
+                'ijazah_path' => $ijazahPath,
+                'certificate_path' => $certificatePath,
             ]);
 
             // 3. Update pengalaman kerja jika ada

@@ -254,13 +254,13 @@
             </div>
         </div>
 
-        <!-- Keterampilan & Minat Section -->
+        <!-- Keterampilan, Minat & Gaji Section -->
         <div class="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
             <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
                 <svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                 </svg>
-                Keterampilan & Minat
+                Keterampilan, Minat & Gaji
             </h3>
             <div class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -277,10 +277,106 @@
                     </div>
                 </div>
 
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <x-input-label for="job_interest" :value="__('Minat Pekerjaan')" />
+                        <x-text-input id="job_interest" name="job_interest" type="text" class="mt-1 block w-full" :value="old('job_interest', $user->profile->job_interest ?? '')" placeholder="contoh: Web Developer, Software Engineer" />
+                        <x-input-error class="mt-2" :messages="$errors->get('job_interest')" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="expected_salary" :value="__('Ekspektasi Gaji (IDR/bulan)')" />
+                        <x-text-input id="expected_salary" name="expected_salary" type="number" class="mt-1 block w-full" :value="old('expected_salary', $user->profile->expected_salary ?? '')" placeholder="5000000" required />
+                        <x-input-error class="mt-2" :messages="$errors->get('expected_salary')" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dokumen Pendukung Section -->
+        <div class="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                </svg>
+                Dokumen Pendukung
+            </h3>
+            <p class="text-sm text-gray-500 mb-6">Kosongkan jika tidak ingin mengubah dokumen yang sudah diunggah sebelumnya. Maksimal ukuran file 2MB.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Pas Foto Formal -->
                 <div>
-                    <x-input-label for="job_interest" :value="__('Minat Pekerjaan')" />
-                    <x-text-input id="job_interest" name="job_interest" type="text" class="mt-1 block w-full" :value="old('job_interest', $user->profile->job_interest ?? '')" placeholder="contoh: Web Developer, Software Engineer" />
-                    <x-input-error class="mt-2" :messages="$errors->get('job_interest')" />
+                    <x-input-label for="formal_photo" value="Pas Foto Formal (Wajib saat lamar)" />
+                    @if($user->profile->formal_photo_path ?? false)
+                        <div class="mt-1 flex items-center text-sm font-medium text-green-600 mb-2">
+                            <i class="fas fa-check-circle mr-1"></i> Sudah terunggah
+                        </div>
+                    @else
+                        <div class="mt-1 flex items-center text-sm font-medium text-red-500 mb-2">
+                            <i class="fas fa-exclamation-circle mr-1"></i> Belum ada foto formal
+                        </div>
+                    @endif
+                    <input type="file" id="formal_photo" name="formal_photo" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition" />
+                    <x-input-error class="mt-2" :messages="$errors->get('formal_photo')" />
+                </div>
+
+                <!-- Foto KTP -->
+                <div>
+                    <x-input-label for="ktp" value="Foto KTP (Wajib saat lamar)" />
+                    @if($user->profile->ktp_path ?? false)
+                        <div class="mt-1 flex items-center text-sm font-medium text-green-600 mb-2">
+                            <i class="fas fa-check-circle mr-1"></i> Sudah terunggah
+                        </div>
+                    @else
+                        <div class="mt-1 flex items-center text-sm font-medium text-red-500 mb-2">
+                            <i class="fas fa-exclamation-circle mr-1"></i> Belum ada foto KTP
+                        </div>
+                    @endif
+                    <input type="file" id="ktp" name="ktp" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition" />
+                    <x-input-error class="mt-2" :messages="$errors->get('ktp')" />
+                </div>
+
+                <!-- Foto KK -->
+                <div>
+                    <x-input-label for="kk" value="Foto Kartu Keluarga (Wajib saat lamar)" />
+                    @if($user->profile->kk_path ?? false)
+                        <div class="mt-1 flex items-center text-sm font-medium text-green-600 mb-2">
+                            <i class="fas fa-check-circle mr-1"></i> Sudah terunggah
+                        </div>
+                    @else
+                        <div class="mt-1 flex items-center text-sm font-medium text-red-500 mb-2">
+                            <i class="fas fa-exclamation-circle mr-1"></i> Belum ada foto KK
+                        </div>
+                    @endif
+                    <input type="file" id="kk" name="kk" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition" />
+                    <x-input-error class="mt-2" :messages="$errors->get('kk')" />
+                </div>
+
+                <!-- Ijazah -->
+                <div>
+                    <x-input-label for="ijazah" value="Ijazah Terakhir (Wajib saat lamar)" />
+                    @if($user->profile->ijazah_path ?? false)
+                        <div class="mt-1 flex items-center text-sm font-medium text-green-600 mb-2">
+                            <i class="fas fa-check-circle mr-1"></i> Sudah terunggah <a href="{{ asset('storage/' . $user->profile->ijazah_path) }}" target="_blank" class="text-blue-600 hover:underline ml-2">(Lihat)</a>
+                        </div>
+                    @else
+                        <div class="mt-1 flex items-center text-sm font-medium text-red-500 mb-2">
+                            <i class="fas fa-exclamation-circle mr-1"></i> Belum ada ijazah
+                        </div>
+                    @endif
+                    <input type="file" id="ijazah" name="ijazah" accept=".pdf,image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition" />
+                    <x-input-error class="mt-2" :messages="$errors->get('ijazah')" />
+                </div>
+
+                <!-- Sertifikat -->
+                <div>
+                    <x-input-label for="certificate" value="Sertifikat Pendukung (Opsional)" />
+                    @if($user->profile->certificate_path ?? false)
+                        <div class="mt-1 flex items-center text-sm font-medium text-green-600 mb-2">
+                            <i class="fas fa-check-circle mr-1"></i> Sudah ada <a href="{{ asset('storage/' . $user->profile->certificate_path) }}" target="_blank" class="text-blue-600 hover:underline ml-2">(Lihat)</a>
+                        </div>
+                    @endif
+                    <input type="file" id="certificate" name="certificate" accept=".pdf,image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition" />
+                    <x-input-error class="mt-2" :messages="$errors->get('certificate')" />
                 </div>
             </div>
         </div>
