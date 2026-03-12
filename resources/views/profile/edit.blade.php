@@ -13,61 +13,61 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Profile Header Card -->
-            <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-blue-600 to-indigo-800 rounded-3xl shadow-2xl p-8 md:p-10 mb-6 border border-white/10">
+            <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-blue-600 to-indigo-800 rounded-3xl shadow-2xl p-6 md:p-10 mb-6 border border-white/10 mx-auto w-full max-w-full">
                 <!-- Abstract Background Elements -->
                 <div class="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-white opacity-10 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-blue-300 opacity-20 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12 pointer-events-none"></div>
                 
-                <div class="relative z-10 flex flex-col md:flex-row items-center md:items-center gap-8">
+                <div class="relative z-10 flex flex-col md:flex-row items-center md:items-center gap-6 md:gap-8">
                     <!-- Profile Photo Container -->
-                    <div class="relative group">
+                    <div class="relative group shrink-0">
                         <!-- Glow Effect -->
                         <div class="absolute -inset-1 bg-gradient-to-r from-blue-300 to-indigo-300 rounded-full blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
                         
                         @if($user->profile && $user->profile->photo_path)
                             <img src="{{ asset('storage/' . $user->profile->photo_path) }}" 
                                  alt="{{ $user->name }}" 
-                                 class="relative w-36 h-36 rounded-full border-4 border-white/90 shadow-2xl object-cover transition transform group-hover:scale-105 duration-300 bg-white">
+                                 class="relative w-28 h-28 md:w-36 md:h-36 rounded-full border-4 border-white/90 shadow-2xl object-cover transition transform group-hover:scale-105 duration-300 bg-white mx-auto">
                         @else
-                            <div class="relative w-36 h-36 rounded-full border-4 border-white/90 shadow-2xl bg-gradient-to-br from-gray-100 to-gray-300 flex items-center justify-center transition transform group-hover:scale-105 duration-300">
-                                <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <div class="relative w-28 h-28 md:w-36 md:h-36 mx-auto rounded-full border-4 border-white/90 shadow-2xl bg-gradient-to-br from-gray-100 to-gray-300 flex items-center justify-center transition transform group-hover:scale-105 duration-300">
+                                <svg class="w-12 h-12 md:w-16 md:h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
                                 </svg>
                             </div>
                         @endif
                         
                         <!-- Pulse Online Status -->
-                        <div class="absolute bottom-2 right-2 flex items-center justify-center">
-                            <span class="absolute inline-flex h-8 w-8 rounded-full bg-green-400 opacity-75 animate-ping"></span>
-                            <span class="relative inline-flex rounded-full h-6 w-6 bg-green-500 border-2 border-white shadow-sm"></span>
+                        <div class="absolute bottom-1 right-1 md:bottom-2 md:right-2 flex items-center justify-center">
+                            <span class="absolute inline-flex h-6 w-6 md:h-8 md:w-8 rounded-full bg-green-400 opacity-75 animate-ping"></span>
+                            <span class="relative inline-flex rounded-full h-5 w-5 md:h-6 md:w-6 bg-green-500 border-2 border-white shadow-sm"></span>
                         </div>
                     </div>
                     
                     <!-- User Info -->
-                    <div class="flex-1 text-center md:text-left text-white mt-2 md:mt-0">
-                        <h3 class="text-3xl md:text-4xl font-extrabold tracking-tight drop-shadow-md">{{ $user->name }}</h3>
-                        <p class="text-blue-100 mt-2 text-lg font-medium opacity-90">{{ $user->profile->last_position ?? 'Pencari Kerja' }}</p>
+                    <div class="flex-1 w-full text-center md:text-left text-white mt-2 md:mt-0">
+                        <h3 class="text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight drop-shadow-md break-words">{{ $user->name }}</h3>
+                        <p class="text-blue-100 mt-1 md:mt-2 text-base md:text-lg font-medium opacity-90">{{ $user->profile->last_position ?? 'Pencari Kerja' }}</p>
                         
-                        <div class="flex flex-wrap gap-3 mt-6 justify-center md:justify-start">
-                            <div class="flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full px-5 py-2.5 transition-all duration-300 shadow-sm group cursor-default">
-                                <div class="bg-white/20 p-1.5 rounded-full group-hover:bg-white/30 transition-colors">
-                                    <svg class="w-4 h-4 text-blue-100" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="flex flex-col sm:flex-row flex-wrap gap-2 md:gap-3 mt-5 justify-center md:justify-start w-full max-w-xs sm:max-w-none mx-auto sm:mx-0">
+                            <div class="flex items-center justify-center md:justify-start gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 shadow-sm group cursor-default w-full sm:w-auto">
+                                <div class="bg-white/20 p-1.5 rounded-full group-hover:bg-white/30 hidden sm:block">
+                                    <svg class="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-100" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
                                         <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
                                     </svg>
                                 </div>
-                                <span class="text-sm font-medium tracking-wide text-white">{{ $user->email }}</span>
+                                <span class="text-xs md:text-sm font-medium tracking-wide text-white truncate">{{ $user->email }}</span>
                             </div>
                             
                             @if($user->profile && $user->profile->phone_number)
-                            <div class="flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full px-5 py-2.5 transition-all duration-300 shadow-sm group cursor-default">
-                                <div class="bg-white/20 p-1.5 rounded-full group-hover:bg-white/30 transition-colors">
-                                    <svg class="w-4 h-4 text-blue-100" fill="currentColor" viewBox="0 0 20 20">
+                            <div class="flex items-center justify-center md:justify-start gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 shadow-sm group cursor-default w-full sm:w-auto">
+                                <div class="bg-white/20 p-1.5 rounded-full group-hover:bg-white/30 hidden sm:block">
+                                    <svg class="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-100" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
                                     </svg>
                                 </div>
-                                <span class="text-sm font-medium tracking-wide text-white">{{ $user->profile->phone_number }}</span>
+                                <span class="text-xs md:text-sm font-medium tracking-wide text-white truncate">{{ $user->profile->phone_number }}</span>
                             </div>
                             @endif
                         </div>
