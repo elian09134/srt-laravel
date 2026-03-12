@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('kk_path')->nullable()->after('ktp_path');
             $table->string('ijazah_path')->nullable()->after('kk_path');
             $table->string('certificate_path')->nullable()->after('ijazah_path');
+        });
     }
 
     /**
@@ -32,5 +33,6 @@ return new class extends Migration
                 'ijazah_path',
                 'certificate_path'
             ]);
+        });
     }
 };
