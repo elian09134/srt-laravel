@@ -25,3 +25,5 @@ Thumbs.db
 
 # Ignore deploy keys and other local deploy artifacts
 deploy/keys/
+*.md
+.env*
