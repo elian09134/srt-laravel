@@ -146,7 +146,7 @@
                     </div>
                 </div>
 
-                <!-- Snapshot Info -->
+                <!-- Snapshot Info & Documents -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Informasi Saat Daftar</h4>
@@ -181,6 +181,45 @@
                                 <span class="text-slate-700 break-words line-clamp-1">{{ optional($application->user->profile)->address ?? '—' }}</span>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Dokumen Pendukung -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Dokumen Pendukung</h4>
+                    @php
+                        $userProfile = optional($application->user)->profile;
+                        $docs = [
+                            ['title' => 'Foto Formal', 'path' => optional($userProfile)->formal_photo_path, 'icon' => 'fa-id-badge', 'color' => 'text-blue-500', 'bg' => 'bg-blue-50'],
+                            ['title' => 'KTP', 'path' => optional($userProfile)->ktp_path, 'icon' => 'fa-address-card', 'color' => 'text-indigo-500', 'bg' => 'bg-indigo-50'],
+                            ['title' => 'Kartu Keluarga (KK)', 'path' => optional($userProfile)->kk_path, 'icon' => 'fa-users', 'color' => 'text-purple-500', 'bg' => 'bg-purple-50'],
+                            ['title' => 'NPWP', 'path' => optional($userProfile)->npwp_path, 'icon' => 'fa-file-invoice-dollar', 'color' => 'text-emerald-500', 'bg' => 'bg-emerald-50'],
+                            ['title' => 'Ijazah Terakhir', 'path' => optional($userProfile)->ijazah_path, 'icon' => 'fa-graduation-cap', 'color' => 'text-amber-500', 'bg' => 'bg-amber-50'],
+                            ['title' => 'Sertifikat', 'path' => optional($userProfile)->certificate_path, 'icon' => 'fa-certificate', 'color' => 'text-rose-500', 'bg' => 'bg-rose-50'],
+                        ];
+                    @endphp
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                        @foreach($docs as $doc)
+                            @if($doc['path'])
+                                <a href="{{ asset('storage/' . $doc['path']) }}" target="_blank" 
+                                   class="group flex flex-col items-center p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all text-center">
+                                    <div class="w-12 h-12 {{ $doc['bg'] }} {{ $doc['color'] }} rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+                                        <i class="fas {{ $doc['icon'] }}"></i>
+                                    </div>
+                                    <h5 class="text-xs font-bold text-slate-700 leading-tight">{{ $doc['title'] }}</h5>
+                                    <span class="text-[10px] text-blue-500 font-medium mt-1 opacity-0 group-hover:opacity-100 transition-opacity">Tinjau Dokumen &rarr;</span>
+                                </a>
+                            @else
+                                <div class="flex flex-col items-center p-4 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200 text-center opacity-60">
+                                    <div class="w-12 h-12 bg-slate-100 text-slate-300 rounded-xl flex items-center justify-center text-xl mb-3">
+                                        <i class="fas {{ $doc['icon'] }}"></i>
+                                    </div>
+                                    <h5 class="text-xs font-medium text-slate-500 leading-tight">{{ $doc['title'] }}</h5>
+                                    <span class="text-[10px] text-slate-400 mt-1">Belum Tersedia</span>
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
 

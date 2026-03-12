@@ -269,6 +269,58 @@
                 @endif
             </div>
 
+            <!-- Documents -->
+            <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 p-8 md:p-10 transition-all hover:border-blue-100">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-8">
+                     <h3 class="text-xl font-black text-slate-900 flex items-center">
+                        <div class="w-12 h-12 mr-4 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-600 font-bold">
+                            <i class="fas fa-folder-open"></i>
+                        </div>
+                        Dokumen Kandidat
+                    </h3>
+                    @if($profile && $profile->expected_salary)
+                        <div class="mt-4 md:mt-0 px-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-center md:text-right">
+                            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Ekspektasi Gaji</div>
+                            <div class="text-sm font-black text-green-600 tracking-tight">{{ number_format($profile->expected_salary,0,',','.') }} <span class="text-xs text-slate-400 font-medium">IDR</span></div>
+                        </div>
+                    @endif
+                </div>
+
+                @php
+                    $docs = [
+                        ['title' => 'Foto Formal', 'path' => optional($profile)->formal_photo_path, 'icon' => 'fa-id-badge', 'color' => 'text-blue-500', 'bg' => 'bg-blue-50'],
+                        ['title' => 'KTP', 'path' => optional($profile)->ktp_path, 'icon' => 'fa-address-card', 'color' => 'text-indigo-500', 'bg' => 'bg-indigo-50'],
+                        ['title' => 'Kartu Keluarga (KK)', 'path' => optional($profile)->kk_path, 'icon' => 'fa-users', 'color' => 'text-purple-500', 'bg' => 'bg-purple-50'],
+                        ['title' => 'NPWP', 'path' => optional($profile)->npwp_path, 'icon' => 'fa-file-invoice-dollar', 'color' => 'text-emerald-500', 'bg' => 'bg-emerald-50'],
+                        ['title' => 'Ijazah Terakhir', 'path' => optional($profile)->ijazah_path, 'icon' => 'fa-graduation-cap', 'color' => 'text-amber-500', 'bg' => 'bg-amber-50'],
+                        ['title' => 'Sertifikat', 'path' => optional($profile)->certificate_path, 'icon' => 'fa-certificate', 'color' => 'text-rose-500', 'bg' => 'bg-rose-50'],
+                    ];
+                @endphp
+                
+                <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
+                    @foreach($docs as $doc)
+                        @if($doc['path'])
+                            <a href="{{ asset('storage/' . $doc['path']) }}" target="_blank" 
+                               class="group flex flex-col items-center p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all text-center">
+                                <div class="w-12 h-12 {{ $doc['bg'] }} {{ $doc['color'] }} rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+                                    <i class="fas {{ $doc['icon'] }}"></i>
+                                </div>
+                                <h5 class="text-xs font-bold text-slate-700 leading-tight">{{ $doc['title'] }}</h5>
+                                <span class="text-[10px] text-blue-500 font-medium mt-1 opacity-0 group-hover:opacity-100 transition-opacity">Tinjau Dokumen &rarr;</span>
+                            </a>
+                        @else
+                            <div class="flex flex-col items-center p-4 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200 text-center opacity-60">
+                                <div class="w-12 h-12 bg-slate-100 text-slate-300 rounded-xl flex items-center justify-center text-xl mb-3">
+                                    <i class="fas {{ $doc['icon'] }}"></i>
+                                </div>
+                                <h5 class="text-xs font-medium text-slate-500 leading-tight">{{ $doc['title'] }}</h5>
+                                <span class="text-[10px] text-slate-400 mt-1">Belum Tersedia</span>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+
             <!-- Skills & Languages -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pb-10">
                 @if($profile && $profile->skills)
