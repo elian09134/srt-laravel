@@ -174,8 +174,9 @@
                             <label for="currently_employed" class="ml-2 text-sm text-gray-700">Sedang bekerja saat ini</label>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Ekspektasi Gaji (IDR/bulan)</label>
-                            <input type="number" name="expected_salary" value="{{ old('expected_salary') }}" class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="5000000">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Ekspektasi Gaji (IDR/bulan) <span class="text-red-500">*</span></label>
+                            <input type="number" name="expected_salary" value="{{ old('expected_salary') }}" required class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" placeholder="5000000">
+                            <x-input-error :messages="$errors->get('expected_salary')" class="mt-1" />
                         </div>
                     </div>
                     <div>
@@ -189,12 +190,39 @@
                     <h3 class="text-lg font-semibold text-gray-900 border-b pb-2">Dokumen Pendukung</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Unggah CV (PDF) - Maks 2MB</label>
-                            <input type="file" name="cv" accept=".pdf" class="block w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Unggah CV (PDF) - Maks 2MB <span class="text-red-500">*</span></label>
+                            <input type="file" name="cv" accept=".pdf" required class="block w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition">
+                            <x-input-error :messages="$errors->get('cv')" class="mt-1" />
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Unggah Foto (opsional) - Maks 2MB</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Pas Foto Formal - Maks 2MB <span class="text-red-500">*</span></label>
+                            <input type="file" name="formal_photo" accept="image/*" required class="block w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition">
+                            <x-input-error :messages="$errors->get('formal_photo')" class="mt-1" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Foto KTP - Maks 2MB <span class="text-red-500">*</span></label>
+                            <input type="file" name="ktp" accept="image/*" required class="block w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition">
+                            <x-input-error :messages="$errors->get('ktp')" class="mt-1" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Foto Kartu Keluarga - Maks 2MB <span class="text-red-500">*</span></label>
+                            <input type="file" name="kk" accept="image/*" required class="block w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition">
+                            <x-input-error :messages="$errors->get('kk')" class="mt-1" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Ijazah Terakhir - Maks 2MB <span class="text-red-500">*</span></label>
+                            <input type="file" name="ijazah" accept=".pdf,image/*" required class="block w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition">
+                            <x-input-error :messages="$errors->get('ijazah')" class="mt-1" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Sertifikat (opsional) - Maks 2MB</label>
+                            <input type="file" name="certificate" accept=".pdf,image/*" class="block w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition">
+                            <x-input-error :messages="$errors->get('certificate')" class="mt-1" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Foto Profil Bebas (opsional) - Maks 2MB</label>
                             <input type="file" name="photo" accept="image/*" class="block w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition">
+                            <x-input-error :messages="$errors->get('photo')" class="mt-1" />
                         </div>
                     </div>
                 </div>

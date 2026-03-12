@@ -47,13 +47,18 @@ class RegisteredUserController extends Controller
             'major' => ['required', 'string', 'max:255'],
             'cv' => ['required', 'file', 'mimes:pdf', 'max:2048'], // maks 2MB
             'photo' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:2048'], // maks 2MB
+            'formal_photo' => ['required', 'file', 'image', 'max:2048'],
+            'ktp' => ['required', 'file', 'image', 'max:2048'],
+            'kk' => ['required', 'file', 'image', 'max:2048'],
+            'ijazah' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
+            'certificate' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
             'experience' => ['nullable', 'array'],
             'experience.*.company' => ['nullable', 'string', 'max:255'],
             'experience.*.position' => ['nullable', 'string', 'max:255'],
             'experience.*.duration' => ['nullable', 'string', 'max:255'],
             'experience.*.jobdesk' => ['nullable', 'string'],
             'currently_employed' => ['nullable', 'boolean'],
-            'expected_salary' => ['nullable', 'numeric'],
+            'expected_salary' => ['required', 'numeric', 'min:0'],
         ]);
 
         // Memulai transaksi database untuk memastikan semua data aman
@@ -62,6 +67,15 @@ class RegisteredUserController extends Controller
         try {
             // 2. Handle Upload File
             $cvPath = $request->file('cv')->store('cvs', 'public');
+            
+            $formalPhotoPath = $request->file('formal_photo')->store('formal_photos', 'public');
+            $ktpPath = $request->file('ktp')->store('ktps', 'public');
+            $kkPath = $request->file('kk')->store('kks', 'public');
+            $ijazahPath = $request->file('ijazah')->store('ijazahs', 'public');
+            
+            $certificatePath = $request->hasFile('certificate') 
+                ? $request->file('certificate')->store('certificates', 'public') 
+                : null;
             
             $photoPath = null;
             if ($request->hasFile('photo')) {
@@ -93,12 +107,17 @@ class RegisteredUserController extends Controller
                 'last_position' => $request->last_position ?? null,
                 'last_company_duration' => $request->last_company_duration ?? null,
                 'currently_employed' => $request->boolean('currently_employed', false),
-                'expected_salary' => $request->expected_salary ?? null,
+                'expected_salary' => $request->expected_salary,
                 'skills' => $request->skills,
                 'languages' => $request->languages,
                 'job_interest' => $request->job_interest,
                 'cv_path' => $cvPath,
                 'photo_path' => $photoPath,
+                'formal_photo_path' => $formalPhotoPath,
+                'ktp_path' => $ktpPath,
+                'kk_path' => $kkPath,
+                'ijazah_path' => $ijazahPath,
+                'certificate_path' => $certificatePath,
             ]);
 
             // 5. Tambahkan user ke Talent Pool untuk rekrutmen mendatang (kecuali admin)
