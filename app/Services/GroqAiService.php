@@ -51,10 +51,19 @@ Analyze strictly based on skills, experience, and education.";
 
             if ($response->successful()) {
                 $content = $response->json('choices.0.message.content');
+                
+                // CRITICAL DEBUG: Log what Groq actually responded
+                Log::info('GROQ RAW RESPONSE: ' . $content);
+                
                 // Clean up any potential markdown wrapping from LLM
                 $content = str_replace(['```json', '```'], '', trim($content));
                 
-                return json_decode($content, true);
+                $decoded = json_decode($content, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    Log::error('GROQ JSON ERROR: ' . json_last_error_msg());
+                }
+                
+                return $decoded;
             }
 
             Log::error('Groq API Error: ' . $response->body());
