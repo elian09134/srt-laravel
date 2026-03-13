@@ -363,7 +363,7 @@
                     this.results = [];
                     
                     try {
-                        const response = await fetch('/admin/api/smart-filter', {
+                        const response = await fetch('{{ route('admin.smart-filter') }}', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
