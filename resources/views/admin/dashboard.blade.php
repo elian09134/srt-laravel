@@ -110,6 +110,132 @@
         </div>
     </div>
 
+    <!-- AI Smart Candidate Filter Section -->
+    <div class="mb-8" x-data="smartFilter()">
+        <div class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl shadow-lg border border-slate-700 overflow-hidden relative">
+            <!-- Decorative background elements -->
+            <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+            <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+            
+            <div class="p-6 md:p-8 relative z-10">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fas fa-robot text-purple-400 text-xl animate-pulse"></i>
+                            <h2 class="text-xl font-black text-white tracking-tight">AI Smart Candidate Matcher</h2>
+                        </div>
+                        <p class="text-sm font-medium text-slate-400">Pilih lowongan spesifik dan biarkan Groq Llama AI menyeleksi 5 kandidat paling cocok secara instan berdasarkan keahlian dan pengalaman.</p>
+                        
+                        <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                            <div class="flex-1">
+                                <label for="job_select" class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Pilih Lowongan Aktif</label>
+                                <select id="job_select" x-model="selectedJobId" class="bg-slate-800 border-slate-600 text-white text-sm font-semibold rounded-xl focus:ring-purple-500 focus:border-purple-500 block w-full px-4 py-3 cursor-pointer transition-colors shadow-inner">
+                                    <option value="">-- Pilih Lowongan --</option>
+                                    @foreach($active_jobs as $job)
+                                        <option value="{{ $job->id }}">{{ $job->title }} ({{ $job->applications_count }} Pelamar)</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="sm:self-end">
+                                <button @click="analyze()" :disabled="!selectedJobId || isLoading" 
+                                    class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-xl hover:from-purple-500 hover:to-blue-500 transition-all shadow-lg shadow-purple-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                                    <span x-show="!isLoading"><i class="fas fa-magic"></i> Analisis Sekarang</span>
+                                    <span x-show="isLoading" x-cloak><i class="fas fa-spinner fa-spin"></i> AI Sedang Berpikir...</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Validation Error Alert -->
+            <div x-show="error" x-cloak class="px-6 md:px-8 pb-6 relative z-10">
+                <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-start">
+                    <i class="fas fa-exclamation-circle text-red-400 mt-0.5 mr-3"></i>
+                    <div>
+                        <h4 class="text-sm font-bold text-red-400">Terjadi Kesalahan</h4>
+                        <p class="text-xs text-red-300 mt-1" x-text="error"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Skeleton -->
+            <div x-show="isLoading" x-cloak class="border-t border-slate-700/50 bg-slate-800/50 p-6 md:p-8 relative z-10">
+                <div class="animate-pulse flex items-center gap-3 mb-6">
+                    <div class="h-4 w-4 bg-purple-500/50 rounded-full"></div>
+                    <div class="h-4 w-48 bg-slate-700 rounded-full"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <template x-for="i in 3">
+                        <div class="bg-slate-800 rounded-xl p-5 border border-slate-700">
+                            <div class="flex gap-4">
+                                <div class="w-12 h-12 bg-slate-700 rounded-full shrink-0"></div>
+                                <div class="flex-1 py-1">
+                                    <div class="h-3 bg-slate-700 rounded w-3/4 mb-3"></div>
+                                    <div class="h-2 bg-slate-700 rounded w-1/2 mb-4"></div>
+                                    <div class="h-16 bg-slate-700 rounded w-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Results Area -->
+            <div x-show="results.length > 0 && !isLoading" x-cloak class="border-t border-slate-700/50 bg-slate-800/80 p-6 md:p-8 relative z-10">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-sm font-bold text-slate-300 uppercase tracking-widest"><i class="fas fa-trophy text-yellow-400 mr-2"></i> Top Kandidat Rekomendasi AI</h3>
+                    <span class="text-xs text-slate-500 font-medium hidden sm:block">Berdasarkan data profil vs standar <span x-text="jobTitle" class="text-white font-bold"></span></span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <template x-for="(candidate, index) in results" :key="candidate.user_id">
+                        <div class="bg-slate-900 rounded-xl p-5 border border-slate-700 relative overflow-hidden group hover:border-purple-500/50 transition-colors">
+                            <div class="absolute top-0 right-0 w-1 h-full bg-slate-700 group-hover:bg-purple-500 transition-colors"></div>
+                            <div class="flex gap-4">
+                                <div class="w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 border-slate-700 bg-slate-800">
+                                    <template x-if="candidate.photo">
+                                        <img :src="candidate.photo" class="w-full h-full object-cover">
+                                    </template>
+                                    <template x-if="!candidate.photo">
+                                        <div class="w-full h-full flex items-center justify-center text-slate-500 font-bold text-lg" x-text="candidate.name.charAt(0)"></div>
+                                    </template>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <h4 class="text-base font-bold text-white truncate pr-2" x-text="candidate.name"></h4>
+                                        <span class="shrink-0 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-black"
+                                            :class="candidate.match_score >= 80 ? 'bg-green-500/20 text-green-400 border border-green-500/30' : (candidate.match_score >= 50 ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30')">
+                                            <i class="fas fa-fire mr-1" x-show="candidate.match_score >= 80"></i>
+                                            <span x-text="candidate.match_score + '% Fit'"></span>
+                                        </span>
+                                    </div>
+                                    <p class="text-xs text-slate-400 font-medium mb-3 truncate"><i class="fas fa-briefcase opacity-50 mr-1"></i> <span x-text="candidate.last_position"></span></p>
+                                    
+                                    <div class="bg-slate-800 rounded-lg p-3 border border-slate-700/50 mb-3">
+                                        <div class="flex items-start gap-2">
+                                            <i class="fas fa-quote-left text-slate-600 text-[10px] mt-0.5"></i>
+                                            <p class="text-xs text-slate-300 leading-relaxed italic" x-text="candidate.reasoning"></p>
+                                        </div>
+                                    </div>
+
+                                    <a :href="'/admin/applicants/' + candidate.user_id" class="block text-center w-full py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 font-semibold text-xs text-white rounded-lg transition-colors">
+                                        Lihat Detail Profil
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Rank Badge -->
+                            <div class="absolute -top-3 -left-3 w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg border-2 border-slate-900 z-10">
+                                <span class="text-white font-black text-xs" x-text="'#' + (index + 1)"></span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Content Area: Chart & List -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
@@ -218,6 +344,55 @@
             @endif
         </div>
     </div>
+
+    <!-- Alpine.js Smart Filter Component Details -->
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('smartFilter', () => ({
+                selectedJobId: '',
+                isLoading: false,
+                results: [],
+                jobTitle: '',
+                error: null,
+
+                async analyze() {
+                    if (!this.selectedJobId) return;
+                    
+                    this.isLoading = true;
+                    this.error = null;
+                    this.results = [];
+                    
+                    try {
+                        const response = await fetch('/admin/api/smart-filter', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                job_id: this.selectedJobId
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            this.results = data.candidates;
+                            this.jobTitle = data.job_title;
+                        } else {
+                            this.error = data.message || 'Terjadi kesalahan saat parsing data AI.';
+                        }
+                    } catch (err) {
+                        this.error = 'Gagal terhubung ke server/API Groq. Pastikan koneksi internet stabil.';
+                        console.error(err);
+                    } finally {
+                        this.isLoading = false;
+                    }
+                }
+            }));
+        });
+    </script>
 
     <!-- Chart.js Configuration -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
