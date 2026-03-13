@@ -70,9 +70,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/applicants/{application}', [ApplicantController::class, 'show'])->name('admin.applicants.show');
     Route::patch('/applicants/{application}/status', [ApplicantController::class, 'updateStatus'])->name('admin.applicants.updateStatus');
     Route::post('/applicants/{application}/talent-pool', [ApplicantController::class, 'addToTalentPool'])->name('admin.applicants.addToTalentPool');
-    
-    // Smart Filter API
-    Route::post('/api/smart-filter', [\App\Http\Controllers\Admin\SmartFilterController::class, 'analyze'])->name('admin.smart-filter');
+
     // Talent Pool management
     Route::get('/talent-pool', [App\Http\Controllers\Admin\TalentPoolController::class, 'index'])->name('admin.talent_pool.index');
     Route::get('/talent-pool/{talentPool}', [App\Http\Controllers\Admin\TalentPoolController::class, 'show'])->name('admin.talent_pool.show');
