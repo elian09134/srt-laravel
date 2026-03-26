@@ -111,12 +111,6 @@ class FptkController extends Controller
             return redirect()->route('admin.fptk.show', $fptk)->with('status', 'FPTK sudah diarsipkan sebelumnya.');
         }
 
-        // Jika belum completed, set completed juga
-        if (!$fptk->isCompleted()) {
-            $fptk->completed_at = now();
-            $fptk->completed_by = Auth::id();
-        }
-
         $fptk->archived_at = now();
         $fptk->save();
 
