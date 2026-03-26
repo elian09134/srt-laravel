@@ -317,23 +317,38 @@
                     </div>
                 @elseif($fptk->status === 'approved')
                     {{-- Progress Info --}}
-                    @php
-                        $accepted = $fptk->accepted_count;
-                        $total = $fptk->qty ?: 1;
-                        $pct = min(100, round(($accepted / $total) * 100));
-                    @endphp
                     <div class="bg-green-50 rounded-lg p-4">
                         <p class="text-sm font-semibold text-green-800 mb-2">Progress Pemenuhan</p>
                         <div class="flex items-center space-x-3 mb-2">
                             <div class="flex-1 bg-gray-200 rounded-full h-3">
-                                <div class="bg-green-600 h-3 rounded-full transition-all" style="width: {{ $pct }}%"></div>
+                                <div class="bg-green-600 h-3 rounded-full transition-all" style="width: {{ $fptk->fulfilled_percent }}%"></div>
                             </div>
-                            <span class="text-sm font-bold text-gray-700">{{ $accepted }}/{{ $total }}</span>
+                            <span class="text-sm font-bold text-gray-700">{{ $fptk->fulfilled_count }}/{{ $fptk->qty }}</span>
                         </div>
-                        <p class="text-xs text-gray-500">{{ $accepted }} dari {{ $total }} posisi sudah terisi</p>
+                        <p class="text-xs text-gray-500">{{ $fptk->fulfilled_count }} dari {{ $fptk->qty }} posisi sudah terisi</p>
                     </div>
 
-                    {{-- Tombol Tandai Selesai --}}
+                    {{-- Update Fulfilled Count --}}
+                    <form method="POST" action="{{ route('admin.fptk.updateFulfilled', $fptk->id) }}" class="bg-white border border-gray-200 rounded-lg p-4">
+                        @csrf
+                        @method('PATCH')
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Update Jumlah Terpenuhi</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="number" name="fulfilled_count" value="{{ $fptk->fulfilled_count }}" min="0" max="{{ $fptk->qty }}"
+                                   class="w-20 border border-gray-300 rounded-lg px-3 py-2 text-sm text-center font-bold focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                            <span class="text-sm text-gray-500">dari {{ $fptk->qty }} orang</span>
+                        </div>
+                        @error('fulfilled_count')
+                            <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
+                        <button type="submit" class="w-full mt-3 inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition transform hover:scale-105 text-sm">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                            Simpan Progress
+                        </button>
+                        <p class="text-xs text-gray-400 mt-2">Jika jumlah terpenuhi = kebutuhan, FPTK otomatis ditandai selesai.</p>
+                    </form>
+
+                    {{-- Tombol Tandai Selesai Manual --}}
                     <form method="POST" action="{{ route('admin.fptk.complete', $fptk->id) }}" onsubmit="return confirm('Tandai FPTK ini sebagai selesai?')">
                         @csrf
                         <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition transform hover:scale-105">

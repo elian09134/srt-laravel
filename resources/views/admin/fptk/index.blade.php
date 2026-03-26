@@ -162,20 +162,13 @@
                             </td>
                             {{-- Progress column --}}
                             <td class="px-6 py-4 whitespace-nowrap">
-                                @if($f->status === 'approved' && $f->job)
-                                    @php
-                                        $accepted = $f->job->applications->where('status', 'Diterima')->count();
-                                        $total = $f->qty ?: 1;
-                                        $pct = min(100, round(($accepted / $total) * 100));
-                                    @endphp
+                                @if($f->status === 'approved')
                                     <div class="flex items-center space-x-2">
-                                        <div class="w-20 bg-gray-200 rounded-full h-2">
-                                            <div class="bg-blue-600 h-2 rounded-full" style="width: {{ $pct }}%"></div>
+                                        <div class="w-20 bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-blue-600 h-2.5 rounded-full transition-all" style="width: {{ $f->fulfilled_percent }}%"></div>
                                         </div>
-                                        <span class="text-xs font-medium text-gray-700">{{ $accepted }}/{{ $total }}</span>
+                                        <span class="text-xs font-bold text-gray-700">{{ $f->fulfilled_count }}/{{ $f->qty }}</span>
                                     </div>
-                                @elseif($f->status === 'approved')
-                                    <span class="text-xs text-gray-400 italic">Belum ada loker</span>
                                 @else
                                     <span class="text-xs text-gray-400 italic">Menunggu approval</span>
                                 @endif

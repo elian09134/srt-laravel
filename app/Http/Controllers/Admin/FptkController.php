@@ -17,7 +17,7 @@ class FptkController extends Controller
         // Auto-complete: cek FPTK approved yang sudah fulfilled tapi belum ditandai completed
         $this->autoCompleteFulfilled();
 
-        $query = Fptk::with(['user', 'job.applications'])->orderBy('created_at', 'desc');
+        $query = Fptk::with(['user', 'completedByUser'])->orderBy('created_at', 'desc');
 
         if ($tab === 'selesai') {
             $fptks = $query->selesai()->get();
@@ -75,11 +75,34 @@ class FptkController extends Controller
         }
 
         $fptk->update([
+            'fulfilled_count' => $fptk->qty, // set penuh saat manual complete
             'completed_at' => now(),
             'completed_by' => Auth::id(),
         ]);
 
         return redirect()->route('admin.fptk.index', ['tab' => 'selesai'])->with('status', 'FPTK berhasil ditandai selesai.');
+    }
+
+    public function updateFulfilled(Request $request, Fptk $fptk)
+    {
+        $request->validate([
+            'fulfilled_count' => 'required|integer|min:0|max:' . $fptk->qty,
+        ]);
+
+        $fptk->update([
+            'fulfilled_count' => $request->input('fulfilled_count'),
+        ]);
+
+        // Auto-complete jika sudah terpenuhi
+        if ($fptk->isFulfilled() && !$fptk->isCompleted()) {
+            $fptk->update([
+                'completed_at' => now(),
+                'completed_by' => null, // otomatis
+            ]);
+            return redirect()->route('admin.fptk.index', ['tab' => 'selesai'])->with('status', 'FPTK otomatis ditandai selesai — kebutuhan terpenuhi.');
+        }
+
+        return redirect()->route('admin.fptk.show', $fptk)->with('status', 'Progress pemenuhan berhasil diperbarui.');
     }
 
     public function exportPdf(Fptk $fptk)
@@ -115,23 +138,17 @@ class FptkController extends Controller
     }
 
     /**
-     * Auto-complete FPTK yang sudah fulfilled (accepted >= qty).
+     * Auto-complete FPTK yang fulfilled_count >= qty.
      */
     private function autoCompleteFulfilled(): void
     {
-        $fptkApproved = Fptk::where('status', 'approved')
+        Fptk::where('status', 'approved')
             ->whereNull('completed_at')
             ->where('qty', '>', 0)
-            ->with('job.applications')
-            ->get();
-
-        foreach ($fptkApproved as $fptk) {
-            if ($fptk->isFulfilled()) {
-                $fptk->update([
-                    'completed_at' => now(),
-                    'completed_by' => null, // null = otomatis
-                ]);
-            }
-        }
+            ->whereColumn('fulfilled_count', '>=', 'qty')
+            ->update([
+                'completed_at' => now(),
+                'completed_by' => null,
+            ]);
     }
 }

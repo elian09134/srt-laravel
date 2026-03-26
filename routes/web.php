@@ -92,6 +92,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/fptk/{fptk}/approve', [App\Http\Controllers\Admin\FptkController::class, 'approve'])->name('admin.fptk.approve');
     Route::post('/fptk/{fptk}/reject', [App\Http\Controllers\Admin\FptkController::class, 'reject'])->name('admin.fptk.reject');
     Route::post('/fptk/{fptk}/complete', [App\Http\Controllers\Admin\FptkController::class, 'complete'])->name('admin.fptk.complete');
+    Route::patch('/fptk/{fptk}/fulfilled', [App\Http\Controllers\Admin\FptkController::class, 'updateFulfilled'])->name('admin.fptk.updateFulfilled');
         // Employee management routes removed — site is recruitment-only
         // Route::resource('employees', App\Http\Controllers\Admin\EmployeeController::class)->only(['index', 'show'])->names('admin.employees');
 });

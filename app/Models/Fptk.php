@@ -34,6 +34,7 @@ class Fptk extends Model
         'admin_id',
         'admin_note',
         'admin_signature',
+        'fulfilled_count',
         'completed_at',
         'completed_by',
     ];
@@ -92,37 +93,21 @@ class Fptk extends Model
     }
 
     /**
-     * Cek apakah kebutuhan FPTK sudah terpenuhi secara otomatis
-     * berdasarkan jumlah Application berstatus 'Diterima' pada Job terkait.
+     * Cek apakah kebutuhan FPTK sudah terpenuhi
+     * berdasarkan fulfilled_count >= qty.
      */
     public function isFulfilled(): bool
     {
-        if (!$this->relationLoaded('job')) {
-            $this->load('job.applications');
-        }
-
-        if (!$this->job) {
-            return false;
-        }
-
-        $accepted = $this->job->applications->where('status', 'Diterima')->count();
-        return $accepted >= $this->qty && $this->qty > 0;
+        return $this->qty > 0 && $this->fulfilled_count >= $this->qty;
     }
 
     /**
-     * Hitung jumlah kandidat yang sudah diterima untuk FPTK ini.
+     * Hitung persentase pemenuhan.
      */
-    public function getAcceptedCountAttribute(): int
+    public function getFulfilledPercentAttribute(): int
     {
-        if (!$this->relationLoaded('job')) {
-            $this->load('job.applications');
-        }
-
-        if (!$this->job) {
-            return 0;
-        }
-
-        return $this->job->applications->where('status', 'Diterima')->count();
+        $total = $this->qty ?: 1;
+        return min(100, round(($this->fulfilled_count / $total) * 100));
     }
 
     // decode notes JSON if stored as JSON
