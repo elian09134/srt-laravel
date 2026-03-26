@@ -41,7 +41,12 @@
                     Export PDF
                 </a>
             @endif
-            @if($fptk->status === 'pending')
+            @if($fptk->isCompleted())
+                <span class="px-4 py-2 inline-flex items-center text-sm font-semibold rounded-full bg-blue-100 text-blue-800">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    Selesai
+                </span>
+            @elseif($fptk->status === 'pending')
                 <span class="px-4 py-2 inline-flex items-center text-sm font-semibold rounded-full bg-yellow-100 text-yellow-800">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
                     Menunggu Review
@@ -292,9 +297,54 @@
                 </form>
             </div>
             @else
-            <div class="bg-white rounded-xl shadow-lg p-6 sticky top-6">
+            <div class="bg-white rounded-xl shadow-lg p-6 sticky top-6 space-y-4">
                 <h3 class="text-lg font-bold text-gray-800 mb-3">Status</h3>
-                <p class="text-gray-600 text-sm mb-4">FPTK ini sudah {{ $fptk->status === 'approved' ? 'disetujui' : 'ditolak' }}.</p>
+
+                @if($fptk->isCompleted())
+                    {{-- Info Selesai --}}
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <p class="text-sm font-semibold text-blue-800 mb-2">FPTK Selesai</p>
+                        <div class="text-sm text-gray-600 space-y-1">
+                            <p><span class="font-medium">Selesai pada:</span> {{ $fptk->completed_at->format('d M Y, H:i') }}</p>
+                            <p><span class="font-medium">Tipe:</span>
+                                @if($fptk->completed_by)
+                                    Manual oleh {{ $fptk->completedByUser->name ?? '-' }}
+                                @else
+                                    Otomatis (kebutuhan terpenuhi)
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+                @elseif($fptk->status === 'approved')
+                    {{-- Progress Info --}}
+                    @php
+                        $accepted = $fptk->accepted_count;
+                        $total = $fptk->qty ?: 1;
+                        $pct = min(100, round(($accepted / $total) * 100));
+                    @endphp
+                    <div class="bg-green-50 rounded-lg p-4">
+                        <p class="text-sm font-semibold text-green-800 mb-2">Progress Pemenuhan</p>
+                        <div class="flex items-center space-x-3 mb-2">
+                            <div class="flex-1 bg-gray-200 rounded-full h-3">
+                                <div class="bg-green-600 h-3 rounded-full transition-all" style="width: {{ $pct }}%"></div>
+                            </div>
+                            <span class="text-sm font-bold text-gray-700">{{ $accepted }}/{{ $total }}</span>
+                        </div>
+                        <p class="text-xs text-gray-500">{{ $accepted }} dari {{ $total }} posisi sudah terisi</p>
+                    </div>
+
+                    {{-- Tombol Tandai Selesai --}}
+                    <form method="POST" action="{{ route('admin.fptk.complete', $fptk->id) }}" onsubmit="return confirm('Tandai FPTK ini sebagai selesai?')">
+                        @csrf
+                        <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition transform hover:scale-105">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            Tandai Selesai
+                        </button>
+                    </form>
+                @else
+                    <p class="text-gray-600 text-sm">FPTK ini sudah {{ $fptk->status === 'approved' ? 'disetujui' : 'ditolak' }}.</p>
+                @endif
+
                 <a href="{{ route('admin.fptk.index') }}" class="block w-full text-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition">
                     Kembali ke Daftar
                 </a>

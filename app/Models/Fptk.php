@@ -34,6 +34,8 @@ class Fptk extends Model
         'admin_id',
         'admin_note',
         'admin_signature',
+        'completed_at',
+        'completed_by',
     ];
 
     protected $casts = [
@@ -42,6 +44,7 @@ class Fptk extends Model
         'gaji' => 'integer',
         'qty_male' => 'integer',
         'qty_female' => 'integer',
+        'completed_at' => 'datetime',
     ];
 
     public function user()
@@ -57,6 +60,69 @@ class Fptk extends Model
     public function job()
     {
         return $this->hasOne(Job::class);
+    }
+
+    public function completedByUser()
+    {
+        return $this->belongsTo(User::class, 'completed_by');
+    }
+
+    /**
+     * Scope: FPTK Proses — pending OR approved yang belum completed.
+     */
+    public function scopeProses($query)
+    {
+        return $query->where(function ($q) {
+            $q->where('status', 'pending')
+              ->orWhere('status', 'approved');
+        })->whereNull('completed_at');
+    }
+
+    /**
+     * Scope: FPTK Selesai — yang sudah ditandai completed.
+     */
+    public function scopeSelesai($query)
+    {
+        return $query->whereNotNull('completed_at');
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->completed_at !== null;
+    }
+
+    /**
+     * Cek apakah kebutuhan FPTK sudah terpenuhi secara otomatis
+     * berdasarkan jumlah Application berstatus 'Diterima' pada Job terkait.
+     */
+    public function isFulfilled(): bool
+    {
+        if (!$this->relationLoaded('job')) {
+            $this->load('job.applications');
+        }
+
+        if (!$this->job) {
+            return false;
+        }
+
+        $accepted = $this->job->applications->where('status', 'Diterima')->count();
+        return $accepted >= $this->qty && $this->qty > 0;
+    }
+
+    /**
+     * Hitung jumlah kandidat yang sudah diterima untuk FPTK ini.
+     */
+    public function getAcceptedCountAttribute(): int
+    {
+        if (!$this->relationLoaded('job')) {
+            $this->load('job.applications');
+        }
+
+        if (!$this->job) {
+            return 0;
+        }
+
+        return $this->job->applications->where('status', 'Diterima')->count();
     }
 
     // decode notes JSON if stored as JSON
