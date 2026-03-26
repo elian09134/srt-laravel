@@ -37,6 +37,7 @@ class Fptk extends Model
         'fulfilled_count',
         'completed_at',
         'completed_by',
+        'archived_at',
     ];
 
     protected $casts = [
@@ -46,6 +47,7 @@ class Fptk extends Model
         'qty_male' => 'integer',
         'qty_female' => 'integer',
         'completed_at' => 'datetime',
+        'archived_at' => 'datetime',
     ];
 
     public function user()
@@ -69,22 +71,35 @@ class Fptk extends Model
     }
 
     /**
-     * Scope: FPTK Proses — pending OR approved yang belum completed.
+     * Scope: FPTK Proses — pending/approved, belum completed, belum diarsipkan.
      */
     public function scopeProses($query)
     {
         return $query->where(function ($q) {
             $q->where('status', 'pending')
               ->orWhere('status', 'approved');
-        })->whereNull('completed_at');
+        })->whereNull('completed_at')->whereNull('archived_at');
     }
 
     /**
-     * Scope: FPTK Selesai — yang sudah ditandai completed.
+     * Scope: FPTK Selesai — completed tapi belum diarsipkan.
      */
     public function scopeSelesai($query)
     {
-        return $query->whereNotNull('completed_at');
+        return $query->whereNotNull('completed_at')->whereNull('archived_at');
+    }
+
+    /**
+     * Scope: Arsip — yang sudah diarsipkan.
+     */
+    public function scopeArsip($query)
+    {
+        return $query->whereNotNull('archived_at');
+    }
+
+    public function isArchived(): bool
+    {
+        return $this->archived_at !== null;
     }
 
     public function isCompleted(): bool

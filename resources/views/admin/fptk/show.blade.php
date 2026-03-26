@@ -360,6 +360,21 @@
                     <p class="text-gray-600 text-sm">FPTK ini sudah {{ $fptk->status === 'approved' ? 'disetujui' : 'ditolak' }}.</p>
                 @endif
 
+                @if(!$fptk->isArchived())
+                    <form method="POST" action="{{ route('admin.fptk.archive', $fptk->id) }}" onsubmit="return confirm('Pindahkan FPTK ini ke arsip?')">
+                        @csrf
+                        <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition transform hover:scale-105 text-sm">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+                            Pindahkan ke Arsip
+                        </button>
+                    </form>
+                @else
+                    <div class="bg-amber-50 rounded-lg p-3 text-center">
+                        <p class="text-xs font-semibold text-amber-700">FPTK ini sudah diarsipkan</p>
+                        <p class="text-xs text-amber-600 mt-1">{{ $fptk->archived_at->format('d M Y, H:i') }}</p>
+                    </div>
+                @endif
+
                 <a href="{{ route('admin.fptk.index') }}" class="block w-full text-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition">
                     Kembali ke Daftar
                 </a>

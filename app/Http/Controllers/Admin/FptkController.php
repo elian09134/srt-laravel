@@ -22,7 +22,7 @@ class FptkController extends Controller
         if ($tab === 'selesai') {
             $fptks = $query->selesai()->get();
         } elseif ($tab === 'arsip') {
-            $fptks = $query->get();
+            $fptks = $query->arsip()->get();
         } else {
             $tab = 'proses';
             $fptks = $query->proses()->get();
@@ -31,7 +31,7 @@ class FptkController extends Controller
         // Hitung jumlah per tab untuk badge
         $countProses = Fptk::proses()->count();
         $countSelesai = Fptk::selesai()->count();
-        $countArsip = Fptk::count();
+        $countArsip = Fptk::arsip()->count();
 
         return view('admin.fptk.index', compact('fptks', 'tab', 'countProses', 'countSelesai', 'countArsip'));
     }
@@ -103,6 +103,24 @@ class FptkController extends Controller
         }
 
         return redirect()->route('admin.fptk.show', $fptk)->with('status', 'Progress pemenuhan berhasil diperbarui.');
+    }
+
+    public function archive(Fptk $fptk)
+    {
+        if ($fptk->isArchived()) {
+            return redirect()->route('admin.fptk.show', $fptk)->with('status', 'FPTK sudah diarsipkan sebelumnya.');
+        }
+
+        // Jika belum completed, set completed juga
+        if (!$fptk->isCompleted()) {
+            $fptk->completed_at = now();
+            $fptk->completed_by = Auth::id();
+        }
+
+        $fptk->archived_at = now();
+        $fptk->save();
+
+        return redirect()->route('admin.fptk.index', ['tab' => 'arsip'])->with('status', 'FPTK berhasil dipindahkan ke arsip.');
     }
 
     public function exportPdf(Fptk $fptk)
