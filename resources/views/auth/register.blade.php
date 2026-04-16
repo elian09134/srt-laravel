@@ -232,8 +232,16 @@
                     </div>
                 </div>
 
+                <!-- Agreement -->
+                <div class="mt-4 text-sm text-gray-700">
+                    <label class="inline-flex items-start space-x-3">
+                        <input id="terms-agree" type="checkbox" name="terms" value="1" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-1">
+                        <span>Saya menyetujui <a href="{{ route('terms') }}" target="_blank" class="text-blue-600 hover:underline">Syarat &amp; Ketentuan TERANG By SRT</a></span>
+                    </label>
+                </div>
+
                 <!-- Action Buttons -->
-                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6">
                     <a href="{{ route('login') }}" class="text-sm text-gray-600 hover:text-blue-600 transition">
                         <i class="fas fa-arrow-left mr-2"></i>Sudah punya akun? Login
                     </a>
@@ -243,14 +251,6 @@
                 </div>
             </form>
         </div>
-
-                <!-- Agreement -->
-                <div class="mt-4 text-sm text-gray-700">
-                    <label class="inline-flex items-start space-x-3">
-                        <input id="terms-agree" type="checkbox" name="terms" value="1" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 mt-1">
-                        <span>Saya menyetujui <a href="{{ route('terms') }}" target="_blank" class="text-blue-600 hover:underline">Syarat &amp; Ketentuan TERANG By SRT</a></span>
-                    </label>
-                </div>
 
         <!-- Footer Link -->
         <div class="text-center mt-6 text-sm text-gray-600">
@@ -274,6 +274,58 @@
                 }
                 if (checkbox) checkbox.addEventListener('change', update);
                 update();
+
+                // Prevent ERR_UPLOAD_FILE_CHANGED on Mobile
+                const form = document.querySelector('form');
+                if (form) {
+                    form.addEventListener('submit', async function(e) {
+                        if (form.dataset.validating === "1") {
+                            e.preventDefault();
+                            return;
+                        }
+                        if (form.dataset.validated === "1") {
+                            return;
+                        }
+                        e.preventDefault();
+                        form.dataset.validating = "1";
+                        
+                        const fileInputs = form.querySelectorAll('input[type="file"]');
+                        let hasError = false;
+                        
+                        const checkFile = (file) => {
+                            return new Promise((resolve, reject) => {
+                                const reader = new FileReader();
+                                reader.onload = () => resolve(true);
+                                reader.onerror = () => reject(reader.error);
+                                reader.readAsArrayBuffer(file.slice(0, 1));
+                            });
+                        };
+
+                        for (const input of fileInputs) {
+                            if (input.files.length > 0) {
+                                const file = input.files[0];
+                                try {
+                                    await checkFile(file);
+                                } catch (err) {
+                                    hasError = true;
+                                    alert('Maaf, file "' + file.name + '" sudah tidak dapat diakses (mungkin dipindahkan atau dihapus oleh sistem HP Anda). Silakan pilih ulang file tersebut.');
+                                    input.value = ''; // Reset the invalid file
+                                }
+                            }
+                        }
+                        
+                        form.dataset.validating = "0";
+                        if (!hasError) {
+                            form.dataset.validated = "1";
+                            if (button) {
+                                button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mendaftar...';
+                                button.classList.add('opacity-80', 'cursor-not-allowed');
+                                button.setAttribute('disabled', 'disabled');
+                            }
+                            form.submit();
+                        }
+                    });
+                }
             });
         </script>
     </div>
