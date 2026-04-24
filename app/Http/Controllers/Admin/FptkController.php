@@ -43,31 +43,38 @@ class FptkController extends Controller
         // Fetch results
         $fptks = $query->get();
 
-        // Apply Division Filter on Collection (Case-insensitive)
+        // Mapping Email ke Divisi sesuai data terbaru
+        $emailToDivision = [
+            'divisiminimarket@gmail.com'    => 'MINIMARKET',
+            'divisiwrapping@gmail.com'      => 'WRAPPING',
+            'hansmks.hlp@gmail.com'         => 'HANS',
+            'officefnb126@gmail.com'        => 'FNB',
+            'divisireflexology@gmail.com'   => 'REFLEXIOLOGY',
+            'businessdevelopment@srtcorp.id'=> 'BUSINESS DEVELOPMENT',
+            'cellulardivisi@gmail.com'      => 'CELLULLER',
+            'fat.holding24@gmail.com'       => 'DIVISION FAT',
+            'srtcreativedesign@gmail.com'   => 'CREATIVE DESIGN',
+            'valutamasjaya@gmail.com'       => 'MONEY CHANGER',
+        ];
+
+        // Apply Division Filter on Collection based on Email Mapping
         if ($selectedDivision) {
-            $fptks = $fptks->filter(function($f) use ($selectedDivision) {
-                $notes = $f->notes_decoded;
-                $div = $notes['division'] ?? ($f->division ?? null);
-                return strtolower($div) == strtolower($selectedDivision);
+            $fptks = $fptks->filter(function($f) use ($selectedDivision, $emailToDivision) {
+                $userEmail = $f->user->email ?? '';
+                // Ambil divisi dari map email, jika tidak ada baru cek dari notes/kolom
+                $mappedDiv = $emailToDivision[$userEmail] ?? ($f->notes_decoded['division'] ?? ($f->division ?? 'LAINNYA'));
+                return strtoupper($mappedDiv) == strtoupper($selectedDivision);
             });
         }
 
-        // Get divisions from Users with 'operasional' role + any existing divisions in FPTKs
-        $userDivisions = \App\Models\User::where('role', 'operasional')
-            ->whereNotNull('division')
-            ->distinct()
-            ->pluck('division');
-
-        $fptkDivisions = Fptk::all()->map(function($f) {
-            $notes = $f->notes_decoded;
-            return $notes['division'] ?? ($f->division ?? null);
-        });
-
-        $divisions = $userDivisions->merge($fptkDivisions)
+        // Get divisions for dropdown primarily from the Email Map
+        $divisions = collect(array_values($emailToDivision))
+            ->merge($fptks->map(function($f) use ($emailToDivision) {
+                $userEmail = $f->user->email ?? '';
+                return $emailToDivision[$userEmail] ?? ($f->notes_decoded['division'] ?? ($f->division ?? null));
+            }))
             ->unique()
             ->filter()
-            ->map(fn($d) => strtoupper($d)) // Normalize to uppercase for display
-            ->unique()
             ->sort()
             ->values();
 
