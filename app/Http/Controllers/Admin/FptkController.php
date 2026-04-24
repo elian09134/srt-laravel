@@ -32,15 +32,7 @@ class FptkController extends Controller
             $query->proses();
         }
 
-        // Apply Division Filter
-        if ($selectedDivision) {
-            $query->where(function($q) use ($selectedDivision) {
-                $q->where('division', $selectedDivision)
-                  ->orWhere('notes->division', $selectedDivision);
-            });
-        }
-
-        // Apply Date Filter
+        // Apply Date Filter (Safe)
         if ($startDate) {
             $query->whereDate('created_at', '>=', $startDate);
         }
@@ -48,17 +40,26 @@ class FptkController extends Controller
             $query->whereDate('created_at', '<=', $endDate);
         }
 
+        // Fetch results
         $fptks = $query->get();
 
-        // Get distinct divisions for filter dropdown
-        $divisions = Fptk::whereNotNull('division')->distinct()->pluck('division')
-            ->merge(Fptk::whereNotNull('notes->division')->distinct()->pluck('notes->division'))
-            ->unique()
-            ->filter()
-            ->sort()
-            ->values();
+        // Apply Division Filter on Collection (Safest way if DB/JSON support is uncertain)
+        if ($selectedDivision) {
+            $fptks = $fptks->filter(function($f) use ($selectedDivision) {
+                $notes = $f->notes_decoded; // uses model attribute or raw notes
+                $div = $notes['division'] ?? ($f->division ?? null);
+                return $div == $selectedDivision;
+            });
+        }
 
-        // Hitung jumlah per tab untuk badge (tetap tanpa filter divisi/tanggal agar badge akurat ke seluruh data)
+        // Get distinct divisions for filter dropdown from ALL FPTKs (to show all options)
+        // We'll cache or limit this if performance becomes an issue, but for now this is stable.
+        $divisions = Fptk::all()->map(function($f) {
+            $notes = $f->notes_decoded;
+            return $notes['division'] ?? ($f->division ?? null);
+        })->unique()->filter()->sort()->values();
+
+        // Hitung jumlah per tab untuk badge
         $countProses = Fptk::proses()->count();
         $countSelesai = Fptk::selesai()->count();
         $countArsip = Fptk::arsip()->count();
