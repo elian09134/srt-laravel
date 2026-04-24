@@ -13,27 +13,57 @@ class FptkController extends Controller
     public function index(Request $request)
     {
         $tab = $request->query('tab', 'proses');
+        $selectedDivision = $request->query('division');
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
 
         // Auto-complete: cek FPTK approved yang sudah fulfilled tapi belum ditandai completed
         $this->autoCompleteFulfilled();
 
         $query = Fptk::with(['user', 'completedByUser'])->orderBy('created_at', 'desc');
 
+        // Apply Status Tab Filter
         if ($tab === 'selesai') {
-            $fptks = $query->selesai()->get();
+            $query->selesai();
         } elseif ($tab === 'arsip') {
-            $fptks = $query->arsip()->get();
+            $query->arsip();
         } else {
             $tab = 'proses';
-            $fptks = $query->proses()->get();
+            $query->proses();
         }
 
-        // Hitung jumlah per tab untuk badge
+        // Apply Division Filter
+        if ($selectedDivision) {
+            $query->where(function($q) use ($selectedDivision) {
+                $q->where('division', $selectedDivision)
+                  ->orWhere('notes->division', $selectedDivision);
+            });
+        }
+
+        // Apply Date Filter
+        if ($startDate) {
+            $query->whereDate('created_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->whereDate('created_at', '<=', $endDate);
+        }
+
+        $fptks = $query->get();
+
+        // Get distinct divisions for filter dropdown
+        $divisions = Fptk::whereNotNull('division')->distinct()->pluck('division')
+            ->merge(Fptk::whereNotNull('notes->division')->distinct()->pluck('notes->division'))
+            ->unique()
+            ->filter()
+            ->sort()
+            ->values();
+
+        // Hitung jumlah per tab untuk badge (tetap tanpa filter divisi/tanggal agar badge akurat ke seluruh data)
         $countProses = Fptk::proses()->count();
         $countSelesai = Fptk::selesai()->count();
         $countArsip = Fptk::arsip()->count();
 
-        return view('admin.fptk.index', compact('fptks', 'tab', 'countProses', 'countSelesai', 'countArsip'));
+        return view('admin.fptk.index', compact('fptks', 'tab', 'countProses', 'countSelesai', 'countArsip', 'divisions', 'selectedDivision', 'startDate', 'endDate'));
     }
 
     public function show(Fptk $fptk)

@@ -69,6 +69,51 @@
                 </span>
             </a>
         </nav>
+    <!-- Filter Section -->
+    <div class="mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+        <form action="{{ route('admin.fptk.index') }}" method="GET" class="flex flex-wrap items-end gap-4">
+            <input type="hidden" name="tab" value="{{ $tab }}">
+            
+            {{-- Filter Divisi --}}
+            <div class="flex-1 min-w-[200px]">
+                <label for="division" class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Divisi</label>
+                <select name="division" id="division" class="w-full bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5">
+                    <option value="">Semua Divisi</option>
+                    @foreach($divisions as $div)
+                        <option value="{{ $div }}" {{ $selectedDivision == $div ? 'selected' : '' }}>{{ $div }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Filter Tanggal Mulai --}}
+            <div class="w-full sm:w-auto">
+                <label for="start_date" class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Dari Tanggal</label>
+                <input type="date" name="start_date" id="start_date" value="{{ $startDate }}"
+                       class="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            </div>
+
+            {{-- Filter Tanggal Selesai --}}
+            <div class="w-full sm:w-auto">
+                <label for="end_date" class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Sampai Tanggal</label>
+                <input type="date" name="end_date" id="end_date" value="{{ $endDate }}"
+                       class="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+            </div>
+
+            {{-- Action Buttons --}}
+            <div class="flex items-center gap-2">
+                <button type="submit" class="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm transition transform hover:scale-105 text-sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                    </svg>
+                    Filter
+                </button>
+                @if($selectedDivision || $startDate || $endDate)
+                    <a href="{{ route('admin.fptk.index', ['tab' => $tab]) }}" class="inline-flex items-center px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold rounded-lg shadow-sm transition text-sm">
+                        Bereskan
+                    </a>
+                @endif
+            </div>
+        </form>
     </div>
 
     <!-- Table -->
