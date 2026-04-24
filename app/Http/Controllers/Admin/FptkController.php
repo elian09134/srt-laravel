@@ -43,21 +43,33 @@ class FptkController extends Controller
         // Fetch results
         $fptks = $query->get();
 
-        // Apply Division Filter on Collection (Safest way if DB/JSON support is uncertain)
+        // Apply Division Filter on Collection (Case-insensitive)
         if ($selectedDivision) {
             $fptks = $fptks->filter(function($f) use ($selectedDivision) {
-                $notes = $f->notes_decoded; // uses model attribute or raw notes
+                $notes = $f->notes_decoded;
                 $div = $notes['division'] ?? ($f->division ?? null);
-                return $div == $selectedDivision;
+                return strtolower($div) == strtolower($selectedDivision);
             });
         }
 
-        // Get distinct divisions for filter dropdown from ALL FPTKs (to show all options)
-        // We'll cache or limit this if performance becomes an issue, but for now this is stable.
-        $divisions = Fptk::all()->map(function($f) {
+        // Get divisions from Users with 'operasional' role + any existing divisions in FPTKs
+        $userDivisions = \App\Models\User::where('role', 'operasional')
+            ->whereNotNull('division')
+            ->distinct()
+            ->pluck('division');
+
+        $fptkDivisions = Fptk::all()->map(function($f) {
             $notes = $f->notes_decoded;
             return $notes['division'] ?? ($f->division ?? null);
-        })->unique()->filter()->sort()->values();
+        });
+
+        $divisions = $userDivisions->merge($fptkDivisions)
+            ->unique()
+            ->filter()
+            ->map(fn($d) => strtoupper($d)) // Normalize to uppercase for display
+            ->unique()
+            ->sort()
+            ->values();
 
         // Hitung jumlah per tab untuk badge
         $countProses = Fptk::proses()->count();
