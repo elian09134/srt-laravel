@@ -114,7 +114,7 @@ class RegisteredUserController extends Controller
                 'currently_employed' => $request->boolean('currently_employed', false),
                 'expected_salary' => $request->expected_salary,
                 'skills' => $request->skills,
-                'languages' => $request->languages,
+                'languages' => $request->input('languages'),
                 'job_interest' => $request->job_interest,
                 'cv_path' => $cvPath,
                 'photo_path' => $photoPath,

@@ -104,7 +104,7 @@ class ProfileController extends Controller
                 'last_position' => $request->last_position,
                 'last_company_duration' => $request->last_company_duration,
                 'skills' => $request->skills,
-                'languages' => $request->languages,
+                'languages' => $request->input('languages'),
                 'job_interest' => $request->job_interest,
                 'expected_salary' => $request->expected_salary,
                 'photo_path' => $photoPath,
