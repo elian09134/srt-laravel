@@ -3,9 +3,8 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
-use Illuminate\Auth\Notifications\ResetPassword;
+use App\Models\UserProfile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class PasswordResetTest extends TestCase
@@ -19,55 +18,43 @@ class PasswordResetTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_reset_password_link_can_be_requested(): void
+    public function test_password_reset_request_can_be_submitted(): void
     {
-        Notification::fake();
-
         $user = User::factory()->create();
+        UserProfile::create([
+            'user_id' => $user->id,
+            'phone_number' => '08123456789',
+        ]);
 
-        $this->post('/forgot-password', ['email' => $user->email]);
+        $response = $this->post('/forgot-password', [
+            'phone' => '08123456789',
+        ]);
 
-        Notification::assertSentTo($user, ResetPassword::class);
+        $response->assertSessionHas('status');
+        $this->assertDatabaseHas('password_reset_requests', [
+            'user_id' => $user->id,
+            'phone' => '08123456789',
+            'status' => 'pending',
+        ]);
     }
 
-    public function test_reset_password_screen_can_be_rendered(): void
+    public function test_password_reset_request_with_unknown_phone(): void
     {
-        Notification::fake();
+        $response = $this->post('/forgot-password', [
+            'phone' => '00000000000',
+        ]);
 
-        $user = User::factory()->create();
-
-        $this->post('/forgot-password', ['email' => $user->email]);
-
-        Notification::assertSentTo($user, ResetPassword::class, function ($notification) {
-            $response = $this->get('/reset-password/'.$notification->token);
-
-            $response->assertStatus(200);
-
-            return true;
-        });
+        $response->assertSessionHas('status');
+        $this->assertDatabaseHas('password_reset_requests', [
+            'phone' => '00000000000',
+            'user_id' => null,
+        ]);
     }
 
-    public function test_password_can_be_reset_with_valid_token(): void
+    public function test_password_reset_request_requires_phone(): void
     {
-        Notification::fake();
+        $response = $this->post('/forgot-password', []);
 
-        $user = User::factory()->create();
-
-        $this->post('/forgot-password', ['email' => $user->email]);
-
-        Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
-            $response = $this->post('/reset-password', [
-                'token' => $notification->token,
-                'email' => $user->email,
-                'password' => 'password',
-                'password_confirmation' => 'password',
-            ]);
-
-            $response
-                ->assertSessionHasNoErrors()
-                ->assertRedirect(route('login'));
-
-            return true;
-        });
+        $response->assertSessionHasErrors(['phone']);
     }
 }
