@@ -44,6 +44,17 @@
                     @endforeach
                 </select>
             </div>
+            <div>
+                <label for="referral_source" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Sumber Info</label>
+                <select name="referral_source" id="referral_source" class="w-full rounded-lg border-slate-300 text-sm focus:border-blue-500 focus:ring-blue-500 shadow-sm">
+                    <option value="">Semua Sumber</option>
+                    @foreach ($referralSources as $source)
+                        <option value="{{ $source }}" {{ request('referral_source') == $source ? 'selected' : '' }}>
+                            {{ $source }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
             <div class="flex items-end space-x-2 lg:col-span-2">
                 <button type="submit" class="flex-1 lg:flex-none px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
                     Filter
@@ -64,6 +75,7 @@
                         <th class="px-6 py-4">Kandidat</th>
                         <th class="px-6 py-4">Lowongan Dilamar</th>
                         <th class="px-6 py-4">Status & Update</th>
+                        <th class="px-6 py-4">Sumber Info</th>
                         <th class="px-6 py-4">Tanggal Masuk</th>
                         <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
@@ -115,6 +127,23 @@
                                 </form>
                             </td>
                             <td class="px-6 py-4">
+                                @php
+                                    $source = optional($app->user)->referral_source;
+                                    $sourceColors = [
+                                        'Sosial Media' => 'bg-blue-100 text-blue-700',
+                                        'M28' => 'bg-purple-100 text-purple-700',
+                                    ];
+                                    $sourceBadgeClass = $sourceColors[$source] ?? 'bg-slate-100 text-slate-700';
+                                @endphp
+                                @if($source)
+                                    <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold {{ $sourceBadgeClass }}">
+                                        {{ $source }}
+                                    </span>
+                                @else
+                                    <span class="text-slate-300 text-xs italic">—</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
                                 <div class="text-sm text-slate-600">
                                     @if($app->status == 'Diterima')
                                         {{ $app->join_date ? \Carbon\Carbon::parse($app->join_date)->format('d M Y') : '-' }}
@@ -139,7 +168,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center text-slate-500">
+                            <td colspan="6" class="px-6 py-12 text-center text-slate-500">
                                 <div class="flex flex-col items-center justify-center">
                                     <i class="fas fa-user-slash text-4xl text-slate-200 mb-3"></i>
                                     <p class="text-base font-medium">Tidak ada pelamar ditemukan</p>

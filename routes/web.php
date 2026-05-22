@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AI\AgentController;
+use App\Http\Controllers\M28\DashboardController as M28DashboardController;
+use App\Http\Controllers\M28\CandidateController as M28CandidateController;
 
 // Google Authentication Routes
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
@@ -63,6 +65,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/images', [ImageController::class, 'index'])->name('admin.images.index');
     Route::post('/images', [ImageController::class, 'update'])->name('admin.images.update');
     Route::delete('/gallery/{gallery}', [ImageController::class, 'destroyGalleryImage'])->name('admin.gallery.destroy');
+    // Partner target management
+    Route::get('/partner-targets', [App\Http\Controllers\Admin\PartnerTargetController::class, 'index'])->name('admin.partner-targets.index');
+    Route::post('/partner-targets', [App\Http\Controllers\Admin\PartnerTargetController::class, 'store'])->name('admin.partner-targets.store');
+    Route::delete('/partner-targets/{partnerTarget}', [App\Http\Controllers\Admin\PartnerTargetController::class, 'destroy'])->name('admin.partner-targets.destroy');
+
     // Employee invitation routes removed — site is recruitment-only
     // Route::get('/invitations', [EmployeeInvitationController::class, 'index'])->name('admin.invitations.index');
     // Route::post('/invitations', [EmployeeInvitationController::class, 'store'])->name('admin.invitations.store');
@@ -108,9 +115,20 @@ Route::get('/dashboard', function () {
     if ($role === 'admin' || $role === 'superadmin') {
         return redirect('/admin');
     }
+    if ($role === 'partner') {
+        return redirect('/m28');
+    }
     // Operasional redirect ke homepage, bukan /fptk
     return redirect('/');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // AI agent endpoint (web route returning JSON). Uses throttle to limit requests.
 Route::post('/api/ai/agent/query', [AgentController::class, 'query'])->middleware('throttle:10,1');
+
+// --- PARTNER / MITRA ROUTES (M28) ---
+Route::middleware(['auth', 'partner'])->prefix('m28')->name('m28.')->group(function () {
+    Route::get('/', [M28DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/candidates', [M28CandidateController::class, 'index'])->name('candidates.index');
+    Route::get('/candidates/export', [M28CandidateController::class, 'export'])->name('candidates.export');
+    Route::get('/candidates/{user}', [M28CandidateController::class, 'show'])->name('candidates.show');
+});

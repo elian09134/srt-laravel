@@ -54,6 +54,7 @@
                         <th class="px-6 py-4 text-left text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50">Profil Kandidat</th>
                         <th class="px-6 py-4 text-left text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50">Latar Belakang / Keahlian</th>
                         <th class="px-6 py-4 text-left text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50">Status</th>
+                        <th class="px-6 py-4 text-left text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50">Sumber Info</th>
                         <th class="px-6 py-4 text-left text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50">Terdaftar</th>
                         <th class="px-6 py-4 text-center text-[11px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50">Aksi</th>
                     </tr>
@@ -120,6 +121,23 @@
                                     <i class="fas fa-circle text-[6px] mr-1.5 mb-[1px]"></i>
                                     {{ $item->status }}
                                 </span>
+                            </td>
+                            <td class="px-6 py-5 whitespace-nowrap">
+                                @php
+                                    $source = optional($item->user)->referral_source;
+                                    $sourceColors = [
+                                        'Sosial Media' => 'bg-blue-100 text-blue-700',
+                                        'M28' => 'bg-purple-100 text-purple-700',
+                                    ];
+                                    $sourceBadgeClass = $sourceColors[$source] ?? 'bg-slate-100 text-slate-700';
+                                @endphp
+                                @if($source)
+                                    <span class="px-3 py-1.5 rounded-xl text-[10px] font-black border {{ $sourceBadgeClass }} uppercase tracking-widest shadow-sm">
+                                        {{ $source }}
+                                    </span>
+                                @else
+                                    <span class="text-slate-300 text-xs">—</span>
+                                @endif
                             </td>
                             <td class="px-6 py-5 whitespace-nowrap">
                                 <div class="text-sm font-bold text-slate-700">

@@ -45,6 +45,7 @@ class RegisteredUserController extends Controller
             'education_level' => ['required', 'string'],
             'institution' => ['required', 'string', 'max:255'],
             'major' => ['required', 'string', 'max:255'],
+            'referral_source' => ['required', 'string', 'max:255'],
             'cv' => ['required', 'file', 'mimes:pdf', 'max:2048'], // maks 2MB
             'photo' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:2048'], // maks 2MB
             'formal_photo' => ['required', 'file', 'image', 'max:2048'],
@@ -96,6 +97,7 @@ class RegisteredUserController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+                'referral_source' => $request->referral_source,
             ]);
 
             // 4. Buat Profil User

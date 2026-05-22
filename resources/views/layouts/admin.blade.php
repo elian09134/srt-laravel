@@ -92,6 +92,10 @@
                         <span class="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-md">{{ $pendingFptk }}</span>
                     @endif
                 </a>
+                <a href="{{ route('admin.partner-targets.index') }}" class="flex items-center px-3 py-2.5 rounded-lg transition-colors group {{ request()->routeIs('admin.partner-targets.*') ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                    <i class="fas fa-bullseye w-6 text-center {{ request()->routeIs('admin.partner-targets.*') ? 'text-white' : 'text-slate-500 group-hover:text-white transition-colors' }}"></i>
+                    <span class="ml-2 font-medium">Target Mitra</span>
+                </a>
 
                 <div class="mt-6 mb-2 pl-3 pr-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                     Content & System

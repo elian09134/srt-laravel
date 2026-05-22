@@ -22,10 +22,8 @@ class JobSeeder extends Seeder
                              "- Develop new user-facing features\n" .
                              "- Build reusable code and libraries for future use\n" .
                              "- Ensure the technical feasibility of UI/UX designs",
-                'requirement' => "- Proficient in React.js and Vue.js\n" .
-                                 "- Experience with Tailwind CSS\n" .
-                                 "- Understanding of server-side CSS pre-processing platforms",
-                'benefits' => "- Competitive salary\n- Health insurance\n- Flexible working hours",
+                'requirement' => json_encode(["- Proficient in React.js and Vue.js", "- Experience with Tailwind CSS", "- Understanding of server-side CSS pre-processing platforms"]),
+                'benefits' => json_encode(["- Competitive salary", "- Health insurance", "- Flexible working hours"]),
                 'salary_range' => 'Rp 15.000.000 - Rp 25.000.000',
                 'is_active' => true,
             ],
@@ -38,10 +36,8 @@ class JobSeeder extends Seeder
                              "- Develop and implement HR strategies and initiatives\n" .
                              "- Bridge management and employee relations\n" .
                              "- Manage the recruitment and selection process",
-                'requirement' => "- Proven working experience as HR Manager\n" .
-                                 "- People oriented and results driven\n" .
-                                 "- Knowledge of HR systems and databases",
-                'benefits' => "- Leadership training\n- Performance bonus\n- Private office",
+                'requirement' => json_encode(["- Proven working experience as HR Manager", "- People oriented and results driven", "- Knowledge of HR systems and databases"]),
+                'benefits' => json_encode(["- Leadership training", "- Performance bonus", "- Private office"]),
                 'salary_range' => 'Rp 20.000.000 - Rp 35.000.000',
                 'is_active' => true,
             ],
@@ -54,10 +50,8 @@ class JobSeeder extends Seeder
                              "- Manage all accounting transactions\n" .
                              "- Publish financial statements in time\n" .
                              "- Handle monthly, quarterly and annual closings",
-                'requirement' => "- Work experience as an Accountant\n" .
-                                 "- Excellent knowledge of accounting regulations and procedures\n" .
-                                 "- Hands-on experience with accounting software",
-                'benefits' => "- Meal allowance\n- Transport allowance",
+                'requirement' => json_encode(["- Work experience as an Accountant", "- Excellent knowledge of accounting regulations and procedures", "- Hands-on experience with accounting software"]),
+                'benefits' => json_encode(["- Meal allowance", "- Transport allowance"]),
                 'salary_range' => 'Rp 8.000.000 - Rp 12.000.000', 
                 'is_active' => true,
             ],
@@ -70,10 +64,8 @@ class JobSeeder extends Seeder
                              "- Install and configure computer hardware operating systems and applications\n" .
                              "- Monitor and maintain computer systems and networks\n" .
                              "- Troubleshoot system and network problems",
-                'requirement' => "- Proven experience as IT Support Specialist\n" .
-                                 "- Basic understanding of networking concepts\n" .
-                                 "- Good problem-solving skills",
-                'benefits' => "- Technical certification support\n- Career growth",
+                'requirement' => json_encode(["- Proven experience as IT Support Specialist", "- Basic understanding of networking concepts", "- Good problem-solving skills"]),
+                'benefits' => json_encode(["- Technical certification support", "- Career growth"]),
                 'salary_range' => 'Rp 6.000.000 - Rp 9.000.000',
                 'is_active' => true,
             ],

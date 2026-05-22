@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
    ->withMiddleware(function (Middleware $middleware) {
     $middleware->alias([
         'admin' => \App\Http\Middleware\IsAdmin::class,
+        'partner' => \App\Http\Middleware\IsPartner::class,
         'block.suspicious' => \App\Http\Middleware\BlockSuspiciousIps::class,
     ]);
     

@@ -34,6 +34,9 @@ class ApplicantController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('applicant_name', 'like', '%' . $search . '%')
+                  ->orWhereHas('user', function ($uq) use ($search) {
+                      $uq->where('name', 'like', '%' . $search . '%');
+                  })
                   ->orWhereHas('job', function ($jq) use ($search) {
                       $jq->where('title', 'like', '%' . $search . '%');
                   });
@@ -46,16 +49,27 @@ class ApplicantController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
+        if ($request->filled('referral_source')) {
+            $query->whereHas('user', function ($uq) use ($request) {
+                $uq->where('referral_source', $request->referral_source);
+            });
+        }
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
         }
 
         $applications = $query->latest()->paginate(15);
 
+        $referralSources = \App\Models\User::whereNotNull('referral_source')
+            ->distinct()
+            ->pluck('referral_source')
+            ->toArray();
+
         return view('admin.applicants', [
             'applications' => $applications,
             'jobs' => $jobs,
             'statuses' => $statuses,
+            'referralSources' => $referralSources,
         ]);
     }
 

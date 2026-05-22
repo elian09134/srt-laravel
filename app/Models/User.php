@@ -24,6 +24,7 @@ class User extends Authenticatable
         'division',
         'google_id',
         'avatar',
+        'referral_source',
     ];
 
     /**
@@ -67,5 +68,10 @@ class User extends Authenticatable
     public function talentPool()
     {
         return $this->hasOne(TalentPool::class);
+    }
+
+    public function partnerTargets()
+    {
+        return $this->hasMany(PartnerTarget::class);
     }
 }

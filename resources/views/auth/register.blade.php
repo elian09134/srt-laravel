@@ -7,8 +7,11 @@
     @vite(['resources/css/app.css','resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="icon" type="image/png" href="{{ asset('images/terang.png') }}">
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 font-sans">
+<body class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 font-sans" x-data="registerFlow()">
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <!-- Logo & Header -->
         <div class="text-center mb-8">
@@ -19,10 +22,69 @@
             <p class="text-gray-600">Isi informasi Anda untuk mulai melamar pekerjaan</p>
         </div>
 
+        <!-- Modal Popup: Sumber Info Lowongan -->
+        <div x-cloak x-show="step === 'source'" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-8 max-w-md w-full mx-4" @click.away="if(referralSource) step='form'">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-info-circle text-blue-600 text-2xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-900">Darimana Anda Mengetahui Lowongan Ini?</h2>
+                </div>
+                <div class="space-y-3">
+                    <label class="flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all" :class="referralSource === 'Sosial Media' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'" @click="selectSource('Sosial Media')">
+                        <input type="radio" name="source_radio" value="Sosial Media" class="h-4 w-4 text-blue-600 focus:ring-blue-500" x-model="referralSource">
+                        <div class="ml-3 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600">
+                                <i class="fab fa-instagram text-lg"></i>
+                            </div>
+                            <div>
+                                <span class="font-semibold text-gray-800">Sosial Media</span>
+                                <p class="text-xs text-gray-500">Instagram, Facebook, LinkedIn, dll</p>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all" :class="referralSource === 'M28' ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-gray-300'" @click="selectSource('M28')">
+                        <input type="radio" name="source_radio" value="M28" class="h-4 w-4 text-purple-600 focus:ring-purple-500" x-model="referralSource">
+                        <div class="ml-3 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600">
+                                <i class="fas fa-handshake text-lg"></i>
+                            </div>
+                            <div>
+                                <span class="font-semibold text-gray-800">M28</span>
+                                <p class="text-xs text-gray-500">Kerjasama dengan M28 Outsourcing</p>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all" :class="referralSource === 'other' && referralOther !== '' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'" @click="selectSource('other')">
+                        <input type="radio" name="source_radio" value="other" class="h-4 w-4 text-green-600 focus:ring-green-500" x-model="referralSource">
+                        <div class="ml-3 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-green-600">
+                                <i class="fas fa-pen text-lg"></i>
+                            </div>
+                            <div>
+                                <span class="font-semibold text-gray-800">Lainnya</span>
+                                <p class="text-xs text-gray-500">Teman, Email, atau sumber lainnya</p>
+                            </div>
+                        </div>
+                    </label>
+                    <div x-show="referralSource === 'other'" x-cloak class="pl-4">
+                        <input type="text" x-model="referralOther" placeholder="Sebutkan sumbernya..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-sm" @keyup.enter="if(referralOther) proceedToForm()">
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <button @click="proceedToForm()" class="w-full px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold shadow-lg transition-all" :disabled="!canProceed" :class="!canProceed ? 'opacity-60 cursor-not-allowed' : ''">
+                        Lanjutkan <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Form Card -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+        <div x-cloak x-show="step === 'form'" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
             <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data" class="space-y-6">
                 @csrf
+                <input type="hidden" name="referral_source" x-model="finalSource">
 
                 @if ($errors->any())
                     <div class="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg">
@@ -253,11 +315,39 @@
         </div>
 
         <!-- Footer Link -->
-        <div class="text-center mt-6 text-sm text-gray-600">
+        <div x-cloak x-show="step === 'form'" class="text-center mt-6 text-sm text-gray-600">
             <p>Dengan mendaftar, Anda menyetujui <a href="{{ route('terms') }}" class="text-blue-600 hover:underline">Syarat & Ketentuan</a> kami</p>
         </div>
         
         <script>
+            function registerFlow() {
+                return {
+                    step: 'source',
+                    referralSource: '',
+                    referralOther: '',
+                    get finalSource() {
+                        if (this.referralSource === 'other') {
+                            return this.referralOther;
+                        }
+                        return this.referralSource;
+                    },
+                    get canProceed() {
+                        if (this.referralSource === 'other') {
+                            return this.referralOther.trim() !== '';
+                        }
+                        return this.referralSource !== '';
+                    },
+                    selectSource(source) {
+                        this.referralSource = source;
+                    },
+                    proceedToForm() {
+                        if (!this.canProceed) return;
+                        this.step = 'form';
+                        document.body.style.overflow = 'auto';
+                    }
+                };
+            }
+
             document.addEventListener('DOMContentLoaded', function () {
                 const checkbox = document.getElementById('terms-agree');
                 const button = document.getElementById('register-button');

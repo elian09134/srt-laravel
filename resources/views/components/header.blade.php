@@ -34,6 +34,9 @@
                 @if(auth()->user()->role == 'admin' || auth()->user()->role == 'superadmin')
                     <!-- Tampilan jika admin login -->
                     <a href="{{ route('admin.dashboard') }}" class="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-green-700 rounded-xl hover:from-green-700 hover:to-green-800 transition-all duration-300 hover:shadow-lg">Admin Panel</a>
+                @elseif(auth()->user()->role == 'partner')
+                    <!-- Tampilan jika partner login -->
+                    <a href="{{ route('m28.dashboard') }}" class="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-300 hover:shadow-lg">Partner Panel</a>
                 @elseif(auth()->user()->role == 'operasional')
                     <!-- Tampilan jika operasional login -->
                     <a href="{{ route('fptk.my') }}" class="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all duration-300">FPTK Saya</a>
@@ -76,6 +79,8 @@
              @auth
                       @if (auth()->user()->role == 'admin' || auth()->user()->role == 'superadmin')
                           <a href="{{ route('admin.dashboard') }}" class="block text-center py-2 font-medium text-white bg-green-600 rounded-lg hover:bg-green-700">Admin Panel</a>
+                @elseif(auth()->user()->role == 'partner')
+                          <a href="{{ route('m28.dashboard') }}" class="block text-center py-2 font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700">Partner Panel</a>
                 @elseif(auth()->user()->role == 'operasional')
                           <a href="{{ route('fptk.my') }}" class="block text-center py-2 font-medium text-gray-700 border border-gray-400 rounded-lg hover:bg-gray-50 mb-2">FPTK Saya</a>
                           <a href="{{ route('fptk.index') }}" class="block text-center py-2 font-medium text-white bg-yellow-600 rounded-lg hover:bg-yellow-700">Buat FPTK</a>
