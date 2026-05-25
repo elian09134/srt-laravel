@@ -6,7 +6,7 @@
 <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
     <div>
         <h1 class="text-2xl font-black text-slate-800 tracking-tight">
-            Selamat Datang, {{ auth()->user()->name }} 👋
+            Selamat Datang, {{ auth()->user()->name }} 
         </h1>
         <p class="text-sm font-medium text-slate-500 mt-1">
             Ringkasan kandidat yang Anda rekomendasikan
@@ -41,64 +41,44 @@
     $proses = max(0, $totalApplications - $diterima - $ditolak);
 @endphp
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <div class="relative bg-white rounded-2xl shadow-sm border border-slate-100 p-6 overflow-hidden group hover:border-purple-200 transition-colors">
-        <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-purple-50 to-purple-100 rounded-bl-full -mr-4 -mt-4 z-0 transition-transform group-hover:scale-110"></div>
-        <div class="relative z-10">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center text-white text-xl shadow-md shadow-purple-500/30">
-                    <i class="fas fa-users"></i>
-                </div>
-            </div>
-            <div>
-                <h3 class="text-3xl font-black text-slate-800 tracking-tight mb-1">{{ number_format($totalCandidates) }}</h3>
-                <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">Total Kandidat</p>
-            </div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+    <div class="relative bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex items-center gap-3 group hover:border-purple-200 transition-all">
+        <div class="w-9 h-9 bg-purple-600 rounded-lg flex items-center justify-center text-white text-sm shadow-sm shadow-purple-500/20 flex-shrink-0">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="min-w-0">
+            <p class="text-lg font-black text-slate-800 tracking-tight">{{ number_format($totalCandidates) }}</p>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider truncate">Total Kandidat</p>
         </div>
     </div>
 
-    <div class="relative bg-white rounded-2xl shadow-sm border border-slate-100 p-6 overflow-hidden group hover:border-amber-200 transition-colors">
-        <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-amber-50 to-amber-100 rounded-bl-full -mr-4 -mt-4 z-0 transition-transform group-hover:scale-110"></div>
-        <div class="relative z-10">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center text-white text-xl shadow-md shadow-amber-500/30">
-                    <i class="fas fa-clock"></i>
-                </div>
-            </div>
-            <div>
-                <h3 class="text-3xl font-black text-slate-800 tracking-tight mb-1">{{ number_format($proses) }}</h3>
-                <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">Dalam Proses</p>
-            </div>
+    <div class="relative bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex items-center gap-3 group hover:border-amber-200 transition-all">
+        <div class="w-9 h-9 bg-amber-500 rounded-lg flex items-center justify-center text-white text-sm shadow-sm shadow-amber-500/20 flex-shrink-0">
+            <i class="fas fa-clock"></i>
+        </div>
+        <div class="min-w-0">
+            <p class="text-lg font-black text-slate-800 tracking-tight">{{ number_format($proses) }}</p>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider truncate">Dalam Proses</p>
         </div>
     </div>
 
-    <div class="relative bg-white rounded-2xl shadow-sm border border-slate-100 p-6 overflow-hidden group hover:border-green-200 transition-colors">
-        <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-green-50 to-green-100 rounded-bl-full -mr-4 -mt-4 z-0 transition-transform group-hover:scale-110"></div>
-        <div class="relative z-10">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center text-white text-xl shadow-md shadow-green-500/30">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-            </div>
-            <div>
-                <h3 class="text-3xl font-black text-slate-800 tracking-tight mb-1">{{ number_format($diterima) }}</h3>
-                <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">Diterima</p>
-            </div>
+    <div class="relative bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex items-center gap-3 group hover:border-green-200 transition-all">
+        <div class="w-9 h-9 bg-green-500 rounded-lg flex items-center justify-center text-white text-sm shadow-sm shadow-green-500/20 flex-shrink-0">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="min-w-0">
+            <p class="text-lg font-black text-slate-800 tracking-tight">{{ number_format($diterima) }}</p>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider truncate">Diterima</p>
         </div>
     </div>
 
-    <div class="relative bg-white rounded-2xl shadow-sm border border-slate-100 p-6 overflow-hidden group hover:border-red-200 transition-colors">
-        <div class="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-red-50 to-red-100 rounded-bl-full -mr-4 -mt-4 z-0 transition-transform group-hover:scale-110"></div>
-        <div class="relative z-10">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center text-white text-xl shadow-md shadow-red-500/30">
-                    <i class="fas fa-times-circle"></i>
-                </div>
-            </div>
-            <div>
-                <h3 class="text-3xl font-black text-slate-800 tracking-tight mb-1">{{ number_format($ditolak) }}</h3>
-                <p class="text-sm font-bold text-slate-500 uppercase tracking-widest">Ditolak</p>
-            </div>
+    <div class="relative bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex items-center gap-3 group hover:border-red-200 transition-all">
+        <div class="w-9 h-9 bg-red-500 rounded-lg flex items-center justify-center text-white text-sm shadow-sm shadow-red-500/20 flex-shrink-0">
+            <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="min-w-0">
+            <p class="text-lg font-black text-slate-800 tracking-tight">{{ number_format($ditolak) }}</p>
+            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider truncate">Ditolak</p>
         </div>
     </div>
 </div>
@@ -214,44 +194,44 @@
         <h3 class="text-lg font-bold text-slate-800">Kandidat Terbaru</h3>
     </div>
     <div class="overflow-x-auto">
-        <table class="w-full text-sm">
+        <table class="w-full text-xs">
             <thead>
-                <tr class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500 font-semibold">
-                    <th class="px-6 py-4 text-left">Nama</th>
-                    <th class="px-6 py-4 text-left">Email</th>
-                    <th class="px-6 py-4 text-left">Posisi</th>
-                    <th class="px-6 py-4 text-left">Status</th>
-                    <th class="px-6 py-4 text-left">Tanggal Daftar</th>
+                <tr class="bg-slate-50 text-[10px] uppercase tracking-wider text-slate-500 font-semibold">
+                    <th class="px-4 py-3 text-left">Nama</th>
+                    <th class="px-4 py-3 text-left">Email</th>
+                    <th class="px-4 py-3 text-left">Posisi</th>
+                    <th class="px-4 py-3 text-left">Status</th>
+                    <th class="px-4 py-3 text-left">Tgl Daftar</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
                 @foreach($recentCandidates as $candidate)
                 <tr class="hover:bg-slate-50/50 transition-colors">
-                    <td class="px-6 py-4">
-                        <a href="{{ route('m28.candidates.show', $candidate) }}" class="font-bold text-purple-600 hover:text-purple-700 transition-colors">
+                    <td class="px-4 py-3">
+                        <a href="{{ route('m28.candidates.show', $candidate) }}" class="font-bold text-xs text-purple-600 hover:text-purple-700 transition-colors truncate max-w-[120px] block">
                             {{ $candidate->name }}
                         </a>
                     </td>
-                    <td class="px-6 py-4 text-slate-600">{{ $candidate->email }}</td>
-                    <td class="px-6 py-4 text-slate-600">
+                    <td class="px-4 py-3 text-slate-600 truncate max-w-[160px]">{{ $candidate->email }}</td>
+                    <td class="px-4 py-3 text-slate-600 truncate max-w-[160px]">
                         @foreach($candidate->applications as $app)
-                            <span class="inline-block">{{ $app->job?->title ?? '-' }}</span>
+                            <span class="inline-block truncate w-full">{{ $app->job?->title ?? '-' }}</span>
                         @endforeach
                         @if($candidate->applications->isEmpty())
                             <span class="text-slate-400">Belum melamar</span>
                         @endif
                     </td>
-                    <td class="px-6 py-4">
+                    <td class="px-4 py-3">
                         @php
                             $status = $candidate->applications->first()?->status ?? '-';
                             $colors = ['Baru' => 'bg-blue-100 text-blue-700', 'Lamaran Dilihat' => 'bg-yellow-100 text-yellow-700', 'Psikotest' => 'bg-amber-100 text-amber-700', 'Wawancara HR' => 'bg-indigo-100 text-indigo-700', 'Wawancara User' => 'bg-purple-100 text-purple-700', 'Shortlist' => 'bg-teal-100 text-teal-700', 'Offering Letter' => 'bg-emerald-100 text-emerald-700', 'Diterima' => 'bg-green-100 text-green-700', 'Tidak Lanjut' => 'bg-red-100 text-red-700'];
                             $badgeClass = $colors[$status] ?? 'bg-slate-100 text-slate-700';
                         @endphp
-                        <span class="inline-flex px-3 py-1 rounded-full text-xs font-bold {{ $badgeClass }}">
+                        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold {{ $badgeClass }}">
                             {{ $status }}
                         </span>
                     </td>
-                    <td class="px-6 py-4 text-slate-500 text-xs">
+                    <td class="px-4 py-3 text-slate-500 text-[10px] whitespace-nowrap">
                         {{ $candidate->created_at->format('d M Y') }}
                     </td>
                 </tr>

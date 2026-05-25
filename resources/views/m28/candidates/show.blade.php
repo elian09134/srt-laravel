@@ -39,18 +39,7 @@
                     }
                 @endphp
 
-                <div class="mt-6 flex flex-col gap-2">
-                    @if($waNumber)
-                        <a href="https://wa.me/{{ $waNumber }}?text={{ urlencode("Halo $candidate->name, saya dari tim M28 ingin menindaklanjuti lamaran Anda.") }}" target="_blank" class="flex items-center justify-center px-4 py-2.5 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-all font-medium border-b-4 border-green-700 active:border-b-0 active:translate-y-1 shadow-md">
-                            <i class="fab fa-whatsapp mr-2 text-lg"></i> Hubungi WhatsApp
-                        </a>
-                    @endif
-                    @if(optional($candidate->profile)->cv_path)
-                        <a href="{{ asset('storage/' . $candidate->profile->cv_path) }}" target="_blank" class="flex items-center justify-center px-4 py-2.5 bg-purple-50 text-purple-600 rounded-xl hover:bg-purple-100 transition-all font-medium border border-purple-100 shadow-sm">
-                            <i class="fas fa-file-pdf mr-2"></i> Lihat CV / Resume
-                        </a>
-                    @endif
-                </div>
+
             </div>
         </div>
 

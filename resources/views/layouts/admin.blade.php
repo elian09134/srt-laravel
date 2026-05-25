@@ -33,6 +33,14 @@
         .nav-link-active i {
             color: #7c3aed;
         }
+        .nav-link-icon-only {
+            background: #f5f3ff;
+            color: #6d28d9;
+            border-radius: 0.5rem;
+        }
+        .nav-link-icon-only i {
+            color: #7c3aed;
+        }
     </style>
 </head>
 
@@ -40,98 +48,139 @@
     <div class="flex h-screen overflow-hidden">
 
         {{-- Sidebar --}}
-        <aside class="fixed inset-y-0 left-0 z-50 w-56 bg-white border-r border-slate-200 transition-transform duration-300 transform lg:translate-x-0 lg:static lg:inset-0 flex flex-col"
-               :class="{'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen}">
+        <aside class="fixed inset-y-0 left-0 z-50 bg-white border-r border-slate-200 transition-all duration-300 flex flex-col"
+               :class="sidebarOpen ? 'w-56' : 'w-16'">
 
-            <div class="flex items-center h-16 px-5 border-b border-slate-100">
+            <div class="flex items-center h-16 px-3 border-b border-slate-100"
+                 :class="sidebarOpen ? 'justify-between' : 'justify-center'">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5">
-                    <div class="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center">
+                    <div class="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0">
                         <span class="font-bold text-white text-sm">T</span>
                     </div>
-                    <span class="text-base font-semibold text-slate-800">TERANG<span class="text-indigo-600">ADMIN</span></span>
+                    <span x-show="sidebarOpen" class="text-base font-semibold text-slate-800 whitespace-nowrap">TERANG<span class="text-indigo-600">ADMIN</span></span>
                 </a>
             </div>
 
-            <nav class="flex-1 overflow-y-auto sidebar-scroll py-4 px-3 space-y-0.5">
-                <div class="px-3 pb-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Main</div>
+            <nav class="flex-1 overflow-y-auto sidebar-scroll py-4 space-y-0.5"
+                 :class="sidebarOpen ? 'px-3' : 'px-2'">
+                <div x-show="sidebarOpen" class="px-3 pb-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Main</div>
                 <a href="{{ route('admin.dashboard') }}"
-                   class="flex items-center px-3 py-2 rounded-lg transition-all duration-200 group text-sm
-                   {{ request()->routeIs('admin.dashboard') ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700' }}">
-                    <i class="fas fa-home w-5 text-center text-sm {{ request()->routeIs('admin.dashboard') ? '' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
-                    <span class="ml-3 font-medium">Dashboard</span>
+                   class="flex items-center rounded-lg transition-all duration-200 group text-sm"
+                   :class="[
+                       sidebarOpen
+                           ? 'px-3 py-2 ' + ({{ request()->routeIs('admin.dashboard') ? 'true' : 'false' }} ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700')
+                           : 'px-2 py-2 justify-center ' + ({{ request()->routeIs('admin.dashboard') ? 'true' : 'false' }} ? 'nav-link-icon-only' : 'text-slate-500 hover:bg-slate-50')
+                   ]">
+                    <i class="fas fa-home w-5 text-center text-sm flex-shrink-0 {{ request()->routeIs('admin.dashboard') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
+                    <span x-show="sidebarOpen" class="ml-3 font-medium whitespace-nowrap">Dashboard</span>
                 </a>
 
-                <div class="mt-5 px-3 pb-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Recruitment</div>
+                <div x-show="sidebarOpen" class="mt-5 px-3 pb-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Recruitment</div>
                 <a href="{{ route('admin.jobs.index') }}"
-                   class="flex items-center px-3 py-2 rounded-lg transition-all duration-200 group text-sm
-                   {{ request()->routeIs('admin.jobs.*') ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700' }}">
-                    <i class="fas fa-briefcase w-5 text-center text-sm {{ request()->routeIs('admin.jobs.*') ? '' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
-                    <span class="ml-3 font-medium">Lowongan Kerja</span>
+                   class="flex items-center rounded-lg transition-all duration-200 group text-sm"
+                   :class="[
+                       sidebarOpen
+                           ? 'px-3 py-2 ' + ({{ request()->routeIs('admin.jobs.*') ? 'true' : 'false' }} ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700')
+                           : 'px-2 py-2 justify-center ' + ({{ request()->routeIs('admin.jobs.*') ? 'true' : 'false' }} ? 'nav-link-icon-only' : 'text-slate-500 hover:bg-slate-50')
+                   ]">
+                    <i class="fas fa-briefcase w-5 text-center text-sm flex-shrink-0 {{ request()->routeIs('admin.jobs.*') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
+                    <span x-show="sidebarOpen" class="ml-3 font-medium whitespace-nowrap">Lowongan Kerja</span>
                 </a>
                 <a href="{{ route('admin.applicants.index') }}"
-                   class="flex items-center px-3 py-2 rounded-lg transition-all duration-200 group text-sm
-                   {{ request()->routeIs('admin.applicants.*') ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700' }}">
-                    <i class="fas fa-users w-5 text-center text-sm {{ request()->routeIs('admin.applicants.*') ? '' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
-                    <span class="ml-3 font-medium">Pelamar</span>
+                   class="flex items-center rounded-lg transition-all duration-200 group text-sm"
+                   :class="[
+                       sidebarOpen
+                           ? 'px-3 py-2 ' + ({{ request()->routeIs('admin.applicants.*') ? 'true' : 'false' }} ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700')
+                           : 'px-2 py-2 justify-center ' + ({{ request()->routeIs('admin.applicants.*') ? 'true' : 'false' }} ? 'nav-link-icon-only' : 'text-slate-500 hover:bg-slate-50')
+                   ]">
+                    <i class="fas fa-users w-5 text-center text-sm flex-shrink-0 {{ request()->routeIs('admin.applicants.*') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
+                    <span x-show="sidebarOpen" class="ml-3 font-medium whitespace-nowrap">Pelamar</span>
                 </a>
                 <a href="{{ route('admin.talent_pool.index') }}"
-                   class="flex items-center px-3 py-2 rounded-lg transition-all duration-200 group text-sm
-                   {{ request()->routeIs('admin.talent_pool.*') ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700' }}">
-                    <i class="fas fa-address-book w-5 text-center text-sm {{ request()->routeIs('admin.talent_pool.*') ? '' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
-                    <span class="ml-3 font-medium">Talent Pool</span>
+                   class="flex items-center rounded-lg transition-all duration-200 group text-sm"
+                   :class="[
+                       sidebarOpen
+                           ? 'px-3 py-2 ' + ({{ request()->routeIs('admin.talent_pool.*') ? 'true' : 'false' }} ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700')
+                           : 'px-2 py-2 justify-center ' + ({{ request()->routeIs('admin.talent_pool.*') ? 'true' : 'false' }} ? 'nav-link-icon-only' : 'text-slate-500 hover:bg-slate-50')
+                   ]">
+                    <i class="fas fa-address-book w-5 text-center text-sm flex-shrink-0 {{ request()->routeIs('admin.talent_pool.*') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
+                    <span x-show="sidebarOpen" class="ml-3 font-medium whitespace-nowrap">Talent Pool</span>
                 </a>
 
-                <div class="mt-5 px-3 pb-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Management</div>
+                <div x-show="sidebarOpen" class="mt-5 px-3 pb-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Management</div>
                 @php
                     $pendingFptk = \App\Models\Fptk::where('status', 'pending')->count();
                 @endphp
                 <a href="{{ route('admin.fptk.index') }}"
-                   class="flex items-center px-3 py-2 rounded-lg transition-all duration-200 group text-sm
-                   {{ request()->routeIs('admin.fptk.*') ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700' }}">
-                    <i class="fas fa-file-contract w-5 text-center text-sm {{ request()->routeIs('admin.fptk.*') ? '' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
-                    <span class="ml-3 font-medium">FPTK</span>
+                   class="flex items-center rounded-lg transition-all duration-200 group text-sm"
+                   :class="[
+                       sidebarOpen
+                           ? 'px-3 py-2 ' + ({{ request()->routeIs('admin.fptk.*') ? 'true' : 'false' }} ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700')
+                           : 'px-2 py-2 justify-center ' + ({{ request()->routeIs('admin.fptk.*') ? 'true' : 'false' }} ? 'nav-link-icon-only' : 'text-slate-500 hover:bg-slate-50')
+                   ]">
+                    <i class="fas fa-file-contract w-5 text-center text-sm flex-shrink-0 {{ request()->routeIs('admin.fptk.*') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
+                    <span x-show="sidebarOpen" class="ml-3 font-medium whitespace-nowrap">FPTK</span>
                     @if($pendingFptk > 0)
-                        <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">{{ $pendingFptk }}</span>
+                        <span x-show="sidebarOpen" class="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">{{ $pendingFptk }}</span>
                     @endif
                 </a>
                 <a href="{{ route('admin.partner-targets.index') }}"
-                   class="flex items-center px-3 py-2 rounded-lg transition-all duration-200 group text-sm
-                   {{ request()->routeIs('admin.partner-targets.*') ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700' }}">
-                    <i class="fas fa-bullseye w-5 text-center text-sm {{ request()->routeIs('admin.partner-targets.*') ? '' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
-                    <span class="ml-3 font-medium">Target Mitra</span>
+                   class="flex items-center rounded-lg transition-all duration-200 group text-sm"
+                   :class="[
+                       sidebarOpen
+                           ? 'px-3 py-2 ' + ({{ request()->routeIs('admin.partner-targets.*') ? 'true' : 'false' }} ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700')
+                           : 'px-2 py-2 justify-center ' + ({{ request()->routeIs('admin.partner-targets.*') ? 'true' : 'false' }} ? 'nav-link-icon-only' : 'text-slate-500 hover:bg-slate-50')
+                   ]">
+                    <i class="fas fa-bullseye w-5 text-center text-sm flex-shrink-0 {{ request()->routeIs('admin.partner-targets.*') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
+                    <span x-show="sidebarOpen" class="ml-3 font-medium whitespace-nowrap">Target Mitra</span>
                 </a>
 
-                <div class="mt-5 px-3 pb-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Content & System</div>
+                <div x-show="sidebarOpen" class="mt-5 px-3 pb-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Content & System</div>
                 <a href="{{ route('admin.content.edit') }}"
-                   class="flex items-center px-3 py-2 rounded-lg transition-all duration-200 group text-sm
-                   {{ request()->routeIs('admin.content.edit') ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700' }}">
-                    <i class="fas fa-pen-nib w-5 text-center text-sm {{ request()->routeIs('admin.content.edit') ? '' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
-                    <span class="ml-3 font-medium">Konten Website</span>
+                   class="flex items-center rounded-lg transition-all duration-200 group text-sm"
+                   :class="[
+                       sidebarOpen
+                           ? 'px-3 py-2 ' + ({{ request()->routeIs('admin.content.edit') ? 'true' : 'false' }} ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700')
+                           : 'px-2 py-2 justify-center ' + ({{ request()->routeIs('admin.content.edit') ? 'true' : 'false' }} ? 'nav-link-icon-only' : 'text-slate-500 hover:bg-slate-50')
+                   ]">
+                    <i class="fas fa-pen-nib w-5 text-center text-sm flex-shrink-0 {{ request()->routeIs('admin.content.edit') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
+                    <span x-show="sidebarOpen" class="ml-3 font-medium whitespace-nowrap">Konten Website</span>
                 </a>
                 <a href="{{ route('admin.images.index') }}"
-                   class="flex items-center px-3 py-2 rounded-lg transition-all duration-200 group text-sm
-                   {{ request()->routeIs('admin.images.index') ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700' }}">
-                    <i class="fas fa-images w-5 text-center text-sm {{ request()->routeIs('admin.images.index') ? '' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
-                    <span class="ml-3 font-medium">Galeri Gambar</span>
+                   class="flex items-center rounded-lg transition-all duration-200 group text-sm"
+                   :class="[
+                       sidebarOpen
+                           ? 'px-3 py-2 ' + ({{ request()->routeIs('admin.images.index') ? 'true' : 'false' }} ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700')
+                           : 'px-2 py-2 justify-center ' + ({{ request()->routeIs('admin.images.index') ? 'true' : 'false' }} ? 'nav-link-icon-only' : 'text-slate-500 hover:bg-slate-50')
+                   ]">
+                    <i class="fas fa-images w-5 text-center text-sm flex-shrink-0 {{ request()->routeIs('admin.images.index') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
+                    <span x-show="sidebarOpen" class="ml-3 font-medium whitespace-nowrap">Galeri Gambar</span>
                 </a>
 
                 @php
                     $pendingPasswordRequests = \App\Models\PasswordResetRequest::where('status', 'pending')->count();
                 @endphp
                 <a href="{{ route('admin.password_requests.index') }}"
-                   class="flex items-center px-3 py-2 rounded-lg transition-all duration-200 group text-sm
-                   {{ request()->routeIs('admin.password_requests.*') ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700' }}">
-                    <i class="fas fa-key w-5 text-center text-sm {{ request()->routeIs('admin.password_requests.*') ? '' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
-                    <span class="ml-3 font-medium">Reset Password</span>
+                   class="flex items-center rounded-lg transition-all duration-200 group text-sm"
+                   :class="[
+                       sidebarOpen
+                           ? 'px-3 py-2 ' + ({{ request()->routeIs('admin.password_requests.*') ? 'true' : 'false' }} ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700')
+                           : 'px-2 py-2 justify-center ' + ({{ request()->routeIs('admin.password_requests.*') ? 'true' : 'false' }} ? 'nav-link-icon-only' : 'text-slate-500 hover:bg-slate-50')
+                   ]">
+                    <i class="fas fa-key w-5 text-center text-sm flex-shrink-0 {{ request()->routeIs('admin.password_requests.*') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
+                    <span x-show="sidebarOpen" class="ml-3 font-medium whitespace-nowrap">Reset Password</span>
                     @if($pendingPasswordRequests > 0)
-                        <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">{{ $pendingPasswordRequests }}</span>
+                        <span x-show="sidebarOpen" class="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">{{ $pendingPasswordRequests }}</span>
                     @endif
                 </a>
             </nav>
 
-            <div class="p-3 border-t border-slate-100">
-                <a href="{{ route('home') }}" class="flex items-center justify-center w-full px-3 py-2 text-sm text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-colors">
-                    <i class="fas fa-globe mr-2"></i> Website Utama
+            <div class="border-t border-slate-100"
+                 :class="sidebarOpen ? 'p-3' : 'p-2'">
+                <a href="{{ route('home') }}" class="flex items-center rounded-lg transition-colors"
+                   :class="sidebarOpen ? 'px-3 py-2 text-sm text-slate-400 hover:text-slate-600 hover:bg-slate-50 justify-center' : 'p-2 text-slate-400 hover:text-slate-600 justify-center'">
+                    <i class="fas fa-globe mr-0 flex-shrink-0"></i>
+                    <span x-show="sidebarOpen" class="ml-2">Website Utama</span>
                 </a>
             </div>
         </aside>
@@ -140,7 +189,8 @@
         <div x-show="sidebarOpen" @@click="sidebarOpen = false" class="fixed inset-0 z-40 bg-black/20 lg:hidden"></div>
 
         {{-- Main Content --}}
-        <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <div class="flex-1 flex flex-col min-w-0 overflow-hidden transition-all duration-300"
+             :class="sidebarOpen ? 'lg:ml-56' : 'lg:ml-16'">
             <header class="h-16 flex items-center justify-between px-6 bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30">
                 <div class="flex items-center gap-3">
                     <button @click="sidebarOpen = !sidebarOpen" class="text-slate-400 hover:text-slate-600 focus:outline-none transition-colors">

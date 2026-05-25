@@ -15,51 +15,83 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         [x-cloak] { display: none !important; }
-        .sidebar-scroll::-webkit-scrollbar { width: 5px; }
+        .sidebar-scroll::-webkit-scrollbar { width: 4px; }
         .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
-        .sidebar-scroll::-webkit-scrollbar-thumb { background: #4a1942; border-radius: 10px; }
-        .sidebar-scroll::-webkit-scrollbar-thumb:hover { background: #6b2060; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        .nav-link-active {
+            background: #f5f3ff;
+            border-right: 3px solid #7c3aed;
+            color: #6d28d9;
+        }
+        .nav-link-active i {
+            color: #7c3aed;
+        }
+        .nav-link-icon-only {
+            background: #f5f3ff;
+            color: #6d28d9;
+            border-radius: 0.5rem;
+        }
+        .nav-link-icon-only i {
+            color: #7c3aed;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 antialiased" x-data="{ sidebarOpen: true }">
     <div class="flex h-screen overflow-hidden">
-        <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-white transition-transform duration-300 transform lg:translate-x-0 lg:static lg:inset-0 flex flex-col shadow-2xl"
-               :class="{'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen}">
-            <div class="flex items-center justify-center h-16 bg-slate-950 shadow-md">
-                <a href="{{ route('m28.dashboard') }}" class="flex items-center gap-3">
-                    <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
-                        <span class="font-bold text-white text-lg">M</span>
+        <aside class="fixed inset-y-0 left-0 z-50 bg-white border-r border-slate-200 transition-all duration-300 flex flex-col"
+               :class="sidebarOpen ? 'w-56' : 'w-16'">
+            <div class="flex items-center h-16 px-3 border-b border-slate-100"
+                 :class="sidebarOpen ? 'justify-between' : 'justify-center'">
+                <a href="{{ route('m28.dashboard') }}" class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 bg-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span class="font-bold text-white text-sm">M</span>
                     </div>
-                    <span class="text-lg font-bold tracking-wide">M28<span class="text-purple-500">PANEL</span></span>
+                    <span x-show="sidebarOpen" class="text-base font-semibold text-slate-800 whitespace-nowrap">M28<span class="text-purple-600">PANEL</span></span>
                 </a>
             </div>
-            <nav class="flex-1 overflow-y-auto sidebar-scroll py-4 px-3 space-y-1">
-                <div class="pl-3 pr-2 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                    Menu
-                </div>
-                <a href="{{ route('m28.dashboard') }}" class="flex items-center px-3 py-2.5 rounded-lg transition-colors group {{ request()->routeIs('m28.dashboard') ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-                    <i class="fas fa-home w-6 text-center {{ request()->routeIs('m28.dashboard') ? 'text-white' : 'text-slate-500 group-hover:text-white transition-colors' }}"></i>
-                    <span class="ml-2 font-medium">Dashboard</span>
+            <nav class="flex-1 overflow-y-auto sidebar-scroll py-4 space-y-0.5"
+                 :class="sidebarOpen ? 'px-3' : 'px-2'">
+                <div x-show="sidebarOpen" class="px-3 pb-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Main</div>
+                <a href="{{ route('m28.dashboard') }}"
+                   class="flex items-center rounded-lg transition-all duration-200 group text-sm"
+                   :class="[
+                       sidebarOpen
+                           ? 'px-3 py-2 ' + ({{ request()->routeIs('m28.dashboard') ? 'true' : 'false' }} ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700')
+                           : 'px-2 py-2 justify-center ' + ({{ request()->routeIs('m28.dashboard') ? 'true' : 'false' }} ? 'nav-link-icon-only' : 'text-slate-500 hover:bg-slate-50')
+                   ]">
+                    <i class="fas fa-home w-5 text-center text-sm flex-shrink-0 {{ request()->routeIs('m28.dashboard') ? 'text-purple-600' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
+                    <span x-show="sidebarOpen" class="ml-3 font-medium whitespace-nowrap">Dashboard</span>
                 </a>
-                <a href="{{ route('m28.candidates.index') }}" class="flex items-center px-3 py-2.5 rounded-lg transition-colors group {{ request()->routeIs('m28.candidates.*') ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
-                    <i class="fas fa-users w-6 text-center {{ request()->routeIs('m28.candidates.*') ? 'text-white' : 'text-slate-500 group-hover:text-white transition-colors' }}"></i>
-                    <span class="ml-2 font-medium">Kandidat Saya</span>
+                <a href="{{ route('m28.candidates.index') }}"
+                   class="flex items-center rounded-lg transition-all duration-200 group text-sm"
+                   :class="[
+                       sidebarOpen
+                           ? 'px-3 py-2 ' + ({{ request()->routeIs('m28.candidates.*') ? 'true' : 'false' }} ? 'nav-link-active' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700')
+                           : 'px-2 py-2 justify-center ' + ({{ request()->routeIs('m28.candidates.*') ? 'true' : 'false' }} ? 'nav-link-icon-only' : 'text-slate-500 hover:bg-slate-50')
+                   ]">
+                    <i class="fas fa-users w-5 text-center text-sm flex-shrink-0 {{ request()->routeIs('m28.candidates.*') ? 'text-purple-600' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
+                    <span x-show="sidebarOpen" class="ml-3 font-medium whitespace-nowrap">Kandidat Saya</span>
                 </a>
             </nav>
-            <div class="p-4 border-t border-slate-800 bg-slate-950">
-                <a href="{{ route('home') }}" class="flex items-center justify-center w-full px-4 py-2 text-sm text-slate-400 bg-slate-800 hover:bg-slate-700 hover:text-white rounded-lg transition-colors">
-                    <i class="fas fa-globe mr-2"></i> Website Utama
+            <div class="p-3 border-t border-slate-100"
+                 :class="sidebarOpen ? 'p-3' : 'p-2'">
+                <a href="{{ route('home') }}" class="flex items-center rounded-lg transition-colors"
+                   :class="sidebarOpen ? 'px-4 py-2 text-sm font-medium text-slate-500 bg-slate-50 hover:bg-slate-100 hover:text-slate-700 justify-center' : 'p-2 text-slate-400 hover:text-slate-600 justify-center'">
+                    <i class="fas fa-globe mr-0 flex-shrink-0"></i>
+                    <span x-show="sidebarOpen" class="ml-2">Website Utama</span>
                 </a>
             </div>
         </aside>
-        <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
-            <header class="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-6 sticky top-0 z-40 bg-white/80 backdrop-blur-md">
-                <div class="flex items-center">
-                    <button @click="sidebarOpen = !sidebarOpen" class="text-slate-500 hover:text-slate-700 lg:hidden focus:outline-none">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                    <h2 class="ml-4 text-lg font-semibold text-slate-800 hidden md:block">@yield('title', 'Dashboard')</h2>
-                </div>
+        <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 z-40 bg-black/20 lg:hidden"></div>
+        <div class="flex-1 flex flex-col min-w-0 overflow-hidden transition-all duration-300"
+             :class="sidebarOpen ? 'lg:ml-56' : 'lg:ml-16'">
+                <header class="h-16 flex items-center justify-between px-6 bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30">
+                    <div class="flex items-center gap-3">
+                        <button @click="sidebarOpen = !sidebarOpen" class="text-slate-400 hover:text-slate-600 focus:outline-none transition-colors">
+                            <i class="fas fa-bars text-lg"></i>
+                        </button>
+                        <h2 class="text-sm font-medium text-slate-500 hidden md:block">@yield('title', 'Dashboard')</h2>
+                    </div>
                 <div class="flex items-center gap-4">
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open" class="flex items-center gap-3 focus:outline-none">

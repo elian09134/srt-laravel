@@ -44,30 +44,30 @@
     <div class="overflow-x-auto">
         <table class="w-full text-left text-sm">
             <thead>
-                <tr class="bg-slate-50 border-b border-slate-100 text-xs uppercase tracking-wider text-slate-500 font-semibold">
-                    <th class="px-6 py-4">Kandidat</th>
-                    <th class="px-6 py-4">Email</th>
-                    <th class="px-6 py-4">Sumber Info</th>
-                    <th class="px-6 py-4">Posisi Dilamar</th>
-                    <th class="px-6 py-4">Status</th>
-                    <th class="px-6 py-4">Tanggal Daftar</th>
-                    <th class="px-6 py-4">Update Terakhir</th>
-                    <th class="px-6 py-4 text-center">Aksi</th>
+                <tr class="bg-slate-50 border-b border-slate-100 text-[10px] uppercase tracking-wider text-slate-500 font-semibold">
+                    <th class="px-3 py-3">Kandidat</th>
+                    <th class="px-3 py-3">Email</th>
+                    <th class="px-3 py-3">Sumber Info</th>
+                    <th class="px-3 py-3">Posisi Dilamar</th>
+                    <th class="px-3 py-3">Status</th>
+                    <th class="px-3 py-3">Tgl Daftar</th>
+                    <th class="px-3 py-3">Update</th>
+                    <th class="px-3 py-3 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
                 @forelse($candidates as $candidate)
                     <tr class="hover:bg-slate-50/50 transition-colors">
-                        <td class="px-6 py-4">
+                        <td class="px-3 py-3">
                             <div class="flex items-center">
-                                <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold border border-purple-200 mr-3">
+                                <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-xs border border-purple-200 mr-2.5 flex-shrink-0">
                                     {{ substr($candidate->name, 0, 1) }}
                                 </div>
-                                <div class="font-bold text-slate-800">{{ $candidate->name }}</div>
+                                <div class="text-xs font-bold text-slate-800 truncate max-w-[120px]">{{ $candidate->name }}</div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-slate-600">{{ $candidate->email }}</td>
-                        <td class="px-6 py-4">
+                        <td class="px-3 py-3 text-xs text-slate-600 truncate max-w-[160px]">{{ $candidate->email }}</td>
+                        <td class="px-3 py-3">
                             @php
                                 $sourceColors = [
                                     'M28' => 'bg-purple-100 text-purple-700',
@@ -86,43 +86,42 @@
                                 $source = $candidate->referral_source ?? '-';
                                 $badgeClass = $sourceColors[$source] ?? 'bg-slate-100 text-slate-700';
                             @endphp
-                            <span class="inline-flex px-3 py-1 rounded-full text-xs font-bold {{ $badgeClass }}">
+                            <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold {{ $badgeClass }}">
                                 {{ $source }}
                             </span>
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-3 py-3 text-xs text-slate-600 truncate max-w-[160px]">
                             @forelse($candidate->applications as $app)
-                                <span class="inline-block text-slate-700">{{ $app->job?->title ?? '-' }}</span>
+                                <span class="inline-block truncate w-full">{{ $app->job?->title ?? '-' }}</span>
                             @empty
                                 <span class="text-slate-400">Belum melamar</span>
                             @endforelse
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-3 py-3">
                             @php
                                 $status = $candidate->applications->first()?->status ?? '-';
                                 $colors = ['Baru' => 'bg-blue-100 text-blue-700', 'Lamaran Dilihat' => 'bg-yellow-100 text-yellow-700', 'Psikotest' => 'bg-amber-100 text-amber-700', 'Wawancara HR' => 'bg-indigo-100 text-indigo-700', 'Wawancara User' => 'bg-purple-100 text-purple-700', 'Shortlist' => 'bg-teal-100 text-teal-700', 'Offering Letter' => 'bg-emerald-100 text-emerald-700', 'Diterima' => 'bg-green-100 text-green-700', 'Tidak Lanjut' => 'bg-red-100 text-red-700'];
                                 $badgeClass = $colors[$status] ?? 'bg-slate-100 text-slate-700';
                             @endphp
-                            <span class="inline-flex px-3 py-1 rounded-full text-xs font-bold {{ $badgeClass }}">
+                            <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold {{ $badgeClass }}">
                                 {{ $status }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-slate-500 text-xs">
+                        <td class="px-3 py-3 text-[10px] text-slate-500 whitespace-nowrap">
                             {{ $candidate->created_at->format('d M Y') }}
                         </td>
-                        <td class="px-6 py-4 text-slate-500 text-xs">
+                        <td class="px-3 py-3 text-[10px] text-slate-500 whitespace-nowrap">
                             @php
                                 $lastHistory = $candidate->applications->first()?->statusHistories->last();
                             @endphp
                             @if($lastHistory)
                                 {{ $lastHistory->created_at->format('d M Y') }}
-                                <span class="text-slate-400 ml-1">{{ $lastHistory->created_at->format('H:i') }}</span>
                             @else
                                 <span class="text-slate-400">-</span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 text-center">
-                            <a href="{{ route('m28.candidates.show', $candidate) }}" class="inline-flex items-center px-4 py-2 bg-purple-50 text-purple-600 text-xs font-bold rounded-lg hover:bg-purple-100 transition-colors">
+                        <td class="px-3 py-3 text-center">
+                            <a href="{{ route('m28.candidates.show', $candidate) }}" class="inline-flex items-center px-3 py-1.5 bg-purple-50 text-purple-600 text-[10px] font-bold rounded-lg hover:bg-purple-100 transition-colors">
                                 Detail <i class="fas fa-arrow-right ml-1"></i>
                             </a>
                         </td>
