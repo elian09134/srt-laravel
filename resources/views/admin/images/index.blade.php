@@ -3,7 +3,7 @@
 @section('title', 'Kelola Gambar Website')
 
 @section('content')
-    <h1 class="text-3xl font-bold text-gray-800 mb-8">Kelola Gambar Website</h1>
+    <h1 class="text-xl font-semibold text-slate-800 mb-6">Kelola Gambar Website</h1>
 
     @if(session('success'))
         <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
@@ -65,7 +65,7 @@
             </div>
 
             <div class="mt-8 pt-6 border-t">
-                <button type="submit" class="px-8 py-3 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                <button type="submit" class="px-8 py-3 font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700">
                     Simpan Perubahan Gambar Utama
                 </button>
             </div>

@@ -147,12 +147,26 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Password <span class="text-red-500">*</span></label>
-                            <input type="password" name="password" required class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            <div class="relative">
+                                <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input type="password" name="password" required id="regPassword"
+                                       class="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <button type="button" onclick="toggleRegPassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors">
+                                    <i class="fas fa-eye" id="regPwIcon"></i>
+                                </button>
+                            </div>
                             <x-input-error :messages="$errors->get('password')" class="mt-1" />
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password <span class="text-red-500">*</span></label>
-                            <input type="password" name="password_confirmation" required class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            <div class="relative">
+                                <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input type="password" name="password_confirmation" required id="regPasswordConfirm"
+                                       class="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <button type="button" onclick="toggleRegPasswordConfirm()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600 transition-colors">
+                                    <i class="fas fa-eye" id="regPwConfirmIcon"></i>
+                                </button>
+                            </div>
                             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-1" />
                         </div>
                     </div>
@@ -446,6 +460,30 @@
                     });
                 }
             });
+        </script>
+        <script>
+            function toggleRegPassword() {
+                const input = document.getElementById('regPassword');
+                const icon = document.getElementById('regPwIcon');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.className = 'fas fa-eye-slash';
+                } else {
+                    input.type = 'password';
+                    icon.className = 'fas fa-eye';
+                }
+            }
+            function toggleRegPasswordConfirm() {
+                const input = document.getElementById('regPasswordConfirm');
+                const icon = document.getElementById('regPwConfirmIcon');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.className = 'fas fa-eye-slash';
+                } else {
+                    input.type = 'password';
+                    icon.className = 'fas fa-eye';
+                }
+            }
         </script>
     </div>
 </body>

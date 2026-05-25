@@ -4,11 +4,9 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto">
-    <div class="flex items-center justify-between mb-6">
-        <div>
-            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Target Mitra</h1>
-            <p class="text-sm text-slate-500 mt-1">Atur target pendaftaran kandidat per posisi untuk setiap mitra.</p>
-        </div>
+    <div class="mb-6">
+        <h1 class="text-xl font-semibold text-slate-800">Target Mitra</h1>
+        <p class="text-sm text-slate-500 mt-1">Atur target pendaftaran kandidat per posisi untuk setiap mitra.</p>
     </div>
 
     @foreach($partners as $partner)

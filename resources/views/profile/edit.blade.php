@@ -45,7 +45,7 @@
                     <!-- User Info -->
                     <div class="flex-1 text-center md:text-left text-white md:pt-2">
                         <h3 class="text-2xl md:text-3xl font-extrabold tracking-tight drop-shadow-md">{{ $user->name }}</h3>
-                        <p class="text-blue-100 mt-1 mb-4 text-base md:text-lg font-medium opacity-90">{{ $user->profile->last_position ?? 'Pencari Kerja' }}</p>
+                        <p class="text-blue-100 mt-1 mb-4 text-base md:text-lg font-medium opacity-90">{{ $user->profile?->last_position ?? 'Pencari Kerja' }}</p>
                         
                         <div class="flex flex-wrap items-center justify-center md:justify-start gap-3">
                             <div class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 rounded-full py-1.5 px-4 md:px-5 transition-colors shadow-sm">

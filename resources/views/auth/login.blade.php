@@ -9,7 +9,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
         body {
@@ -73,7 +73,7 @@
                 <!-- Error Alert -->
                 @if ($errors->any())
                 <div class="bg-red-50 border border-red-100 text-red-600 p-4 rounded-2xl flex items-start gap-3 shadow-sm mb-6 animate-pulse">
-                    <span class="material-symbols-outlined shrink-0">error</span>
+                    <i class="fas fa-exclamation-circle mt-0.5"></i>
                     <p class="text-sm font-bold">{{ $errors->first() }}</p>
                 </div>
                 @endif
@@ -82,6 +82,7 @@
                 <div class="space-y-2">
                     <label for="email" class="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1 uppercase tracking-wider text-[10px]">Alamat Email</label>
                     <div class="relative flex items-center group">
+                        <i class="fas fa-envelope absolute left-4 text-slate-400"></i>
                         <input id="email" 
                                name="email" 
                                type="email" 
@@ -111,7 +112,7 @@
                                autocomplete="current-password"
                                class="w-full pl-12 pr-12 py-4 bg-slate-50 dark:bg-slate-800 border-none rounded-2xl focus:ring-4 focus:ring-primary/10 transition-all outline-none text-slate-900 dark:text-white font-medium">
                         <button type="button" onclick="togglePassword()" class="absolute right-4 text-slate-400 hover:text-primary transition-colors">
-                            <span class="material-symbols-outlined" id="pwIcon">visibility</span>
+                            <i class="fas fa-eye" id="pwIcon"></i>
                         </button>
                     </div>
                 </div>
@@ -130,6 +131,7 @@
                 </button>
             </form>
 
+            {{--
             <div class="relative my-10">
                 <div class="absolute inset-0 flex items-center">
                     <div class="w-full border-t border-slate-100 dark:border-slate-800"></div>
@@ -140,7 +142,7 @@
             </div>
 
             <!-- Social Logins (Temporarily Hidden) -->
-            {{-- 
+            
             <div class="grid grid-cols-1 gap-4">
                 <a href="{{ route('auth.google') }}" class="flex items-center justify-center gap-3 py-4 px-4 bg-slate-50 hover:bg-white dark:bg-slate-800 dark:hover:bg-slate-700 border border-transparent hover:border-slate-200 dark:hover:border-slate-600 rounded-2xl transition-all font-bold text-slate-700 dark:text-slate-300 shadow-sm">
                     <svg class="w-5 h-5" viewbox="0 0 24 24">
@@ -168,10 +170,10 @@
         const icon = document.getElementById('pwIcon');
         if (input.type === 'password') {
             input.type = 'text';
-            icon.innerText = 'visibility_off';
+            icon.className = 'fas fa-eye-slash';
         } else {
             input.type = 'password';
-            icon.innerText = 'visibility';
+            icon.className = 'fas fa-eye';
         }
     }
 

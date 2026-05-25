@@ -4,10 +4,10 @@
 
 @section('content')
     <div class="mb-6">
-        <a href="{{ route('admin.jobs.index') }}" class="text-slate-500 hover:text-blue-600 text-sm mb-2 inline-flex items-center transition-colors">
+        <a href="{{ route('admin.jobs.index') }}" class="text-slate-400 hover:text-indigo-600 text-sm inline-flex items-center transition-colors">
             <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar
         </a>
-        <h1 class="text-2xl font-bold text-slate-800">
+        <h1 class="text-xl font-semibold text-slate-800 mt-1">
             {{ isset($job) ? 'Edit Lowongan Kerja' : 'Buat Lowongan Baru' }}
         </h1>
     </div>
@@ -165,7 +165,7 @@
                     <p class="text-sm text-slate-600 mb-4">Pastikan semua data sudah benar sebelum menyimpan.</p>
                     
                     <div class="space-y-3">
-                        <button type="submit" class="w-full py-2.5 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200">
+                        <button type="submit" class="w-full py-2.5 px-4 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors">
                             <i class="fas fa-save mr-2"></i> {{ isset($job) ? 'Simpan Perubahan' : 'Terbitkan Lowongan' }}
                         </button>
                         <a href="{{ route('admin.jobs.index') }}" class="block w-full text-center py-2.5 px-4 bg-slate-100 text-slate-600 font-medium rounded-lg hover:bg-slate-200 transition-colors">

@@ -3,10 +3,12 @@
 @section('title', 'Detail Karyawan')
 
 @section('content')
-    <a href="{{ route('admin.employees.index') }}" class="text-blue-600 hover:underline mb-6 inline-block"><i class="fas fa-arrow-left mr-2"></i>Kembali ke Daftar Karyawan</a>
-    <h1 class="text-3xl font-bold text-gray-800 mb-8">Detail Karyawan</h1>
+    <a href="{{ route('admin.employees.index') }}" class="text-slate-400 hover:text-indigo-600 text-sm inline-flex items-center transition-colors mb-2">
+        <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Karyawan
+    </a>
+    <h1 class="text-xl font-semibold text-slate-800 mb-6">Detail Karyawan</h1>
 
-    <div class="bg-white p-8 rounded-lg shadow-md">
+    <div class="bg-white rounded-xl border border-slate-100 p-6">
         <!-- Informasi Pribadi --> 
         <div class="border-b pb-6">
             <h2 class="text-xl font-semibold text-gray-800 mb-4">Informasi Pribadi & Kontak</h2>

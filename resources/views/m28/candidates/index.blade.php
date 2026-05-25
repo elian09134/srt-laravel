@@ -35,7 +35,7 @@
             </a>
         @endif
         <a href="{{ route('m28.candidates.export', request()->only(['search', 'status'])) }}" class="px-6 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors shadow-sm inline-flex items-center gap-2">
-            <i class="fas fa-download"></i> Download Excell
+            <i class="fas fa-download"></i> Download Excel
         </a>
     </form>
 </div>

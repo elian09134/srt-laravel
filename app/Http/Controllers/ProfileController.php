@@ -14,6 +14,16 @@ class ProfileController extends Controller
     public function edit()
     {
         $user = Auth::user();
+
+        if ($user->role === 'partner') {
+            return redirect()->route('m28.dashboard')->with('error', 'Halaman profil tidak tersedia untuk mitra.');
+        }
+
+        if (!$user->profile) {
+            $user->profile()->create();
+            $user->load('profile');
+        }
+
         // Memuat semua relasi yang dibutuhkan untuk user reguler
         $user->load(['profile', 'workExperiences']);
 
@@ -26,6 +36,15 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
+
+        if ($user->role === 'partner') {
+            return redirect()->route('m28.dashboard')->with('error', 'Halaman profil tidak tersedia untuk mitra.');
+        }
+
+        if (!$user->profile) {
+            $user->profile()->create();
+            $user->load('profile');
+        }
 
         $request->validate([
             'nickname' => 'required|string|max:255',
@@ -151,6 +170,10 @@ class ProfileController extends Controller
     public function destroy(Request $request)
     {
         $user = Auth::user();
+
+        if ($user->role === 'partner') {
+            return redirect()->route('m28.dashboard')->with('error', 'Halaman profil tidak tersedia untuk mitra.');
+        }
 
         $request->validate([
             'password' => 'required|string',

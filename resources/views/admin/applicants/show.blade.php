@@ -4,10 +4,10 @@
 
 @section('content')
 <div class="mb-6">
-    <a href="{{ route('admin.applicants.index') }}" class="text-slate-500 hover:text-blue-600 text-sm mb-2 inline-flex items-center transition-colors">
+    <a href="{{ route('admin.applicants.index') }}" class="text-slate-400 hover:text-indigo-600 text-sm mb-2 inline-flex items-center transition-colors">
         <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar
     </a>
-    <h1 class="text-2xl font-bold text-slate-800">Detail Pelamar</h1>
+    <h1 class="text-xl font-semibold text-slate-800">Detail Pelamar</h1>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-12">
@@ -15,7 +15,7 @@
     <div class="lg:col-span-1 space-y-6">
         <!-- Profile Card -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-            <div class="h-24 bg-gradient-to-r from-blue-600 to-indigo-700"></div>
+            <div class="h-20 bg-gradient-to-r from-indigo-500 to-violet-600"></div>
             <div class="px-6 pb-6">
                 <div class="relative flex justify-center -mt-12 mb-4">
                     @if($application->user && $application->user->profile && $application->user->profile->photo_path)
@@ -49,7 +49,7 @@
 
                 <div class="mt-6 flex flex-col gap-2">
                     @if($waNumber)
-                        <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessage }}" target="_blank" class="flex items-center justify-center px-4 py-2.5 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-all font-medium border-b-4 border-green-700 active:border-b-0 active:translate-y-1 shadow-md">
+                        <a href="https://wa.me/{{ $waNumber }}?text={{ $waMessage }}" target="_blank" class="flex items-center justify-center px-4 py-2.5 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-all font-medium shadow-sm">
                             <i class="fab fa-whatsapp mr-2 text-lg"></i> Hubungi WhatsApp
                         </a>
                     @endif
@@ -60,7 +60,7 @@
                     @endphp
 
                     @if($cvPath)
-                        <a href="{{ asset('storage/' . $cvPath) }}" target="_blank" class="flex items-center justify-center px-4 py-2.5 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition-all font-medium border border-blue-100 shadow-sm">
+                        <a href="{{ asset('storage/' . $cvPath) }}" target="_blank" class="flex items-center justify-center px-4 py-2.5 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-all font-medium border border-indigo-100">
                             <i class="fas fa-file-pdf mr-2"></i> Lihat CV / Resume
                         </a>
                     @endif
@@ -70,7 +70,7 @@
 
         <!-- Status Card -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Status Saat Ini</h3>
+            <h3 class="text-xs font-semibold text-slate-400 uppercase mb-3">Status Saat Ini</h3>
             
             <div class="flex items-center justify-between mb-4">
                  @php
@@ -82,13 +82,13 @@
                         'Wawancara User'  => 'bg-indigo-100 text-indigo-700 border-indigo-200',
                         'Offering Letter' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
                         'Shortlist'       => 'bg-purple-100 text-purple-700 border-purple-200',
-                        'Diterima'        => 'bg-green-100 text-green-700 border-green-200',
-                        'Tidak Lanjut'    => 'bg-red-100 text-red-700 border-red-200',
+                        'Diterima'        => 'bg-green-50 text-green-600 border-green-200',
+                        'Tidak Lanjut'    => 'bg-red-50 text-red-600 border-red-200',
                     ];
-                    $badgeClass = $statusColors[$application->status] ?? 'bg-slate-100 text-slate-700 border-slate-200';
+                    $badgeClass = $statusColors[$application->status] ?? 'bg-slate-50 text-slate-600 border-slate-200';
                 @endphp
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border {{ $badgeClass }}">
-                    {{ strtoupper($application->status) }}
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border {{ $badgeClass }}">
+                    {{ $application->status }}
                 </span>
                 <span class="text-[10px] text-slate-400 font-medium">Updated: {{ $application->updated_at->diffForHumans() }}</span>
             </div>
@@ -160,9 +160,9 @@
                 <!-- Applied Position -->
                 <div>
                     <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Posisi Dilamar</h4>
-                    <div class="flex items-center p-4 bg-blue-50/50 rounded-2xl border border-blue-100/50">
-                        <div class="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-white mr-4 shadow-blue-200 shadow-lg">
-                            <i class="fas fa-briefcase text-lg"></i>
+                    <div class="flex items-center p-4 bg-indigo-50/50 rounded-xl border border-indigo-100/50">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-600 flex items-center justify-center text-white mr-3">
+                            <i class="fas fa-briefcase text-sm"></i>
                         </div>
                         <div>
                             <div class="font-bold text-slate-800 text-lg">{{ $application->job->title ?? '—' }}</div>
@@ -261,7 +261,7 @@
                     <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Timeline Perubahan Status</h4>
                     <div class="relative pl-6 space-y-6 before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-100">
                         @php
-                            $steps = ['Baru', 'Lamaran Dilihat', 'Psikotest', 'Wawancara HR', 'Wawancara User', 'Offering Letter', 'Shortlist', 'Diterima', 'Tidak Lanjut'];
+                            $steps = ['Baru', 'Lamaran Dilihat', 'Psikotest', 'Wawancara HR', 'Wawancara User', 'Shortlist', 'Offering Letter', 'Diterima', 'Tidak Lanjut'];
                             $currentIndex = array_search($application->status, $steps);
                             if ($currentIndex === false) $currentIndex = -1;
                         @endphp

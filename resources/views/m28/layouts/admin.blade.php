@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1280, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard') - M28 Panel</title>
@@ -67,8 +67,8 @@
                                 <div class="text-sm font-semibold text-slate-800">{{ auth()->user()->name }}</div>
                                 <div class="text-xs text-slate-500 capitalize">Partner</div>
                             </div>
-                            <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold border border-purple-200">
-                                M
+                            <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold border border-purple-200 uppercase">
+                                {{ substr(auth()->user()->name, 0, 1) }}
                             </div>
                             <i class="fas fa-chevron-down text-xs text-slate-400"></i>
                         </button>
@@ -76,7 +76,7 @@
                              class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
                                     <i class="fas fa-sign-out-alt mr-2 w-4"></i> Logout
                                 </button>
                             </form>

@@ -1,76 +1,105 @@
 @extends('layouts.admin')
 
+@section('title', 'Detail Permintaan Reset Password')
+
 @section('content')
-<div class="p-6 max-w-3xl">
-    <h1 class="text-2xl font-semibold mb-4">Detail Permintaan #{{ $request->id }}</h1>
+    <div class="max-w-3xl">
+        <div class="mb-6">
+            <a href="{{ route('admin.password_requests.index') }}" class="text-slate-400 hover:text-indigo-600 text-sm inline-flex items-center transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar
+            </a>
+            <h1 class="text-xl font-semibold text-slate-800 mt-1">Detail Permintaan #{{ $request->id }}</h1>
+        </div>
 
-    @if(session('status'))
-        <div class="mb-4 p-3 bg-green-50 border border-green-200 text-green-800">{{ session('status') }}</div>
-    @endif
-    @if(session('warning'))
-        <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 text-yellow-800">{{ session('warning') }}</div>
-    @endif
+        @if(session('status'))
+            <div class="mb-6 bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3" role="alert">
+                <i class="fas fa-check-circle text-emerald-500"></i>
+                <span class="text-sm font-medium text-emerald-800">{{ session('status') }}</span>
+            </div>
+        @endif
+        @if(session('warning'))
+            <div class="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center gap-3" role="alert">
+                <i class="fas fa-exclamation-triangle text-amber-500"></i>
+                <span class="text-sm font-medium text-amber-800">{{ session('warning') }}</span>
+            </div>
+        @endif
 
-    <div class="bg-white p-4 rounded-lg shadow-sm mb-4">
-        <p><strong>Email:</strong> {{ $request->email ?? '-' }}</p>
-        <p><strong>Phone:</strong> {{ $request->phone ?? $request->user?->profile?->phone_number ?? '-' }}</p>
-        <p><strong>User ID:</strong> {{ $request->user_id ?? '-' }}</p>
-        <p><strong>Status:</strong> {{ ucfirst($request->status) }}</p>
-        <p><strong>IP:</strong> {{ $request->ip_address }}</p>
-        <p><strong>User Agent:</strong> <small class="text-gray-600">{{ $request->user_agent }}</small></p>
-        <p><strong>Alasan:</strong> {{ $request->reason ?? '-' }}</p>
-    </div>
+        <div class="bg-white rounded-xl border border-slate-100 p-5 space-y-3 mb-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <div><span class="text-slate-400">Email:</span> <span class="text-slate-700 ml-2">{{ $request->email ?? '-' }}</span></div>
+                <div><span class="text-slate-400">Phone:</span> <span class="text-slate-700 ml-2">{{ $request->phone ?? $request->user?->profile?->phone_number ?? '-' }}</span></div>
+                <div><span class="text-slate-400">User ID:</span> <span class="text-slate-700 ml-2">{{ $request->user_id ?? '-' }}</span></div>
+                <div><span class="text-slate-400">Status:</span>
+                    @php
+                        $statusClass = match($request->status) {
+                            'pending' => 'bg-amber-50 text-amber-600',
+                            'approved' => 'bg-emerald-50 text-emerald-600',
+                            'rejected' => 'bg-red-50 text-red-600',
+                            default => 'bg-slate-50 text-slate-600',
+                        };
+                    @endphp
+                    <span class="inline-flex px-2 py-0.5 rounded-full text-[11px] font-medium {{ $statusClass }} ml-2">{{ ucfirst($request->status) }}</span>
+                </div>
+                <div class="sm:col-span-2"><span class="text-slate-400">IP:</span> <span class="text-slate-700 ml-2">{{ $request->ip_address }}</span></div>
+                <div class="sm:col-span-2"><span class="text-slate-400">User Agent:</span> <span class="text-slate-500 ml-2 text-xs">{{ $request->user_agent }}</span></div>
+                <div class="sm:col-span-2"><span class="text-slate-400">Alasan:</span> <span class="text-slate-700 ml-2">{{ $request->reason ?? '-' }}</span></div>
+            </div>
+        </div>
 
-    @if($request->status === 'pending')
-    <form method="POST" action="{{ route('admin.password_requests.approve', $request) }}" class="mb-3">
-        @csrf
-        <label class="block text-sm mb-2">Catatan admin (opsional)</label>
-        <textarea name="admin_note" class="block w-full border rounded p-2 mb-3" rows="3"></textarea>
-        <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Approve & Kirim Password</button>
-    </form>
-
-    <form method="POST" action="{{ route('admin.password_requests.reject', $request) }}">
-        @csrf
-        <label class="block text-sm mb-2">Alasan penolakan (opsional)</label>
-        <textarea name="admin_note" class="block w-full border rounded p-2 mb-3" rows="3"></textarea>
-        <button class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Tolak Permintaan</button>
-    </form>
-    @else
-    <div class="p-4 bg-gray-50 rounded">
-        <p><strong>Diproses oleh admin:</strong> {{ $request->admin?->name ?? $request->admin_id }}</p>
-        <p><strong>Catatan admin:</strong> {{ $request->admin_note ?? '-' }}</p>
-        <p><strong>Temporary password:</strong> {{ $request->temporary_password ?? '-' }}</p>
-        @if($request->temporary_password)
-            <div class="flex items-start gap-3 mt-3">
-                <form method="POST" action="{{ route('admin.password_requests.resend', $request) }}">
+        @if($request->status === 'pending')
+            <div class="bg-white rounded-xl border border-slate-100 p-5 space-y-6 mb-6">
+                <form method="POST" action="{{ route('admin.password_requests.approve', $request) }}">
                     @csrf
-                    <button class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Kirim Ulang Password ke Email</button>
+                    <label class="block text-sm font-medium text-slate-600 mb-1">Catatan admin (opsional)</label>
+                    <textarea name="admin_note" class="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-indigo-500 focus:border-indigo-500" rows="2"></textarea>
+                    <button class="mt-3 inline-flex items-center px-4 py-2 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600 transition-colors">
+                        <i class="fas fa-check mr-1.5"></i> Approve & Kirim Password
+                    </button>
                 </form>
 
-                @php
-                    $rawPhone = $request->phone ?? $request->user?->profile?->phone_number ?? null;
-                    $phoneDigits = $rawPhone ? preg_replace('/[^0-9]/', '', $rawPhone) : null;
-                    if ($phoneDigits && str_starts_with($phoneDigits, '0')) {
-                        $waNumber = '62' . ltrim($phoneDigits, '0');
-                    } else {
-                        $waNumber = $phoneDigits;
-                    }
-                    $waMessage = $request->temporary_password ? urlencode("Password sementara Anda: {$request->temporary_password}") : '';
-                    $waLink = $waNumber ? "https://wa.me/{$waNumber}?text={$waMessage}" : null;
-                @endphp
+                <form method="POST" action="{{ route('admin.password_requests.reject', $request) }}">
+                    @csrf
+                    <label class="block text-sm font-medium text-slate-600 mb-1">Alasan penolakan (opsional)</label>
+                    <textarea name="admin_note" class="w-full border border-slate-200 rounded-lg p-2.5 text-sm focus:ring-red-500 focus:border-red-500" rows="2"></textarea>
+                    <button class="mt-3 inline-flex items-center px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg hover:bg-red-600 transition-colors">
+                        <i class="fas fa-times mr-1.5"></i> Tolak Permintaan
+                    </button>
+                </form>
+            </div>
+        @else
+            <div class="bg-white rounded-xl border border-slate-100 p-5 space-y-3 mb-6">
+                <div class="text-sm"><span class="text-slate-400">Diproses oleh admin:</span> <span class="text-slate-700 ml-2">{{ $request->admin?->name ?? $request->admin_id }}</span></div>
+                <div class="text-sm"><span class="text-slate-400">Catatan admin:</span> <span class="text-slate-700 ml-2">{{ $request->admin_note ?? '-' }}</span></div>
+                <div class="text-sm"><span class="text-slate-400">Temporary password:</span> <span class="text-slate-700 ml-2 font-mono">{{ $request->temporary_password ?? '-' }}</span></div>
+                @if($request->temporary_password)
+                    <div class="flex items-start gap-3 pt-3 border-t border-slate-50">
+                        <form method="POST" action="{{ route('admin.password_requests.resend', $request) }}">
+                            @csrf
+                            <button class="inline-flex items-center px-3 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                                <i class="fas fa-envelope mr-1.5"></i> Kirim Ulang ke Email
+                            </button>
+                        </form>
 
-                @if($waLink)
-                    <a href="{{ $waLink }}" target="_blank" class="inline-flex items-center px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                        <i class="fab fa-whatsapp mr-2"></i> Kirim via WhatsApp
-                    </a>
+                        @php
+                            $rawPhone = $request->phone ?? $request->user?->profile?->phone_number ?? null;
+                            $phoneDigits = $rawPhone ? preg_replace('/[^0-9]/', '', $rawPhone) : null;
+                            if ($phoneDigits && str_starts_with($phoneDigits, '0')) {
+                                $waNumber = '62' . ltrim($phoneDigits, '0');
+                            } else {
+                                $waNumber = $phoneDigits;
+                            }
+                            $waMessage = $request->temporary_password ? urlencode("Password sementara Anda: {$request->temporary_password}") : '';
+                            $waLink = $waNumber ? "https://wa.me/{$waNumber}?text={$waMessage}" : null;
+                        @endphp
+
+                        @if($waLink)
+                            <a href="{{ $waLink }}" target="_blank" class="inline-flex items-center px-3 py-2 bg-emerald-500 text-white text-sm font-medium rounded-lg hover:bg-emerald-600 transition-colors">
+                                <i class="fab fa-whatsapp mr-1.5"></i> Kirim via WhatsApp
+                            </a>
+                        @endif
+                    </div>
                 @endif
             </div>
         @endif
     </div>
-    @endif
-
-    <div class="mt-4">
-        <a href="{{ route('admin.password_requests.index') }}" class="text-sm text-gray-600 hover:underline">Kembali ke daftar</a>
-    </div>
-</div>
 @endsection

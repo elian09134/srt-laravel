@@ -4,50 +4,37 @@
 @section('content')
 <div class="p-6 max-w-7xl mx-auto">
     <!-- Header Section -->
-    <div class="mb-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg p-6">
-        <div class="flex items-center">
-            <div class="bg-white bg-opacity-20 rounded-lg p-3 mr-4">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-            </div>
-            <div>
-                <h1 class="text-3xl font-bold text-white">Manajemen FPTK</h1>
-                <p class="text-blue-100 mt-1">Kelola permintaan tenaga kerja dari seluruh divisi</p>
-            </div>
-        </div>
+    <div class="mb-6">
+        <h1 class="text-xl font-semibold text-slate-800">Manajemen FPTK</h1>
+        <p class="text-sm text-slate-500 mt-1">Kelola permintaan tenaga kerja dari seluruh divisi</p>
     </div>
 
     @if(session('status'))
-        <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-r shadow-sm">
-            <div class="flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                <span class="font-medium">{{ session('status') }}</span>
-            </div>
+        <div class="mb-6 bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3" role="alert">
+            <i class="fas fa-check-circle text-emerald-500"></i>
+            <span class="text-sm font-medium text-emerald-800">{{ session('status') }}</span>
         </div>
     @endif
 
     <!-- Tab Navigation -->
-    <div class="mb-6 border-b border-gray-200">
-        <nav class="flex space-x-1" aria-label="Tabs">
+    <div class="mb-6 border-b border-slate-200">
+        <nav class="flex space-x-6" aria-label="Tabs">
             {{-- Tab: FPTK Proses --}}
             <a href="{{ route('admin.fptk.index', ['tab' => 'proses']) }}"
-               class="group inline-flex items-center px-5 py-3 border-b-2 font-medium text-sm transition-colors
-                      {{ $tab === 'proses' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
-                <svg class="w-5 h-5 mr-2 {{ $tab === 'proses' ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
+               class="inline-flex items-center px-1 py-3 border-b-2 text-sm font-medium transition-colors
+                      {{ $tab === 'proses' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300' }}">
+                <i class="fas fa-clock mr-2 text-xs {{ $tab === 'proses' ? 'text-indigo-600' : 'text-slate-400' }}"></i>
                 FPTK Proses
-                <span class="ml-2 px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $tab === 'proses' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600' }}">
+                <span class="ml-2 px-2 py-0.5 rounded-full text-xs font-medium {{ $tab === 'proses' ? 'bg-indigo-50 text-indigo-600' : 'bg-slate-50 text-slate-500' }}">
                     {{ $countProses }}
                 </span>
             </a>
 
             {{-- Tab: FPTK Selesai --}}
             <a href="{{ route('admin.fptk.index', ['tab' => 'selesai']) }}"
-               class="group inline-flex items-center px-5 py-3 border-b-2 font-medium text-sm transition-colors
-                      {{ $tab === 'selesai' ? 'border-green-600 text-green-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
-                <svg class="w-5 h-5 mr-2 {{ $tab === 'selesai' ? 'text-green-600' : 'text-gray-400 group-hover:text-gray-500' }}" fill="currentColor" viewBox="0 0 20 20">
+               class="inline-flex items-center px-1 py-3 border-b-2 text-sm font-medium transition-colors
+                      {{ $tab === 'selesai' ? 'border-emerald-600 text-emerald-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300' }}">
+                <i class="fas fa-check-circle mr-2 text-xs {{ $tab === 'selesai' ? 'text-emerald-600' : 'text-slate-400' }}"></i>
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                 </svg>
                 FPTK Selesai

@@ -27,9 +27,11 @@ class ApplicationController extends Controller
             ->where('user_id', $user->id)
             ->exists();
 
-        // Check verification limit (Max 2 active applications)
-        $applicationCount = Application::where('user_id', $user->id)->count();
-        if ($applicationCount >= 2) {
+        // Check active application limit (Max 2) — exclude rejected/accepted
+        $activeCount = Application::where('user_id', $user->id)
+            ->whereNotIn('status', ['Diterima', 'Tidak Lanjut'])
+            ->count();
+        if ($activeCount >= 2) {
             return redirect()->back()->with('error', 'Anda hanya dapat melamar maksimal 2 lowongan pekerjaan.');
         }
 

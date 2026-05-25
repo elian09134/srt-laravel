@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 mb-1">Kelola Konten Website</h1>
+        <h1 class="text-xl font-semibold text-slate-800 mb-1">Kelola Konten Website</h1>
         <p class="text-sm text-gray-600">Atur dan kelola semua konten yang tampil di halaman utama</p>
     </div>
     
@@ -15,7 +15,7 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-100">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
                         <i class="fas fa-home text-white text-lg"></i>
                     </div>
                     <div>
@@ -84,7 +84,7 @@
                             <label class="block text-sm font-medium text-gray-700">Anggota Tim HR</label>
                             <p class="text-xs text-gray-500 mt-1">Kelola data tim Human Resources</p>
                         </div>
-                        <button type="button" id="addMemberBtn" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
+                        <button type="button" id="addMemberBtn" class="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors flex items-center space-x-2">
                             <i class="fas fa-plus text-xs"></i>
                             <span>Tambah Anggota</span>
                         </button>

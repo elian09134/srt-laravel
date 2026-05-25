@@ -3,7 +3,7 @@
 @section('title', 'Kelola Konten Website')
 
 @section('content')
-    <h1 class="text-3xl font-bold text-gray-800 mb-8">Kelola Konten Halaman Utama</h1>
+    <h1 class="text-xl font-semibold text-slate-800 mb-6">Kelola Konten Halaman Utama</h1>
     
     <form action="{{ route('admin.content.update') }}" method="POST" class="bg-white p-8 rounded-lg shadow-md space-y-12">
         @csrf
@@ -52,7 +52,7 @@
         </div>
 
         <div class="mt-8 pt-6 border-t">
-            <button type="submit" class="w-full px-8 py-3 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700">
+            <button type="submit" class="w-full px-8 py-3 font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700">
                 Simpan Semua Perubahan
             </button>
         </div>

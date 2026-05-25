@@ -90,7 +90,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <x-input-label for="date_of_birth" :value="__('Tanggal Lahir')" />
-                    <x-text-input id="date_of_birth" name="date_of_birth" type="date" class="mt-1 block w-full" :value="old('date_of_birth', optional($user->profile->date_of_birth)->format('Y-m-d') ?? '')" required />
+                    <x-text-input id="date_of_birth" name="date_of_birth" type="date" class="mt-1 block w-full" :value="old('date_of_birth', $user->profile?->date_of_birth?->format('Y-m-d') ?? '')" required />
                     <x-input-error class="mt-2" :messages="$errors->get('date_of_birth')" />
                 </div>
 

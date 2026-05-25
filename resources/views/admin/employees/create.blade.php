@@ -3,10 +3,12 @@
 @section('title', 'Generate Akun Karyawan Baru')
 
 @section('content')
-    <a href="{{ route('admin.employees.index') }}" class="text-blue-600 hover:underline mb-6 inline-block"><i class="fas fa-arrow-left mr-2"></i>Kembali</a>
-    <h1 class="text-3xl font-bold text-gray-800 mb-8">Generate Akun Karyawan Baru</h1>
+    <a href="{{ route('admin.employees.index') }}" class="text-slate-400 hover:text-indigo-600 text-sm inline-flex items-center transition-colors mb-2">
+        <i class="fas fa-arrow-left mr-2"></i> Kembali
+    </a>
+    <h1 class="text-xl font-semibold text-slate-800 mb-6">Generate Akun Karyawan Baru</h1>
 
-    <form action="{{ route('admin.employees.store') }}" method="POST" class="bg-white p-8 rounded-lg shadow-md max-w-lg">
+    <form action="{{ route('admin.employees.store') }}" method="POST" class="bg-white rounded-xl border border-slate-100 p-6 max-w-lg">
         @csrf
         <div class="space-y-6">
             <div>
@@ -21,7 +23,7 @@
             </div>
         </div>
         <div class="mt-8 pt-6 border-t">
-            <button type="submit" class="w-full px-6 py-3 text-white bg-blue-600 rounded-md hover:bg-blue-700">
+            <button type="submit" class="w-full px-6 py-3 text-white bg-indigo-600 rounded-md hover:bg-indigo-700">
                 Generate Akun & Password
             </button>
         </div>

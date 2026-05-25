@@ -103,7 +103,7 @@
                     <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Timeline Status</h4>
                     <div class="relative pl-6 space-y-4 before:content-[''] before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-100">
                         @php
-                            $steps = ['Baru', 'Lamaran Dilihat', 'Psikotest', 'Wawancara HR', 'Wawancara User', 'Offering Letter', 'Shortlist', 'Diterima', 'Tidak Lanjut'];
+                            $steps = ['Baru', 'Lamaran Dilihat', 'Psikotest', 'Wawancara HR', 'Wawancara User', 'Shortlist', 'Offering Letter', 'Diterima', 'Tidak Lanjut'];
                             $currentIndex = array_search($application->status, $steps);
                             if ($currentIndex === false) $currentIndex = -1;
                         @endphp

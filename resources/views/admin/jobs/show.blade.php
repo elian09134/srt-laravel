@@ -4,14 +4,16 @@
 
 @section('content')
 <div class="mb-6">
-    <a href="{{ route('admin.jobs.index') }}" class="text-sm text-gray-600">&larr; Kembali ke daftar lowongan</a>
+    <a href="{{ route('admin.jobs.index') }}" class="text-slate-400 hover:text-indigo-600 text-sm inline-flex items-center transition-colors">
+        <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar
+    </a>
+    <h1 class="text-xl font-semibold text-slate-800 mt-1">{{ $job->title }}</h1>
 </div>
 
-<div class="bg-white p-6 rounded-lg shadow-md">
+<div class="bg-white rounded-xl border border-slate-100 p-6">
     <div class="flex items-start justify-between">
         <div>
-            <h1 class="text-2xl font-bold">{{ $job->title }}</h1>
-            <div class="text-sm text-gray-500">{{ $job->location ?? '-' }} • {{ $job->employment_type ?? '-' }}</div>
+            <p class="text-sm text-slate-500">{{ $job->location ?? '-' }} • {{ $job->employment_type ?? '-' }}</p>
         </div>
         <div class="text-right">
             <div class="text-sm text-gray-500">Pelamar</div>

@@ -28,13 +28,17 @@
                 </option>
             @endforeach
         </select>
+        <a href="{{ route('m28.dashboard') }}"
+           class="px-3 py-2 text-sm font-medium text-slate-500 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 hover:text-slate-700 transition-colors shadow-sm whitespace-nowrap">
+            <i class="fas fa-times mr-1"></i> Clear
+        </a>
     </form>
 </div>
 
 @php
     $diterima = $statusDistribution['Diterima'] ?? 0;
     $ditolak = $statusDistribution['Tidak Lanjut'] ?? 0;
-    $proses = $totalApplications - $diterima - $ditolak;
+    $proses = max(0, $totalApplications - $diterima - $ditolak);
 @endphp
 
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

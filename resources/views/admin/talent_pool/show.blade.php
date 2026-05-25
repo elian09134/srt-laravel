@@ -4,13 +4,13 @@
 
 @section('content')
 <div class="mb-6">
-    <a href="{{ route('admin.talent_pool.index') }}" class="text-slate-500 hover:text-blue-600 text-sm mb-2 inline-flex items-center transition-colors">
+    <a href="{{ route('admin.talent_pool.index') }}" class="text-slate-400 hover:text-indigo-600 text-sm inline-flex items-center transition-colors">
         <i class="fas fa-arrow-left mr-2"></i> Kembali ke Talent Pool
     </a>
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-2">
-        <h1 class="text-2xl font-bold text-slate-800">Detail Talent: {{ $user->name }}</h1>
+        <h1 class="text-xl font-semibold text-slate-800">Detail Talent: {{ $user->name }}</h1>
         <div class="flex items-center gap-3">
-             <a href="mailto:{{ $user->email }}" class="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors shadow-sm text-sm font-medium">
+             <a href="mailto:{{ $user->email }}" class="inline-flex items-center px-3 py-1.5 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition-colors text-sm">
                 <i class="far fa-envelope mr-2"></i> Email Profil
             </a>
             @if($profile && $profile->phone_number)

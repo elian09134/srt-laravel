@@ -3,11 +3,11 @@
 @section('title', 'Undang Karyawan Baru')
 
 @section('content')
-    <h1 class="text-3xl font-bold text-gray-800 mb-8">Undang Karyawan Baru</h1>
+    <h1 class="text-xl font-semibold text-slate-800 mb-6">Undang Karyawan Baru</h1>
 
     <!-- Form Buat Undangan -->
-    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
-        <h2 class="text-2xl font-semibold mb-4">Buat Undangan</h2>
+    <div class="bg-white rounded-xl border border-slate-100 p-6 mb-8">
+        <h2 class="text-base font-semibold text-slate-800 mb-4">Buat Undangan</h2>
         <form action="{{ route('admin.invitations.store') }}" method="POST">
             @csrf
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -20,7 +20,7 @@
                     <input type="tel" name="phone_number" id="phone_number" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                 </div>
                 <div class="text-right">
-                    <button type="submit" class="w-full px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">Buat Kode Undangan</button>
+                    <button type="submit" class="w-full px-6 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700">Buat Kode Undangan</button>
                 </div>
             </div>
         </form>
