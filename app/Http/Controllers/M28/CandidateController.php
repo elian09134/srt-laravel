@@ -41,7 +41,7 @@ class CandidateController extends Controller
 
         $candidates = $query->latest()->paginate(15);
 
-        $statuses = ['Baru', 'Seleksi Berkas', 'Interview HR', 'Interview User', 'Psikotes', 'Offering', 'Diterima', 'Ditolak'];
+        $statuses = ['Baru', 'Lamaran Dilihat', 'Psikotest', 'Wawancara HR', 'Wawancara User', 'Offering Letter', 'Shortlist', 'Diterima', 'Tidak Lanjut'];
 
         return view('m28.candidates.index', [
             'candidates' => $candidates,

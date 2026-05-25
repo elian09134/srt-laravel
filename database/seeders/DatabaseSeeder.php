@@ -16,8 +16,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminUserSeeder::class,
             PartnerSeeder::class,
-            ApplicantReferralSeeder::class,
             PartnerTargetSeeder::class,
+            ApplicantReferralSeeder::class,
+            FptkSeeder::class,
         ]);
     }
 }

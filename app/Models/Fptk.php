@@ -116,6 +116,11 @@ class Fptk extends Model
         return $this->qty > 0 && $this->fulfilled_count >= $this->qty;
     }
 
+    public function remainingQuota(): int
+    {
+        return max(0, ($this->qty ?? 0) - ($this->fulfilled_count ?? 0));
+    }
+
     /**
      * Hitung persentase pemenuhan.
      */

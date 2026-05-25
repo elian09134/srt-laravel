@@ -69,6 +69,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/partner-targets', [App\Http\Controllers\Admin\PartnerTargetController::class, 'index'])->name('admin.partner-targets.index');
     Route::post('/partner-targets', [App\Http\Controllers\Admin\PartnerTargetController::class, 'store'])->name('admin.partner-targets.store');
     Route::delete('/partner-targets/{partnerTarget}', [App\Http\Controllers\Admin\PartnerTargetController::class, 'destroy'])->name('admin.partner-targets.destroy');
+    Route::post('/partner-targets/{partnerTarget}/positions', [App\Http\Controllers\Admin\PartnerTargetController::class, 'storePosition'])->name('admin.partner-targets.positions.store');
+    Route::delete('/partner-targets/positions/{partnerTargetPosition}', [App\Http\Controllers\Admin\PartnerTargetController::class, 'destroyPosition'])->name('admin.partner-targets.positions.destroy');
 
     // Employee invitation routes removed — site is recruitment-only
     // Route::get('/invitations', [EmployeeInvitationController::class, 'index'])->name('admin.invitations.index');

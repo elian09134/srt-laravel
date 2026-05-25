@@ -14,7 +14,7 @@
             </div>
             <div class="text-right">
                 <div class="text-sm text-gray-500">Status</div>
-                <div class="mt-1 font-semibold @if(in_array($application->status, ['Diterima','Offering Letter'])) text-green-600 @elseif(in_array($application->status, ['Tidak Lanjut','Ditolak'])) text-red-600 @else text-gray-800 @endif">{{ $application->status }}</div>
+                <div class="mt-1 font-semibold @if(in_array($application->status, ['Diterima','Offering Letter'])) text-green-600 @elseif($application->status === 'Tidak Lanjut') text-red-600 @else text-gray-800 @endif">{{ $application->status }}</div>
             </div>
         </div>
 

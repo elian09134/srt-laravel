@@ -12,11 +12,28 @@
             Ringkasan kandidat yang Anda rekomendasikan
         </p>
     </div>
+    <form method="GET" action="{{ route('m28.dashboard') }}" class="flex items-center gap-2">
+        <select name="posisi" onchange="this.form.submit()"
+                class="rounded-lg border-slate-300 text-sm focus:border-purple-500 focus:ring-purple-500 shadow-sm py-2 px-3">
+            <option value="">Semua Posisi</option>
+            @foreach($positionOptions as $p)
+                <option value="{{ $p }}" {{ $posisi === $p ? 'selected' : '' }}>{{ $p }}</option>
+            @endforeach
+        </select>
+        <select name="bulan" onchange="this.form.submit()"
+                class="rounded-lg border-slate-300 text-sm focus:border-purple-500 focus:ring-purple-500 shadow-sm py-2 px-3">
+            @foreach($monthOptions as $opt)
+                <option value="{{ $opt['value'] }}" {{ $bulan === $opt['value'] ? 'selected' : '' }}>
+                    {{ $opt['label'] }}
+                </option>
+            @endforeach
+        </select>
+    </form>
 </div>
 
 @php
     $diterima = $statusDistribution['Diterima'] ?? 0;
-    $ditolak = $statusDistribution['Ditolak'] ?? 0;
+    $ditolak = $statusDistribution['Tidak Lanjut'] ?? 0;
     $proses = $totalApplications - $diterima - $ditolak;
 @endphp
 
@@ -88,7 +105,7 @@
         <div class="flex items-center justify-between mb-3">
             <div>
                 <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Target Tahunan</h3>
-                <p class="text-xs text-slate-400">{{ now()->year }}</p>
+                <p class="text-xs text-slate-400">Total kandidat direferal vs target</p>
             </div>
             <div class="text-right">
                 <span class="text-2xl font-black text-slate-800">{{ $yearlyActual }}</span>
@@ -102,7 +119,7 @@
             @endphp
             <div class="h-full rounded-full transition-all {{ $yearColor }}" style="width: {{ $yearBarPct }}%"></div>
         </div>
-        <p class="text-xs {{ $yearlyPct >= 100 ? 'text-green-600 font-bold' : 'text-slate-400' }} mt-2">{{ $yearlyPct }}% tercapai</p>
+        <p class="text-xs {{ $yearlyPct >= 100 ? 'text-green-600 font-bold' : 'text-slate-400' }} mt-2">{{ $yearlyPct }}% dari target tahunan</p>
     </div>
 </div>
 @endif
@@ -115,7 +132,7 @@
         </div>
         <div>
             <h3 class="text-lg font-bold text-slate-800">Capaian Target Per Bulan</h3>
-            <p class="text-xs text-slate-400 mt-0.5">Perbandingan target vs realisasi kandidat {{ now()->year }}</p>
+            <p class="text-xs text-slate-400 mt-0.5">Jumlah kandidat direferal vs target per posisi per bulan — <span class="text-amber-600 font-semibold">hijau</span> berarti target terpenuhi</p>
         </div>
     </div>
     <div class="overflow-x-auto">
@@ -124,21 +141,22 @@
                 <tr class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500 font-semibold">
                     <th class="px-4 py-3 text-left">Bulan</th>
                     <th class="px-4 py-3 text-center">Target</th>
-                    <th class="px-4 py-3 text-center">Realisasi</th>
+                    <th class="px-4 py-3 text-center">Direferal</th>
                     <th class="px-4 py-3 text-center">Progress</th>
+                    <th class="px-4 py-3 text-left">Per Posisi (Direferal / Target)</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
                 @foreach($monthlyBreakdown as $mb)
                     <tr class="hover:bg-slate-50/50 transition-colors">
-                        <td class="px-4 py-3 font-semibold text-slate-700">{{ $monthNames[$mb->month] ?? $mb->month }}</td>
-                        <td class="px-4 py-3 text-center text-slate-600">{{ $mb->target_count }}</td>
-                        <td class="px-4 py-3 text-center">
+                        <td class="px-4 py-3 font-semibold text-slate-700 align-top">{{ $monthNames[$mb->month] ?? $mb->month }}</td>
+                        <td class="px-4 py-3 text-center text-slate-600 align-top">{{ $mb->target_count }}</td>
+                        <td class="px-4 py-3 text-center align-top">
                             <span class="font-bold {{ $mb->actual >= $mb->target_count ? 'text-green-600' : 'text-amber-600' }}">
                                 {{ $mb->actual }}
                             </span>
                         </td>
-                        <td class="px-4 py-3">
+                        <td class="px-4 py-3 align-top">
                             <div class="flex items-center gap-3">
                                 <div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden">
                                     @php
@@ -149,125 +167,42 @@
                                 <span class="text-xs font-bold text-slate-500 w-12 text-right {{ $mb->pct >= 100 ? 'text-green-600' : '' }}">{{ $mb->pct }}%</span>
                             </div>
                         </td>
+                        <td class="px-4 py-3">
+                            @if(!empty($mb->positionProgress))
+                                <div class="space-y-1.5 min-w-[200px]">
+                                    @foreach($mb->positionProgress as $pp)
+                                        @php
+                                            $posBarColor = $pp['pct'] >= 100 ? 'bg-green-500' : ($pp['pct'] >= 50 ? 'bg-amber-500' : ($pp['pct'] > 0 ? 'bg-blue-500' : 'bg-slate-200'));
+                                        @endphp
+                                        <div>
+                                            <div class="flex items-center justify-between text-xs">
+                                                <span class="text-slate-600 truncate">{{ $pp['position'] }}</span>
+                                                <span class="font-medium {{ $pp['pct'] >= 100 ? 'text-green-600' : ($pp['pct'] >= 50 ? 'text-amber-600' : 'text-slate-500') }} ml-2">{{ $pp['actual'] }}/{{ $pp['target'] }}</span>
+                                            </div>
+                                            <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mt-0.5">
+                                                <div class="h-full rounded-full {{ $posBarColor }}" style="width: {{ min($pp['pct'], 100) }}%"></div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <span class="text-xs text-slate-400">-</span>
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+    <div class="flex items-center gap-4 mt-4 text-xs text-slate-400">
+        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span> Target terpenuhi</span>
+        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span> Hampir terpenuhi</span>
+        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span> Masih kurang</span>
+    </div>
 </div>
 @endif
 
-{{-- Filter + Alur Seleksi --}}
-<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-8">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
-        <div>
-            <h3 class="text-lg font-bold text-slate-800">Alur Seleksi Kandidat</h3>
-            <p class="text-xs text-slate-400 mt-0.5">{{ $bulan === 'all' ? 'Rekapitulasi seluruh kandidat' : 'Perbandingan antara bulan terpilih vs bulan sebelumnya' }}</p>
-        </div>
-        <div class="flex items-center gap-2">
-            <div class="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600">
-                <i class="fas fa-chart-simple"></i>
-            </div>
-            <form method="GET" action="{{ route('m28.dashboard') }}" class="flex items-center gap-2">
-                <select name="bulan" onchange="this.form.submit()"
-                        class="rounded-lg border-slate-300 text-sm focus:border-purple-500 focus:ring-purple-500 shadow-sm py-2 px-3">
-                    @foreach($monthOptions as $opt)
-                        <option value="{{ $opt['value'] }}" {{ $bulan === $opt['value'] ? 'selected' : '' }}>
-                            {{ $opt['label'] }}
-                        </option>
-                    @endforeach
-                </select>
-            </form>
-        </div>
-    </div>
 
-    <div class="overflow-x-auto -mx-2">
-        <div class="min-w-[600px] px-2 space-y-4">
-            {{-- Header --}}
-            <div class="flex items-center text-xs text-slate-400 font-semibold uppercase tracking-wider pb-2 border-b border-slate-100">
-                <div class="w-[130px] flex-shrink-0">Tahap</div>
-                <div class="flex-1 text-center">{{ $selectedMonth }}</div>
-                @if($bulan !== 'all')
-                <div class="w-10 flex-shrink-0 text-center">vs</div>
-                <div class="flex-1 text-center">{{ $prevMonth }}</div>
-                @endif
-            </div>
-
-            @foreach($funnelData as $i => $f)
-                @php $prev = $prevFunnelData[$i]; @endphp
-                <div>
-                    <div class="flex items-center justify-between text-sm mb-1.5">
-                        <div class="w-[130px] flex-shrink-0 flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background: {{ $funnelColors[$i] }}"></span>
-                            <span class="font-semibold text-slate-700 truncate">{{ $f['stage'] }}</span>
-                        </div>
-
-                        {{-- Main bar --}}
-                        <div class="flex-1 flex items-center gap-2 min-w-0">
-                            <div class="flex-1 h-4 bg-slate-50 rounded overflow-hidden relative">
-                                <div class="h-full rounded transition-all absolute inset-0" style="width: {{ max($f['bar_pct'], 1) }}%; background: {{ $funnelColors[$i] }};"></div>
-                            </div>
-                            <span class="text-xs font-bold text-slate-700 w-6 text-right flex-shrink-0">{{ $f['count'] }}</span>
-                        </div>
-
-                        @if($bulan !== 'all')
-                        <div class="w-10 flex-shrink-0 text-center">
-                            @if($f['count'] > $prev['count'])
-                                <span class="text-green-600 text-xs"><i class="fas fa-arrow-up"></i></span>
-                            @elseif($f['count'] < $prev['count'])
-                                <span class="text-red-500 text-xs"><i class="fas fa-arrow-down"></i></span>
-                            @else
-                                <span class="text-slate-300 text-xs">-</span>
-                            @endif
-                        </div>
-
-                        {{-- Previous month bar --}}
-                        <div class="flex-1 flex items-center gap-2 min-w-0">
-                            <div class="flex-1 h-4 bg-slate-50 rounded overflow-hidden relative">
-                                <div class="h-full rounded transition-all absolute inset-0 opacity-40" style="width: {{ max($prev['bar_pct'], 1) }}%; background: {{ $funnelColors[$i] }};"></div>
-                            </div>
-                            <span class="text-xs text-slate-500 w-6 text-right flex-shrink-0">{{ $prev['count'] }}</span>
-                        </div>
-                        @endif
-                    </div>
-
-                    {{-- Drop info --}}
-                    @if($f['drop'] > 0)
-                    <div class="flex items-center text-[10px] text-slate-400 pl-[130px]">
-                        <div class="flex-1">
-                            <span class="text-red-400">↓ {{ $f['drop'] }}%</span>
-                        </div>
-                        @if($bulan !== 'all' && $prev['drop'] > 0)
-                        <div class="w-10 flex-shrink-0"></div>
-                        <div class="flex-1">
-                            <span class="text-red-300">↓ {{ $prev['drop'] }}%</span>
-                        </div>
-                        @endif
-                    </div>
-                    @endif
-                </div>
-            @endforeach
-
-            {{-- Legend --}}
-            <div class="flex items-center gap-6 pt-3 text-xs text-slate-400 border-t border-slate-100">
-                <div class="flex items-center gap-1.5">
-                    <span class="w-3 h-3 rounded" style="background: #8b5cf6;"></span>
-                    <span>{{ $selectedMonth }}</span>
-                </div>
-                @if($bulan !== 'all')
-                <div class="flex items-center gap-1.5">
-                    <span class="w-3 h-3 rounded opacity-40" style="background: #8b5cf6;"></span>
-                    <span>{{ $prevMonth }}</span>
-                </div>
-                @endif
-                <div class="flex items-center gap-1.5 text-red-400">
-                    <i class="fas fa-arrow-down text-[9px]"></i>
-                    <span>Drop</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 @if($recentCandidates->isNotEmpty())
 <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">

@@ -75,11 +75,15 @@
             <div class="flex items-center justify-between mb-4">
                  @php
                     $statusColors = [
-                        'Baru' => 'bg-blue-100 text-blue-700 border-blue-200',
-                        'Diterima' => 'bg-green-100 text-green-700 border-green-200',
-                        'Ditolak' => 'bg-red-100 text-red-700 border-red-200',
-                        'Shortlist' => 'bg-purple-100 text-purple-700 border-purple-200',
-                        'Offering' => 'bg-amber-100 text-amber-700 border-amber-200',
+                        'Baru'            => 'bg-blue-100 text-blue-700 border-blue-200',
+                        'Lamaran Dilihat' => 'bg-sky-100 text-sky-700 border-sky-200',
+                        'Psikotest'       => 'bg-amber-100 text-amber-700 border-amber-200',
+                        'Wawancara HR'    => 'bg-pink-100 text-pink-700 border-pink-200',
+                        'Wawancara User'  => 'bg-indigo-100 text-indigo-700 border-indigo-200',
+                        'Offering Letter' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                        'Shortlist'       => 'bg-purple-100 text-purple-700 border-purple-200',
+                        'Diterima'        => 'bg-green-100 text-green-700 border-green-200',
+                        'Tidak Lanjut'    => 'bg-red-100 text-red-700 border-red-200',
                     ];
                     $badgeClass = $statusColors[$application->status] ?? 'bg-slate-100 text-slate-700 border-slate-200';
                 @endphp
@@ -238,9 +242,6 @@
                                 $state = 'future';
                                 if ($i < $currentIndex) $state = 'done';
                                 if ($i === $currentIndex) $state = 'current';
-                                if ($application->status === 'Ditolak' && $step === 'Tidak Lanjut') {
-                                    $state = 'current';
-                                }
                             @endphp
                             
                             @if($state !== 'future' || $i <= $currentIndex + 1)
@@ -292,14 +293,40 @@
                     <!-- Acceptance Form -->
                     <div class="mt-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
                         <p class="text-[11px] font-bold text-slate-500 uppercase mb-3">Tandai Diterima (Hired)</p>
-                        <form action="{{ route('admin.applicants.updateStatus', $application) }}" method="POST" class="flex flex-col sm:flex-row gap-2">
-                            @csrf @method('PATCH')
-                            <input type="hidden" name="status" value="Diterima">
-                            <input name="join_date" type="date" class="flex-1 rounded-xl border-slate-200 text-sm focus:ring-green-500 focus:border-green-500 shadow-sm" required />
-                            <button type="submit" class="px-6 py-2 bg-green-600 text-white text-sm font-bold rounded-xl hover:bg-green-700 shadow-sm shadow-green-200 transition-all">
-                                <i class="fas fa-check mr-2"></i> Konfirmasi Diterima
-                            </button>
-                        </form>
+
+                        @php
+                            $fptk = $application->job?->fptk;
+                        @endphp
+
+                        @if($fptk)
+                            <div class="mb-3 flex items-center gap-2 text-xs">
+                                <span class="text-slate-500">Kuota FPTK:</span>
+                                <span class="font-semibold {{ $fptk->remainingQuota() > 0 ? 'text-green-600' : 'text-red-600' }}">
+                                    {{ $fptk->fulfilled_count }}/{{ $fptk->qty }} terisi
+                                </span>
+                                @if($fptk->remainingQuota() > 0)
+                                    <span class="text-slate-400">(sisa {{ $fptk->remainingQuota() }})</span>
+                                @else
+                                    <span class="text-red-600 font-bold">— Kuota penuh</span>
+                                @endif
+                            </div>
+                        @endif
+
+                        @if(!$fptk || $fptk->remainingQuota() > 0)
+                            <form action="{{ route('admin.applicants.updateStatus', $application) }}" method="POST" class="flex flex-col sm:flex-row gap-2">
+                                @csrf @method('PATCH')
+                                <input type="hidden" name="status" value="Diterima">
+                                <input name="join_date" type="date" class="flex-1 rounded-xl border-slate-200 text-sm focus:ring-green-500 focus:border-green-500 shadow-sm" required />
+                                <button type="submit" class="px-6 py-2 bg-green-600 text-white text-sm font-bold rounded-xl hover:bg-green-700 shadow-sm shadow-green-200 transition-all">
+                                    <i class="fas fa-check mr-2"></i> Konfirmasi Diterima
+                                </button>
+                            </form>
+                        @else
+                            <div class="flex items-center gap-2 p-3 bg-red-50 rounded-xl border border-red-200 text-red-700 text-sm font-medium">
+                                <i class="fas fa-exclamation-circle"></i>
+                                Kuota FPTK sudah penuh. Tidak dapat menerima kandidat baru.
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
