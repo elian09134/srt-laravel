@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 
 class Fptk extends Model
 {
@@ -77,7 +76,7 @@ class Fptk extends Model
     {
         return $query->where(function ($q) {
             $q->where('status', 'pending')
-              ->orWhere('status', 'approved');
+                ->orWhere('status', 'approved');
         })->whereNull('completed_at')->whereNull('archived_at');
     }
 
@@ -127,6 +126,7 @@ class Fptk extends Model
     public function getFulfilledPercentAttribute(): int
     {
         $total = $this->qty ?: 1;
+
         return min(100, round(($this->fulfilled_count / $total) * 100));
     }
 
@@ -134,7 +134,10 @@ class Fptk extends Model
     public function getNotesDecodedAttribute()
     {
         $notes = $this->notes;
-        if (! $notes) return null;
+        if (! $notes) {
+            return null;
+        }
+
         return is_array($notes) ? $notes : $notes;
     }
 
@@ -144,9 +147,14 @@ class Fptk extends Model
     public function getKeterampilanListAttribute()
     {
         $k = $this->attributes['keterampilan'] ?? null;
-        if (! $k) return [];
-        if (is_array($k)) return $k;
+        if (! $k) {
+            return [];
+        }
+        if (is_array($k)) {
+            return $k;
+        }
         $items = array_filter(array_map('trim', explode(',', (string) $k)));
+
         return array_values($items);
     }
 
@@ -156,14 +164,19 @@ class Fptk extends Model
     public function getDasarPermintaanListAttribute()
     {
         $d = $this->attributes['dasar_permintaan'] ?? null;
-        if (! $d) return [];
+        if (! $d) {
+            return [];
+        }
         // if stored as JSON array string
-        if (is_string($d) && in_array(substr($d,0,1), ['[','{'])){
+        if (is_string($d) && in_array(substr($d, 0, 1), ['[', '{'])) {
             $decoded = json_decode($d, true);
-            if (is_array($decoded)) return array_values($decoded);
+            if (is_array($decoded)) {
+                return array_values($decoded);
+            }
         }
         // otherwise if comma-separated
         $items = array_filter(array_map('trim', preg_split('/[,;\n]+/', (string) $d)));
+
         return array_values($items);
     }
 
@@ -172,15 +185,16 @@ class Fptk extends Model
      */
     public function setKeterampilanAttribute($value)
     {
-        if (is_array($value)){
+        if (is_array($value)) {
             $items = array_filter(array_map('trim', $value));
             $this->attributes['keterampilan'] = implode(', ', $items);
+
             return;
         }
         $str = (string) $value;
         // replace newlines with comma and normalize commas
         $normalized = preg_replace('/\s*\r?\n\s*/', ', ', $str);
         $normalized = preg_replace('/,+\s*/', ', ', $normalized);
-        $this->attributes['keterampilan'] = trim($normalized, ", ");
+        $this->attributes['keterampilan'] = trim($normalized, ', ');
     }
 }

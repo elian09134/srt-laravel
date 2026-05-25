@@ -105,7 +105,7 @@
         <div class="flex items-center justify-between mb-3">
             <div>
                 <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest">Target Tahunan</h3>
-                <p class="text-xs text-slate-400">Total kandidat direferal vs target</p>
+                <p class="text-xs text-slate-400">Total kandidat diproses vs target</p>
             </div>
             <div class="text-right">
                 <span class="text-2xl font-black text-slate-800">{{ $yearlyActual }}</span>
@@ -132,7 +132,7 @@
         </div>
         <div>
             <h3 class="text-lg font-bold text-slate-800">Capaian Target Per Bulan</h3>
-            <p class="text-xs text-slate-400 mt-0.5">Jumlah kandidat direferal vs target per posisi per bulan — <span class="text-amber-600 font-semibold">hijau</span> berarti target terpenuhi</p>
+            <p class="text-xs text-slate-400 mt-0.5">Jumlah kandidat diproses vs target per posisi per bulan — <span class="text-amber-600 font-semibold">hijau</span> berarti target terpenuhi</p>
         </div>
     </div>
     <div class="overflow-x-auto">
@@ -141,9 +141,9 @@
                 <tr class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500 font-semibold">
                     <th class="px-4 py-3 text-left">Bulan</th>
                     <th class="px-4 py-3 text-center">Target</th>
-                    <th class="px-4 py-3 text-center">Direferal</th>
+                    <th class="px-4 py-3 text-center">Proses</th>
                     <th class="px-4 py-3 text-center">Progress</th>
-                    <th class="px-4 py-3 text-left">Per Posisi (Direferal / Target)</th>
+                    <th class="px-4 py-3 text-left">Per Posisi (Proses / Target)</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">

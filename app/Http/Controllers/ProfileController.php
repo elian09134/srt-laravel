@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserProfile;
-use App\Models\WorkExperience;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -60,7 +58,7 @@ class ProfileController extends Controller
             if ($request->hasFile('photo')) {
                 $photoPath = $request->file('photo')->store('photos', 'public');
             }
-            
+
             $formalPhotoPath = $user->profile->formal_photo_path;
             if ($request->hasFile('formal_photo')) {
                 $formalPhotoPath = $request->file('formal_photo')->store('formal_photos', 'public');
@@ -75,7 +73,7 @@ class ProfileController extends Controller
             if ($request->hasFile('kk')) {
                 $kkPath = $request->file('kk')->store('kks', 'public');
             }
-            
+
             $npwpPath = $user->profile->npwp_path;
             if ($request->hasFile('npwp')) {
                 $npwpPath = $request->file('npwp')->store('npwps', 'public');
@@ -123,7 +121,7 @@ class ProfileController extends Controller
 
                 // Tambahkan pengalaman kerja baru
                 foreach ($request->experience as $exp) {
-                    if (!empty($exp['company'])) {
+                    if (! empty($exp['company'])) {
                         $user->workExperiences()->create([
                             'company_name' => $exp['company'],
                             'position' => $exp['position'] ?? null,
@@ -142,7 +140,8 @@ class ProfileController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+
+            return back()->withErrors(['error' => 'Terjadi kesalahan: '.$e->getMessage()]);
         }
     }
 
@@ -158,7 +157,7 @@ class ProfileController extends Controller
         ]);
 
         // Verifikasi password
-        if (!Auth::guard('web')->validate([
+        if (! Auth::guard('web')->validate([
             'email' => $user->email,
             'password' => $request->password,
         ])) {
@@ -185,7 +184,8 @@ class ProfileController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Terjadi kesalahan saat menghapus akun: ' . $e->getMessage()]);
+
+            return back()->withErrors(['error' => 'Terjadi kesalahan saat menghapus akun: '.$e->getMessage()]);
         }
     }
 }

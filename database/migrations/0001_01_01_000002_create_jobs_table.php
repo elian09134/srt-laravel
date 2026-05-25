@@ -12,18 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('jobs', function (Blueprint $table) {
-    $table->id();
-    $table->string('title');
-    $table->string('division')->nullable();
-    $table->string('location')->nullable();
-    $table->string('type')->nullable();
-    $table->text('description')->nullable();
-    $table->json('responsibilities')->nullable();
-    $table->json('qualifications')->nullable();
-    $table->string('salary_range')->nullable();
-    $table->boolean('is_active')->default(true);
-    $table->timestamps();
-});
+            $table->id();
+            $table->string('title');
+            $table->string('division')->nullable();
+            $table->string('location')->nullable();
+            $table->string('type')->nullable();
+            $table->text('description')->nullable();
+            $table->json('responsibilities')->nullable();
+            $table->json('qualifications')->nullable();
+            $table->string('salary_range')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
+        });
 
         Schema::create('job_batches', function (Blueprint $table) {
             $table->string('id')->primary();

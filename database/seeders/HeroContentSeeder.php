@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\SiteContent;
+use Illuminate\Database\Seeder;
 
 class HeroContentSeeder extends Seeder
 {

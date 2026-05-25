@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Fptk;
+use Illuminate\Http\Request;
 
 class FptkController extends Controller
 {
@@ -81,7 +81,7 @@ class FptkController extends Controller
         // Pack all extra fields into notes JSON temporarily until ALTER TABLE is run
         $male = isset($data['qty']) ? (int) $data['qty'] : 0;
         $female = isset($data['qty_female']) ? (int) $data['qty_female'] : 0;
-        
+
         $extra = [
             'division' => $data['division'] ?? null,
             'dasar_permintaan' => $data['dasar_permintaan'] ?? null,

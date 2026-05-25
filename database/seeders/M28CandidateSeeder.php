@@ -98,7 +98,7 @@ class M28CandidateSeeder extends Seeder
         ];
 
         foreach ($candidates as $i => $data) {
-            $email = Str::slug($data['name']) . '.m28@example.com';
+            $email = Str::slug($data['name']).'.m28@example.com';
             $daysAgo = rand(5, 60);
 
             $user = User::create([
@@ -117,12 +117,12 @@ class M28CandidateSeeder extends Seeder
 
                 UserProfile::create([
                     'user_id' => $user->id,
-                    'phone_number' => '0813' . str_pad((string) rand(0, 99999999), 8, '0', STR_PAD_LEFT),
+                    'phone_number' => '0813'.str_pad((string) rand(0, 99999999), 8, '0', STR_PAD_LEFT),
                     'date_of_birth' => now()->subYears(rand(22, 45))->subDays(rand(1, 365)),
                     'education_level' => $edu,
                     'institution' => $inst,
-                    'last_company' => 'PT ' . Str::random(6) . ' ' . ['Tbk', 'Indonesia', 'Abadi'][rand(0, 2)],
-                    'last_position' => ['Staff', 'Senior Staff', 'Supervisor', 'Associate'][rand(0, 3)] . ' ' . ['Teknis', 'Administrasi', 'Keuangan', 'Operasional'][rand(0, 3)],
+                    'last_company' => 'PT '.Str::random(6).' '.['Tbk', 'Indonesia', 'Abadi'][rand(0, 2)],
+                    'last_position' => ['Staff', 'Senior Staff', 'Supervisor', 'Associate'][rand(0, 3)].' '.['Teknis', 'Administrasi', 'Keuangan', 'Operasional'][rand(0, 3)],
                     'skills' => implode(', ', array_rand(array_flip(['PHP', 'Laravel', 'JavaScript', 'Python', 'Excel', 'SAP', 'Public Speaking', 'Team Leadership', 'Analisa Data', 'Project Management']), 3)),
                     'created_at' => now()->subDays($daysAgo),
                     'updated_at' => now()->subDays($daysAgo),
@@ -130,9 +130,9 @@ class M28CandidateSeeder extends Seeder
 
                 WorkExperience::create([
                     'user_id' => $user->id,
-                    'company_name' => 'PT ' . Str::random(8) . ' Corp',
-                    'duration' => rand(1, 5) . ' Tahun',
-                    'job_description' => 'Bertanggung jawab atas ' . ['operasional harian', 'pengembangan sistem', 'pelaporan keuangan', 'rekrutmen dan training'][rand(0, 3)] . ' di perusahaan.',
+                    'company_name' => 'PT '.Str::random(8).' Corp',
+                    'duration' => rand(1, 5).' Tahun',
+                    'job_description' => 'Bertanggung jawab atas '.['operasional harian', 'pengembangan sistem', 'pelaporan keuangan', 'rekrutmen dan training'][rand(0, 3)].' di perusahaan.',
                     'created_at' => now()->subDays($daysAgo),
                     'updated_at' => now()->subDays($daysAgo),
                 ]);
@@ -148,14 +148,14 @@ class M28CandidateSeeder extends Seeder
                 'status' => $finalStatus,
                 'applicant_name' => $data['name'],
                 'applicant_email' => $email,
-                'applicant_phone' => '0813' . str_pad((string) rand(0, 99999999), 8, '0', STR_PAD_LEFT),
+                'applicant_phone' => '0813'.str_pad((string) rand(0, 99999999), 8, '0', STR_PAD_LEFT),
                 'applicant_last_position' => $data['profile']
                     ? UserProfile::where('user_id', $user->id)->value('last_position')
-                    : 'Staff ' . Str::random(5),
+                    : 'Staff '.Str::random(5),
                 'applicant_last_education' => $data['profile']
                     ? UserProfile::where('user_id', $user->id)->value('education_level')
                     : $educations[array_rand($educations)],
-                'cover_letter' => 'Saya, ' . $data['name'] . ', mengajukan lamaran untuk posisi ' . $job->title . '. Saya mendapatkan informasi lowongan ini dari M28 dan sangat tertarik untuk bergabung dengan SRT Corp.',
+                'cover_letter' => 'Saya, '.$data['name'].', mengajukan lamaran untuk posisi '.$job->title.'. Saya mendapatkan informasi lowongan ini dari M28 dan sangat tertarik untuk bergabung dengan SRT Corp.',
                 'snapshot_data' => json_encode([
                     'profile' => ['name' => $data['name'], 'email' => $email],
                     'referral' => 'M28',
@@ -176,7 +176,7 @@ class M28CandidateSeeder extends Seeder
                     $note = 'Kandidat dinyatakan lulus seluruh proses rekrutmen dan diterima.';
                 }
                 if ($seqStatus === $finalStatus && $finalStatus === 'Ditolak') {
-                    $note = 'Kandidat tidak memenuhi kualifikasi pada tahap ' . $sequence[$seqIndex - 1] . '.';
+                    $note = 'Kandidat tidak memenuhi kualifikasi pada tahap '.$sequence[$seqIndex - 1].'.';
                     if ($seqIndex === 0) {
                         $note = 'Berkas lamaran tidak memenuhi persyaratan dasar.';
                     }
@@ -197,7 +197,7 @@ class M28CandidateSeeder extends Seeder
                 TalentPool::create([
                     'user_id' => $user->id,
                     'status' => 'Shortlist',
-                    'job_preferences' => $job->title . ', ' . ['Staff', 'Senior', 'Lead'][rand(0, 2)] . ' ' . ['Teknis', 'Manajerial', 'Operasional'][rand(0, 2)],
+                    'job_preferences' => $job->title.', '.['Staff', 'Senior', 'Lead'][rand(0, 2)].' '.['Teknis', 'Manajerial', 'Operasional'][rand(0, 2)],
                     'created_at' => now()->subDays(rand(1, 3)),
                     'updated_at' => now()->subDays(rand(1, 3)),
                 ]);

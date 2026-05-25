@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Fptk;
-use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FptkController extends Controller
 {
@@ -45,32 +45,34 @@ class FptkController extends Controller
 
         // Mapping Email ke Divisi sesuai data terbaru
         $emailToDivision = [
-            'divisiminimarket@gmail.com'    => 'MINIMARKET',
-            'divisiwrapping@gmail.com'      => 'WRAPPING',
-            'hansmks.hlp@gmail.com'         => 'HANS',
-            'officefnb126@gmail.com'        => 'FNB',
-            'divisireflexology@gmail.com'   => 'REFLEXIOLOGY',
-            'businessdevelopment@srtcorp.id'=> 'BUSINESS DEVELOPMENT',
-            'cellulardivisi@gmail.com'      => 'CELLULLER',
-            'fat.holding24@gmail.com'       => 'DIVISION FAT',
-            'srtcreativedesign@gmail.com'   => 'CREATIVE DESIGN',
-            'valutamasjaya@gmail.com'       => 'MONEY CHANGER',
+            'divisiminimarket@gmail.com' => 'MINIMARKET',
+            'divisiwrapping@gmail.com' => 'WRAPPING',
+            'hansmks.hlp@gmail.com' => 'HANS',
+            'officefnb126@gmail.com' => 'FNB',
+            'divisireflexology@gmail.com' => 'REFLEXIOLOGY',
+            'businessdevelopment@srtcorp.id' => 'BUSINESS DEVELOPMENT',
+            'cellulardivisi@gmail.com' => 'CELLULLER',
+            'fat.holding24@gmail.com' => 'DIVISION FAT',
+            'srtcreativedesign@gmail.com' => 'CREATIVE DESIGN',
+            'valutamasjaya@gmail.com' => 'MONEY CHANGER',
         ];
 
         // Apply Division Filter on Collection based on Email Mapping
         if ($selectedDivision) {
-            $fptks = $fptks->filter(function($f) use ($selectedDivision, $emailToDivision) {
+            $fptks = $fptks->filter(function ($f) use ($selectedDivision, $emailToDivision) {
                 $userEmail = $f->user->email ?? '';
                 // Ambil divisi dari map email, jika tidak ada baru cek dari notes/kolom
                 $mappedDiv = $emailToDivision[$userEmail] ?? ($f->notes_decoded['division'] ?? ($f->division ?? 'LAINNYA'));
+
                 return strtoupper($mappedDiv) == strtoupper($selectedDivision);
             });
         }
 
         // Get divisions for dropdown primarily from the Email Map
         $divisions = collect(array_values($emailToDivision))
-            ->merge($fptks->map(function($f) use ($emailToDivision) {
+            ->merge($fptks->map(function ($f) use ($emailToDivision) {
                 $userEmail = $f->user->email ?? '';
+
                 return $emailToDivision[$userEmail] ?? ($f->notes_decoded['division'] ?? ($f->division ?? null));
             }))
             ->unique()
@@ -89,6 +91,7 @@ class FptkController extends Controller
     public function show(Fptk $fptk)
     {
         $fptk->load(['user', 'admin', 'completedByUser', 'job.applications']);
+
         return view('admin.fptk.show', compact('fptk'));
     }
 
@@ -96,7 +99,7 @@ class FptkController extends Controller
     {
         $request->validate([
             'admin_note' => 'nullable|string|max:2000',
-            'admin_signature' => 'required|string'
+            'admin_signature' => 'required|string',
         ]);
 
         $fptk->status = 'approved';
@@ -115,6 +118,7 @@ class FptkController extends Controller
         $fptk->admin_id = Auth::id();
         $fptk->admin_note = $request->input('admin_note');
         $fptk->save();
+
         return redirect()->route('admin.fptk.index')->with('status', 'FPTK ditolak.');
     }
 
@@ -136,7 +140,7 @@ class FptkController extends Controller
     public function updateFulfilled(Request $request, Fptk $fptk)
     {
         $request->validate([
-            'fulfilled_count' => 'required|integer|min:0|max:' . $fptk->qty,
+            'fulfilled_count' => 'required|integer|min:0|max:'.$fptk->qty,
         ]);
 
         $fptk->update([
@@ -144,11 +148,12 @@ class FptkController extends Controller
         ]);
 
         // Auto-complete jika sudah terpenuhi
-        if ($fptk->isFulfilled() && !$fptk->isCompleted()) {
+        if ($fptk->isFulfilled() && ! $fptk->isCompleted()) {
             $fptk->update([
                 'completed_at' => now(),
                 'completed_by' => null, // otomatis
             ]);
+
             return redirect()->route('admin.fptk.index', ['tab' => 'selesai'])->with('status', 'FPTK otomatis ditandai selesai — kebutuhan terpenuhi.');
         }
 
@@ -178,7 +183,7 @@ class FptkController extends Controller
             $signatureData = [
                 'name' => $notes['signer_name'],
                 'signature' => $notes['signature'],
-                'date' => isset($notes['signature_date']) ? date('d F Y', strtotime($notes['signature_date'])) : date('d F Y', strtotime($fptk->created_at))
+                'date' => isset($notes['signature_date']) ? date('d F Y', strtotime($notes['signature_date'])) : date('d F Y', strtotime($fptk->created_at)),
             ];
         }
 
@@ -188,14 +193,15 @@ class FptkController extends Controller
             $adminSignatureData = [
                 'name' => $fptk->admin->name,
                 'signature' => $fptk->admin_signature,
-                'date' => $fptk->updated_at ? date('d F Y', strtotime($fptk->updated_at)) : date('d F Y')
+                'date' => $fptk->updated_at ? date('d F Y', strtotime($fptk->updated_at)) : date('d F Y'),
             ];
         }
 
         $pdf = Pdf::loadView('admin.fptk.pdf', compact('fptk', 'notes', 'signatureData', 'adminSignatureData'));
         $pdf->setPaper('a4', 'portrait');
 
-        $filename = 'FPTK-' . $fptk->id . '-' . str_replace(' ', '-', $fptk->position) . '.pdf';
+        $filename = 'FPTK-'.$fptk->id.'-'.str_replace(' ', '-', $fptk->position).'.pdf';
+
         return $pdf->download($filename);
     }
 

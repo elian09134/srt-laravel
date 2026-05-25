@@ -103,6 +103,35 @@
                         <p class="text-sm text-slate-700 font-medium">{{ optional($application->created_at)->format('d M Y') ?? '-' }}</p>
                     </div>
                 </div>
+
+                @php
+                    $referralSource = optional($application->user)->referral_source;
+                    $referralColors = [
+                        'M28' => 'bg-purple-100 text-purple-700',
+                        'Sosial Media' => 'bg-blue-100 text-blue-700',
+                    ];
+                    $referralColor = $referralColors[$referralSource] ?? 'bg-green-100 text-green-700';
+                    $referralIcon = $referralSource === 'M28' ? 'fa-handshake' : ($referralSource === 'Sosial Media' ? 'fa-instagram' : 'fa-info-circle');
+                @endphp
+
+                <div class="flex items-start">
+                    <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center mr-3 text-slate-400">
+                        <i class="fas {{ $referralIcon }} text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Sumber Info</p>
+                        <p class="text-sm">
+                            @if($referralSource)
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold {{ $referralColor }}">
+                                    <i class="fas {{ $referralIcon }}"></i>
+                                    {{ $referralSource }}
+                                </span>
+                            @else
+                                <span class="text-slate-400">—</span>
+                            @endif
+                        </p>
+                    </div>
+                </div>
                 
                 @if($application->status == 'Diterima')
                 <div class="flex items-start">

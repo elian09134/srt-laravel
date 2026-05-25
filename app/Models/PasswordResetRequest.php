@@ -12,11 +12,11 @@ class PasswordResetRequest extends Model
     protected $table = 'password_reset_requests';
 
     protected $fillable = [
-        'email', 'phone', 'user_id', 'ip_address', 'user_agent', 'reason', 'status', 'admin_id', 'admin_note', 'temporary_password', 'processed_at'
+        'email', 'phone', 'user_id', 'ip_address', 'user_agent', 'reason', 'status', 'admin_id', 'admin_note', 'temporary_password', 'processed_at',
     ];
 
     protected $dates = [
-        'processed_at', 'created_at', 'updated_at'
+        'processed_at', 'created_at', 'updated_at',
     ];
 
     public function user()

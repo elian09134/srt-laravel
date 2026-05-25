@@ -3,19 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AdminGeneratedPassword;
 use App\Models\PasswordResetRequest;
 use App\Models\User;
-use App\Mail\AdminGeneratedPassword;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Auth;
 
 class PasswordRequestController extends Controller
 {
     public function index()
     {
         $requests = PasswordResetRequest::orderBy('created_at', 'desc')->paginate(20);
+
         return view('admin.password_requests.index', compact('requests'));
     }
 

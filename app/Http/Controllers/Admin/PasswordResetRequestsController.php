@@ -3,22 +3,23 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AdminGeneratedPasswordMail;
 use App\Models\PasswordResetRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Throwable;
-use App\Mail\AdminGeneratedPasswordMail;
 
 class PasswordResetRequestsController extends Controller
 {
     public function index()
     {
-        $requests = PasswordResetRequest::orderBy('created_at','desc')->paginate(20);
+        $requests = PasswordResetRequest::orderBy('created_at', 'desc')->paginate(20);
+
         return view('admin.password_requests.index', compact('requests'));
     }
 
@@ -58,9 +59,11 @@ class PasswordResetRequestsController extends Controller
         // send email to user with temp password — catch mail errors to avoid 500
         try {
             Mail::to($user->email)->send(new AdminGeneratedPasswordMail($user, $temp));
+
             return redirect()->route('admin.password_requests.index')->with('status', 'Permintaan disetujui dan password dikirim.');
         } catch (Throwable $e) {
             Log::error('Failed to send admin-generated password email', ['error' => $e->getMessage(), 'request_id' => $passwordRequest->id]);
+
             return redirect()->route('admin.password_requests.index')->with('warning', 'Permintaan disetujui tetapi pengiriman email gagal. Periksa konfigurasi mail.');
         }
     }
@@ -91,9 +94,11 @@ class PasswordResetRequestsController extends Controller
 
         try {
             Mail::to($user->email)->send(new AdminGeneratedPasswordMail($user, $passwordRequest->temporary_password));
+
             return back()->with('status', 'Password sementara berhasil dikirim ulang.');
         } catch (Throwable $e) {
             Log::error('Failed to resend admin-generated password email', ['error' => $e->getMessage(), 'request_id' => $passwordRequest->id]);
+
             return back()->with('warning', 'Gagal mengirim email. Periksa konfigurasi mail.');
         }
     }

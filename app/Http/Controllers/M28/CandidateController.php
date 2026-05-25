@@ -4,15 +4,13 @@ namespace App\Http\Controllers\M28;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Font;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class CandidateController extends Controller
 {
@@ -27,8 +25,8 @@ class CandidateController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('email', 'like', '%' . $search . '%');
+                $q->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('email', 'like', '%'.$search.'%');
             });
         }
 
@@ -76,8 +74,8 @@ class CandidateController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                  ->orWhere('email', 'like', '%' . $search . '%');
+                $q->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('email', 'like', '%'.$search.'%');
             });
         }
 
@@ -90,7 +88,7 @@ class CandidateController extends Controller
 
         $candidates = $query->latest()->get();
 
-        $spreadsheet = new Spreadsheet();
+        $spreadsheet = new Spreadsheet;
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Kandidat M28');
 
@@ -98,7 +96,7 @@ class CandidateController extends Controller
         $colLetters = range('A', 'I');
 
         foreach ($headers as $i => $header) {
-            $cell = $colLetters[$i] . '1';
+            $cell = $colLetters[$i].'1';
             $sheet->setCellValue($cell, $header);
         }
 
@@ -118,15 +116,15 @@ class CandidateController extends Controller
             $lastHistory = $app?->statusHistories->last();
             $phone = optional($candidate->profile)->phone_number ?? '-';
 
-            $sheet->setCellValue('A' . $row, $i + 1);
-            $sheet->setCellValue('B' . $row, $candidate->name);
-            $sheet->setCellValue('C' . $row, $candidate->email);
-            $sheet->setCellValue('D' . $row, $phone);
-            $sheet->setCellValue('E' . $row, $candidate->referral_source ?? '-');
-            $sheet->setCellValue('F' . $row, $app?->job?->title ?? '-');
-            $sheet->setCellValue('G' . $row, $app?->status ?? '-');
-            $sheet->setCellValue('H' . $row, $candidate->created_at->format('d/m/Y'));
-            $sheet->setCellValue('I' . $row, $lastHistory ? $lastHistory->created_at->format('d/m/Y H:i') : '-');
+            $sheet->setCellValue('A'.$row, $i + 1);
+            $sheet->setCellValue('B'.$row, $candidate->name);
+            $sheet->setCellValue('C'.$row, $candidate->email);
+            $sheet->setCellValue('D'.$row, $phone);
+            $sheet->setCellValue('E'.$row, $candidate->referral_source ?? '-');
+            $sheet->setCellValue('F'.$row, $app?->job?->title ?? '-');
+            $sheet->setCellValue('G'.$row, $app?->status ?? '-');
+            $sheet->setCellValue('H'.$row, $candidate->created_at->format('d/m/Y'));
+            $sheet->setCellValue('I'.$row, $lastHistory ? $lastHistory->created_at->format('d/m/Y H:i') : '-');
 
             $row++;
         }
@@ -140,11 +138,11 @@ class CandidateController extends Controller
                 'allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => 'D1D5DB']],
             ],
         ];
-        $sheet->getStyle('A2:I' . $lastRow)->applyFromArray($bodyStyle);
+        $sheet->getStyle('A2:I'.$lastRow)->applyFromArray($bodyStyle);
 
-        $sheet->getStyle('A2:A' . $lastRow)
+        $sheet->getStyle('A2:A'.$lastRow)
             ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-        $sheet->getStyle('H2:I' . $lastRow)
+        $sheet->getStyle('H2:I'.$lastRow)
             ->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
         $sheet->getColumnDimension('A')->setWidth(5);
@@ -163,9 +161,9 @@ class CandidateController extends Controller
             $sheet->getRowDimension($r)->setRowHeight(20);
         }
 
-        $sheet->setAutoFilter('A1:I' . $lastRow);
+        $sheet->setAutoFilter('A1:I'.$lastRow);
 
-        $filename = 'kandidat-m28-' . now()->format('Y-m-d') . '.xlsx';
+        $filename = 'kandidat-m28-'.now()->format('Y-m-d').'.xlsx';
 
         ob_start();
         $writer = new Xlsx($spreadsheet);
@@ -174,7 +172,7 @@ class CandidateController extends Controller
 
         return response($content, 200, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
             'Cache-Control' => 'max-age=0',
         ]);
     }

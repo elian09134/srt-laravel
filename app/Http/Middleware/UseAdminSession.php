@@ -17,7 +17,7 @@ class UseAdminSession
         // If request targets admin area, change session cookie name before session starts
         if ($request->is('admin') || $request->is('admin/*')) {
             $base = config('session.cookie', 'laravel_session');
-            $new = $base . '_admin';
+            $new = $base.'_admin';
             config(['session.cookie' => $new]);
             try {
                 Log::info('UseAdminSession applied', [

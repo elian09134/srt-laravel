@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
             \Log::info('Login attempt', [
                 'email' => $request->email,
                 'ip' => $request->ip(),
-                'user_agent' => $request->userAgent()
+                'user_agent' => $request->userAgent(),
             ]);
 
             $request->authenticate();
@@ -37,7 +37,7 @@ class AuthenticatedSessionController extends Controller
 
             \Log::info('Login successful', [
                 'user_id' => Auth::id(),
-                'email' => Auth::user()->email
+                'email' => Auth::user()->email,
             ]);
 
             // Redirect to dashboard which will handle role-based routing
@@ -46,9 +46,9 @@ class AuthenticatedSessionController extends Controller
             \Log::error('Login error', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'email' => $request->email
+                'email' => $request->email,
             ]);
-            
+
             throw $e;
         }
     }

@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Application;
 use App\Models\Fptk;
 use App\Models\Job;
-use App\Models\Application;
 use Illuminate\Database\Seeder;
 
 class FptkSeeder extends Seeder
@@ -26,7 +26,9 @@ class FptkSeeder extends Seeder
 
         foreach ($jobConfigs as $config) {
             $job = Job::where('title', $config['title'])->first();
-            if (!$job) continue;
+            if (! $job) {
+                continue;
+            }
 
             $diterimaCount = Application::where('job_id', $job->id)
                 ->where('status', 'Diterima')
@@ -46,6 +48,6 @@ class FptkSeeder extends Seeder
             $job->update(['fptk_id' => $fptk->id]);
         }
 
-        $this->command->info(count($jobConfigs) . ' FPTK records created and linked to jobs.');
+        $this->command->info(count($jobConfigs).' FPTK records created and linked to jobs.');
     }
 }

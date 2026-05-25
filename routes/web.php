@@ -1,20 +1,20 @@
 <?php
 
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ApplicantController;
-use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\ContentController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ImageController;
+use App\Http\Controllers\Admin\JobController;
+use App\Http\Controllers\AI\AgentController;
 // Employee invitations controller removed for recruitment-only site
 // use App\Http\Controllers\Admin\EmployeeInvitationController;
 use App\Http\Controllers\Auth\EmployeeRegisterController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GoogleController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AI\AgentController;
-use App\Http\Controllers\M28\DashboardController as M28DashboardController;
 use App\Http\Controllers\M28\CandidateController as M28CandidateController;
+use App\Http\Controllers\M28\DashboardController as M28DashboardController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 
 // Google Authentication Routes
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
@@ -103,10 +103,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/fptk/{fptk}/complete', [App\Http\Controllers\Admin\FptkController::class, 'complete'])->name('admin.fptk.complete');
     Route::patch('/fptk/{fptk}/fulfilled', [App\Http\Controllers\Admin\FptkController::class, 'updateFulfilled'])->name('admin.fptk.updateFulfilled');
     Route::post('/fptk/{fptk}/archive', [App\Http\Controllers\Admin\FptkController::class, 'archive'])->name('admin.fptk.archive');
-        // Employee management routes removed — site is recruitment-only
-        // Route::resource('employees', App\Http\Controllers\Admin\EmployeeController::class)->only(['index', 'show'])->names('admin.employees');
+    // Employee management routes removed — site is recruitment-only
+    // Route::resource('employees', App\Http\Controllers\Admin\EmployeeController::class)->only(['index', 'show'])->names('admin.employees');
 });
-
 
 // Memuat semua rute autentikasi dari Breeze
 require __DIR__.'/auth.php';
@@ -120,6 +119,7 @@ Route::get('/dashboard', function () {
     if ($role === 'partner') {
         return redirect('/m28');
     }
+
     // Operasional redirect ke homepage, bukan /fptk
     return redirect('/');
 })->middleware(['auth', 'verified'])->name('dashboard');

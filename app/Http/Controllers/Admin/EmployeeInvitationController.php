@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\EmployeeInvitation;
+use chillerlan\QRCode\QRCode;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use chillerlan\QRCode\QRCode; // <-- Impor library QR Code
+use Illuminate\Support\Str; // <-- Impor library QR Code
 
 class EmployeeInvitationController extends Controller
 {
@@ -41,7 +41,7 @@ class EmployeeInvitationController extends Controller
         EmployeeInvitation::create([
             'full_name' => $request->full_name,
             'phone_number' => $request->phone_number,
-            'invitation_code' => 'SRT-' . Str::upper(Str::random(8)),
+            'invitation_code' => 'SRT-'.Str::upper(Str::random(8)),
         ]);
 
         return redirect()->route('admin.invitations.index')->with('success', 'Undangan berhasil dibuat.');

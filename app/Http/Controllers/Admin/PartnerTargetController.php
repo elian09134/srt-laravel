@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Job;
 use App\Models\PartnerTarget;
 use App\Models\PartnerTargetPosition;
 use App\Models\User;
-use App\Models\Job;
 use Illuminate\Http\Request;
 
 class PartnerTargetController extends Controller
@@ -32,7 +32,9 @@ class PartnerTargetController extends Controller
         foreach ($partners as $partner) {
             $partnerName = $partner->name;
             foreach ($partner->partnerTargets as $target) {
-                if ($target->month === null) continue;
+                if ($target->month === null) {
+                    continue;
+                }
 
                 foreach ($target->positions as $posTarget) {
                     $actual = User::where('referral_source', $partnerName)
@@ -67,17 +69,40 @@ class PartnerTargetController extends Controller
             'user_id' => 'required|exists:users,id',
             'year' => 'required|integer|min:2020|max:2099',
             'month' => 'nullable|integer|min:1|max:12',
-            'target_count' => 'required|integer|min:1',
+            'target_count' => 'nullable|integer|min:1',
+            'positions' => 'nullable|array',
+            'positions.*.position' => 'required|string|max:255',
+            'positions.*.target_count' => 'required|integer|min:1',
         ]);
 
-        PartnerTarget::updateOrCreate(
+        $targetCount = $validated['target_count'] ?? 0;
+
+        if ($request->has('positions')) {
+            $sumPositions = collect($validated['positions'])->sum('target_count');
+            if ($sumPositions > 0) {
+                $targetCount = $sumPositions;
+            }
+        }
+
+        $partnerTarget = PartnerTarget::updateOrCreate(
             [
                 'user_id' => $validated['user_id'],
                 'year' => $validated['year'],
                 'month' => $validated['month'],
             ],
-            ['target_count' => $validated['target_count']]
+            ['target_count' => $targetCount]
         );
+
+        if ($request->has('positions')) {
+            $partnerTarget->positions()->delete();
+
+            foreach ($validated['positions'] as $pos) {
+                $partnerTarget->positions()->create([
+                    'position' => $pos['position'],
+                    'target_count' => $pos['target_count'],
+                ]);
+            }
+        }
 
         return redirect()->route('admin.partner-targets.index')
             ->with('success', 'Target berhasil disimpan.');

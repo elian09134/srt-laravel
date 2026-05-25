@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('site_content', function (Blueprint $table) {
-    $table->id();
-    $table->string('section_name');
-    $table->string('content_key');
-    $table->text('content_value')->nullable();
-    $table->timestamps();
-    $table->unique(['section_name', 'content_key']);
-});
+            $table->id();
+            $table->string('section_name');
+            $table->string('content_key');
+            $table->text('content_value')->nullable();
+            $table->timestamps();
+            $table->unique(['section_name', 'content_key']);
+        });
     }
 
     /**

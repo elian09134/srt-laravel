@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\EmployeeEducation;
 use App\Models\EmployeeInvitation;
+use App\Models\TalentPool;
 use App\Models\User;
 use App\Models\UserProfile;
-use App\Models\TalentPool;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +51,7 @@ class EmployeeRegisterController extends Controller
     public function showRegistrationForm($code)
     {
         $invitation = EmployeeInvitation::where('invitation_code', $code)->whereNull('used_at')->firstOrFail();
+
         return view('auth.employee-register-form', compact('invitation'));
     }
 
@@ -118,7 +119,7 @@ class EmployeeRegisterController extends Controller
             // 4. Simpan riwayat pendidikan
             if ($request->has('education')) {
                 foreach ($request->education as $edu) {
-                    if (!empty($edu['institution_name']) && !empty($edu['graduation_year'])) {
+                    if (! empty($edu['institution_name']) && ! empty($edu['graduation_year'])) {
                         EmployeeEducation::create([
                             'user_id' => $user->id,
                             'level' => $edu['level'],
@@ -142,7 +143,8 @@ class EmployeeRegisterController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withErrors(['error' => 'Terjadi kesalahan: ' . $e->getMessage()]);
+
+            return back()->withErrors(['error' => 'Terjadi kesalahan: '.$e->getMessage()]);
         }
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\SiteContent;
+use Illuminate\Database\Seeder;
 
 class TeamMembersSeeder extends Seeder
 {
@@ -20,7 +20,7 @@ class TeamMembersSeeder extends Seeder
                 'bio' => 'Leading HCM strategies and organizational growth with over 10 years of leadership experience.',
                 'email' => 'ida@example.com',
                 'social' => ['linkedin' => 'https://linkedin.com'],
-                'photo' => null
+                'photo' => null,
             ],
             [
                 'name' => 'Elian Afriliana',
@@ -29,7 +29,7 @@ class TeamMembersSeeder extends Seeder
                 'bio' => 'Driving digital transformation and high-performance IT solutions for modern business needs.',
                 'email' => 'elian@example.com',
                 'social' => ['linkedin' => 'https://linkedin.com'],
-                'photo' => null
+                'photo' => null,
             ],
             [
                 'name' => 'Robbi yanto',
@@ -38,7 +38,7 @@ class TeamMembersSeeder extends Seeder
                 'bio' => 'Ensuring seamless workplace operations and efficient logistics for the entire team.',
                 'email' => 'robbi@example.com',
                 'social' => ['linkedin' => 'https://linkedin.com'],
-                'photo' => null
+                'photo' => null,
             ],
             [
                 'name' => 'Desiana Putri',
@@ -47,7 +47,7 @@ class TeamMembersSeeder extends Seeder
                 'bio' => 'Expert in human capital management, ensuring operational excellence across all departments.',
                 'email' => 'desiana@example.com',
                 'social' => ['linkedin' => 'https://linkedin.com'],
-                'photo' => null
+                'photo' => null,
             ],
             [
                 'name' => 'Galih Rully R.',
@@ -56,8 +56,8 @@ class TeamMembersSeeder extends Seeder
                 'bio' => 'Dedicated to operational excellence, facilities management, and supportive environments.',
                 'email' => 'galih@example.com',
                 'social' => ['linkedin' => 'https://linkedin.com'],
-                'photo' => null
-            ]
+                'photo' => null,
+            ],
         ];
 
         SiteContent::updateOrCreate(

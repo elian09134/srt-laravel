@@ -3,9 +3,6 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Routing\Router;
-
-use App\Http\Middleware\UseAdminSession;
 
 class AppServiceProvider extends ServiceProvider
 {

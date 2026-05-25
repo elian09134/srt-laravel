@@ -14,6 +14,7 @@ class JobController extends Controller
     public function index()
     {
         $jobs = Job::latest()->get();
+
         return view('admin.jobs.index', compact('jobs'));
     }
 
@@ -26,6 +27,7 @@ class JobController extends Controller
             ->whereDoesntHave('job')
             ->orderBy('created_at', 'desc')
             ->get();
+
         return view('admin.jobs.form', compact('fptks'));
     }
 
@@ -68,12 +70,13 @@ class JobController extends Controller
     public function edit(Job $job)
     {
         $fptks = \App\Models\Fptk::where('status', 'approved')
-            ->where(function($q) use ($job) {
+            ->where(function ($q) use ($job) {
                 $q->whereDoesntHave('job')
-                  ->orWhere('id', $job->fptk_id);
+                    ->orWhere('id', $job->fptk_id);
             })
             ->orderBy('created_at', 'desc')
             ->get();
+
         return view('admin.jobs.form', compact('job', 'fptks'));
     }
 
@@ -125,6 +128,7 @@ class JobController extends Controller
     public function destroy(Job $job)
     {
         $job->delete();
+
         return redirect()->route('admin.jobs.index')->with('success', 'Lowongan berhasil dihapus.');
     }
 
@@ -134,6 +138,7 @@ class JobController extends Controller
     public function show(Job $job)
     {
         $job->load(['applications.user.profile']);
+
         return view('admin.jobs.show', compact('job'));
     }
 
@@ -142,7 +147,7 @@ class JobController extends Controller
      */
     public function toggleActive(Job $job)
     {
-        $job->is_active = !$job->is_active;
+        $job->is_active = ! $job->is_active;
         $job->save();
 
         return response()->json([

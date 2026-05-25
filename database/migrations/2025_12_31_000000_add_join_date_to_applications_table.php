@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        if (!Schema::hasColumn('applications', 'join_date')) {
+        if (! Schema::hasColumn('applications', 'join_date')) {
             Schema::table('applications', function (Blueprint $table) {
                 $table->date('join_date')->nullable()->after('status');
             });

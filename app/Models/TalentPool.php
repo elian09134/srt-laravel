@@ -10,6 +10,7 @@ class TalentPool extends Model
     use HasFactory;
 
     protected $table = 'talent_pool'; // <--- Tambahkan baris ini
+
     protected $fillable = [
         'user_id',
         'status',

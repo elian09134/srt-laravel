@@ -43,8 +43,8 @@ class LoginRequest extends FormRequest
 
         \Log::info('Attempting authentication', [
             'email' => $this->email,
-            'has_password' => !empty($this->password),
-            'remember' => $this->boolean('remember')
+            'has_password' => ! empty($this->password),
+            'remember' => $this->boolean('remember'),
         ]);
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
@@ -52,7 +52,7 @@ class LoginRequest extends FormRequest
 
             \Log::warning('Authentication failed', [
                 'email' => $this->email,
-                'ip' => $this->ip()
+                'ip' => $this->ip(),
             ]);
 
             throw ValidationException::withMessages([
@@ -62,7 +62,7 @@ class LoginRequest extends FormRequest
 
         \Log::info('Authentication successful', [
             'email' => $this->email,
-            'user_id' => Auth::id()
+            'user_id' => Auth::id(),
         ]);
 
         RateLimiter::clear($this->throttleKey());

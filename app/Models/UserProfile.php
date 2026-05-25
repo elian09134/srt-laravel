@@ -47,7 +47,7 @@ class UserProfile extends Model
      */
     public function getFormattedDateOfBirthAttribute()
     {
-        if (!$this->date_of_birth) {
+        if (! $this->date_of_birth) {
             return null;
         }
 

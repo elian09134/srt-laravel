@@ -31,7 +31,7 @@ return new class extends Migration
                 'ktp_path',
                 'kk_path',
                 'ijazah_path',
-                'certificate_path'
+                'certificate_path',
             ]);
         });
     }

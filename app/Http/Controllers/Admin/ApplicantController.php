@@ -33,13 +33,13 @@ class ApplicantController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('applicant_name', 'like', '%' . $search . '%')
-                  ->orWhereHas('user', function ($uq) use ($search) {
-                      $uq->where('name', 'like', '%' . $search . '%');
-                  })
-                  ->orWhereHas('job', function ($jq) use ($search) {
-                      $jq->where('title', 'like', '%' . $search . '%');
-                  });
+                $q->where('applicant_name', 'like', '%'.$search.'%')
+                    ->orWhereHas('user', function ($uq) use ($search) {
+                        $uq->where('name', 'like', '%'.$search.'%');
+                    })
+                    ->orWhereHas('job', function ($jq) use ($search) {
+                        $jq->where('title', 'like', '%'.$search.'%');
+                    });
             });
         }
 
@@ -111,7 +111,7 @@ class ApplicantController extends Controller
         if ($newStatus === 'Diterima' && $oldStatus !== 'Diterima') {
             $fptk = $application->job?->fptk;
             if ($fptk && $fptk->isFulfilled()) {
-                return back()->with('error', 'Kuota FPTK untuk posisi ini sudah terpenuhi (' . $fptk->fulfilled_count . '/' . $fptk->qty . '). Tidak dapat menerima lebih banyak kandidat.');
+                return back()->with('error', 'Kuota FPTK untuk posisi ini sudah terpenuhi ('.$fptk->fulfilled_count.'/'.$fptk->qty.'). Tidak dapat menerima lebih banyak kandidat.');
             }
 
             // Cek partner target (M28) — limit jumlah user Diterima per posisi per bulan
@@ -135,12 +135,12 @@ class ApplicantController extends Controller
                                 ->whereMonth('created_at', $month)
                                 ->whereHas('applications', function ($q) use ($positionTitle) {
                                     $q->where('status', 'Diterima')
-                                      ->whereHas('job', fn($j) => $j->where('title', $positionTitle));
+                                        ->whereHas('job', fn ($j) => $j->where('title', $positionTitle));
                                 })
                                 ->count();
 
                             if ($diterimaUsers >= $positionTarget->target_count) {
-                                return back()->with('error', 'Target M28 untuk posisi ' . $positionTitle . ' bulan ini sudah terpenuhi (' . $diterimaUsers . '/' . $positionTarget->target_count . ').');
+                                return back()->with('error', 'Target M28 untuk posisi '.$positionTitle.' bulan ini sudah terpenuhi ('.$diterimaUsers.'/'.$positionTarget->target_count.').');
                             }
                         }
                     }
@@ -175,7 +175,7 @@ class ApplicantController extends Controller
         \App\Models\ApplicationStatusHistory::create([
             'application_id' => $application->id,
             'status' => $newStatus,
-            'note' => ($newStatus === 'Diterima' && $request->filled('join_date')) ? 'Join date: ' . $request->join_date : null,
+            'note' => ($newStatus === 'Diterima' && $request->filled('join_date')) ? 'Join date: '.$request->join_date : null,
             'changed_by' => Auth::id(),
         ]);
 
@@ -194,7 +194,7 @@ class ApplicantController extends Controller
 
         // Cek apakah sudah ada, jika belum, tambahkan
         TalentPool::firstOrCreate(['user_id' => $application->user_id]);
-        
+
         // Update status lamaran menjadi Shortlist
         $application->update(['status' => 'Shortlist']);
 

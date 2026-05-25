@@ -7,30 +7,27 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class AdminUserSeeder extends Seeder
+class ApplicantSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $email = 'admin@example.test';
+        $email = 'pelamar@example.com';
 
         if (User::where('email', $email)->exists()) {
-            $this->command->info("Admin user already exists: {$email}");
+            $this->command->info("Applicant user already exists: {$email}");
 
             return;
         }
 
         User::create([
-            'name' => 'Administrator',
+            'name' => 'Pelamar',
             'email' => $email,
             'email_verified_at' => now(),
-            'password' => Hash::make('Admin123!'),
-            'role' => 'admin',
+            'password' => Hash::make('password'),
+            'role' => 'applicant',
             'remember_token' => Str::random(10),
         ]);
 
-        $this->command->info("Admin user created: {$email} (password: Admin123!)");
+        $this->command->info("Applicant user created: {$email} (password: password)");
     }
 }

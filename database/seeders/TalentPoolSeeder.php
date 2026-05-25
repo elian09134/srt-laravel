@@ -2,13 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\TalentPool;
 use App\Models\User;
 use App\Models\UserProfile;
 use App\Models\WorkExperience;
-use App\Models\TalentPool;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class TalentPoolSeeder extends Seeder
 {
@@ -29,7 +28,7 @@ class TalentPoolSeeder extends Seeder
                 'experiences' => [
                     ['company' => 'Tech Corp', 'duration' => '3 Years', 'desc' => 'Led the backend team and implemented microservices.'],
                     ['company' => 'Web Start', 'duration' => '2 Years', 'desc' => 'Fullstack developer focusing on Laravel and React.'],
-                ]
+                ],
             ],
             [
                 'name' => 'Jane Smith',
@@ -44,7 +43,7 @@ class TalentPoolSeeder extends Seeder
                 'job_preferences' => 'Finance Manager, Financial Analyst',
                 'experiences' => [
                     ['company' => 'Finance Solutions', 'duration' => '4 Years', 'desc' => 'Managed company financial records and audits.'],
-                ]
+                ],
             ],
             [
                 'name' => 'Alex Johnson',
@@ -59,7 +58,7 @@ class TalentPoolSeeder extends Seeder
                 'job_preferences' => 'Legal Manager, Corporate Lawyer',
                 'experiences' => [
                     ['company' => 'Legal Firm ABC', 'duration' => '5 Years', 'desc' => 'Expert in corporate law and contract drafting.'],
-                ]
+                ],
             ],
             [
                 'name' => 'Siti Rohmah',
@@ -74,7 +73,7 @@ class TalentPoolSeeder extends Seeder
                 'job_preferences' => 'HR Manager, Talent Acquisition',
                 'experiences' => [
                     ['company' => 'HR Agency', 'duration' => '3 Years', 'desc' => 'Specialized in tech recruitment and executive search.'],
-                ]
+                ],
             ],
             [
                 'name' => 'Bambang Sudarmono',
@@ -89,7 +88,7 @@ class TalentPoolSeeder extends Seeder
                 'job_preferences' => 'Electrical Engineer, Technician',
                 'experiences' => [
                     ['company' => 'Power Plant X', 'duration' => '6 Years', 'desc' => 'Maintenance of high voltage electrical systems.'],
-                ]
+                ],
             ],
         ];
 

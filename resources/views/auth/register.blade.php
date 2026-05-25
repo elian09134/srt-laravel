@@ -102,6 +102,25 @@
                     </div>
                 @endif
 
+                <!-- Sumber Informasi (read-only display) -->
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200 p-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                                 :class="referralSource === 'M28' ? 'bg-purple-100 text-purple-600' : referralSource === 'Sosial Media' ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'">
+                                <i class="fas" :class="referralSource === 'M28' ? 'fa-handshake' : referralSource === 'Sosial Media' ? 'fa-instagram' : 'fa-pen'"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">Sumber Informasi</p>
+                                <p class="font-semibold text-gray-800" x-text="displaySource"></p>
+                            </div>
+                        </div>
+                        <button type="button" @click="openSourceModal()" class="text-xs text-blue-600 hover:text-blue-800 font-medium">
+                            <i class="fas fa-pencil-alt mr-1"></i>Ubah
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Informasi Akun -->
                 <div class="space-y-4">
                     <h3 class="text-lg font-semibold text-gray-900 border-b pb-2">Informasi Akun</h3>
@@ -331,6 +350,12 @@
                         }
                         return this.referralSource;
                     },
+                    get displaySource() {
+                        if (this.referralSource === 'other') {
+                            return this.referralOther || 'Lainnya';
+                        }
+                        return this.referralSource;
+                    },
                     get canProceed() {
                         if (this.referralSource === 'other') {
                             return this.referralOther.trim() !== '';
@@ -344,6 +369,10 @@
                         if (!this.canProceed) return;
                         this.step = 'form';
                         document.body.style.overflow = 'auto';
+                    },
+                    openSourceModal() {
+                        this.step = 'source';
+                        document.body.style.overflow = 'hidden';
                     }
                 };
             }

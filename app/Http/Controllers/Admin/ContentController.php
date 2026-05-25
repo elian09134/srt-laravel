@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\SiteContent;
 use App\Models\Gallery;
+use App\Models\SiteContent;
 use Illuminate\Http\Request;
 
 class ContentController extends Controller
@@ -38,27 +38,27 @@ class ContentController extends Controller
         if (isset($content_array['hr_department']['members'])) {
             $members = $content_array['hr_department']['members'];
             $membersArray = [];
-            
+
             foreach ($members as $index => $member) {
-                if (!empty($member['name'])) {
+                if (! empty($member['name'])) {
                     // Handle photo file upload
                     $photoPath = $member['photo_existing'] ?? ''; // Keep existing photo if no new upload
-                    
+
                     if ($request->hasFile("content.hr_department.members.$index.photo_file")) {
                         // Validate and upload new photo
                         $request->validate([
-                            "content.hr_department.members.$index.photo_file" => 'image|mimes:jpeg,png,jpg,webp|max:2048'
+                            "content.hr_department.members.$index.photo_file" => 'image|mimes:jpeg,png,jpg,webp|max:2048',
                         ]);
-                        
+
                         $file = $request->file("content.hr_department.members.$index.photo_file");
                         $photoPath = $file->store('hr_team', 'public');
-                        
+
                         // Delete old photo if exists
-                        if (!empty($member['photo_existing']) && \Storage::disk('public')->exists($member['photo_existing'])) {
+                        if (! empty($member['photo_existing']) && \Storage::disk('public')->exists($member['photo_existing'])) {
                             \Storage::disk('public')->delete($member['photo_existing']);
                         }
                     }
-                    
+
                     $membersArray[] = array_filter([
                         'name' => $member['name'] ?? '',
                         'role' => $member['role'] ?? '',
@@ -75,12 +75,12 @@ class ContentController extends Controller
                     ]);
                 }
             }
-            
+
             SiteContent::updateOrCreate(
                 ['section_name' => 'hr_department', 'content_key' => 'members'],
                 ['content_value' => json_encode($membersArray)]
             );
-            
+
             unset($content_array['hr_department']['members']);
         }
 

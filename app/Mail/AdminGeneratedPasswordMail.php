@@ -2,16 +2,17 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\User;
 
 class AdminGeneratedPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public User $user;
+
     public string $temporaryPassword;
 
     public function __construct(User $user, string $temporaryPassword)

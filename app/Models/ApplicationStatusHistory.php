@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ApplicationStatusHistory extends Model
 {
-    protected $fillable = ['application_id','status','note','changed_by'];
+    protected $fillable = ['application_id', 'status', 'note', 'changed_by'];
 
     public function application()
     {

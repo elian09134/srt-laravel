@@ -36,7 +36,7 @@ return new class extends Migration
             $table->string('father_name')->nullable();
             $table->string('mother_name')->nullable();
             $table->string('spouse_name')->nullable();
-            
+
             // --- Informasi Pekerjaan ---
             $table->string('employee_id')->unique()->nullable();
             $table->string('department')->nullable();

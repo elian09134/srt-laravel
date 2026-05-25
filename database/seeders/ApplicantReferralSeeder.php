@@ -211,22 +211,28 @@ class ApplicantReferralSeeder extends Seeder
     private function loadM28Targets(): void
     {
         $m28User = DB::table('users')->where('email', 'm28@partner.com')->first();
-        if (!$m28User) return;
+        if (! $m28User) {
+            return;
+        }
 
         $this->m28Targets = DB::table('partner_targets')
             ->where('user_id', $m28User->id)
             ->where('year', 2026)
             ->get()
-            ->keyBy(fn($t) => $t->year . '-' . str_pad((string) $t->month, 2, '0', STR_PAD_LEFT));
+            ->keyBy(fn ($t) => $t->year.'-'.str_pad((string) $t->month, 2, '0', STR_PAD_LEFT));
     }
 
     private function getM28PositionTarget(int $year, int $month, string $position): int
     {
-        if ($this->m28Targets === null) return 0;
+        if ($this->m28Targets === null) {
+            return 0;
+        }
 
-        $key = $year . '-' . str_pad((string) $month, 2, '0', STR_PAD_LEFT);
+        $key = $year.'-'.str_pad((string) $month, 2, '0', STR_PAD_LEFT);
         $target = $this->m28Targets->get($key);
-        if (!$target) return 0;
+        if (! $target) {
+            return 0;
+        }
 
         $posTarget = DB::table('partner_target_positions')
             ->where('partner_target_id', $target->id)
@@ -249,10 +255,10 @@ class ApplicantReferralSeeder extends Seeder
         $createdAt = $baseDate->copy()->addDays($day - 1);
 
         $slug = Str::slug($name);
-        $email = strtolower($slug . '@example.com');
+        $email = strtolower($slug.'@example.com');
 
         if (User::where('email', $email)->exists()) {
-            $email = strtolower($slug . '.' . uniqid() . '@example.com');
+            $email = strtolower($slug.'.'.uniqid().'@example.com');
         }
 
         $user = User::create([
@@ -268,7 +274,7 @@ class ApplicantReferralSeeder extends Seeder
         $hasProfile = $data['last_company'] !== '' || rand(1, 10) > 2;
 
         if ($hasProfile) {
-            $phone = '08' . rand(11, 13) . str_pad((string) rand(0, 99999999), 8, '0', STR_PAD_LEFT);
+            $phone = '08'.rand(11, 13).str_pad((string) rand(0, 99999999), 8, '0', STR_PAD_LEFT);
             $dob = now()->subYears(rand(22, 40))->subDays(rand(1, 365));
 
             UserProfile::create([
@@ -289,7 +295,7 @@ class ApplicantReferralSeeder extends Seeder
                 WorkExperience::create([
                     'user_id' => $user->id,
                     'company_name' => $data['last_company'],
-                    'duration' => rand(1, 6) . ' Tahun',
+                    'duration' => rand(1, 6).' Tahun',
                     'job_description' => $jobDescs[array_rand($jobDescs)],
                     'created_at' => $createdAt,
                     'updated_at' => $createdAt,
@@ -305,7 +311,7 @@ class ApplicantReferralSeeder extends Seeder
             $monthNum = (int) $createdAt->format('m');
             $maxTarget = $this->getM28PositionTarget($year, $monthNum, $job->title);
 
-            $countKey = $year . '-' . $monthNum . '-' . $job->title;
+            $countKey = $year.'-'.$monthNum.'-'.$job->title;
             $currentCount = $this->m28AcceptedCounts[$countKey] ?? 0;
 
             if ($currentCount >= $maxTarget) {
@@ -318,7 +324,7 @@ class ApplicantReferralSeeder extends Seeder
 
         $finalStatus = in_array($rawStatus, ['Ditolak (Berkas)', 'Ditolak (HR)', 'Ditolak (User)', 'Ditolak (Psikotes)']) ? 'Tidak Lanjut' : $rawStatus;
 
-        $phone = '08' . rand(11, 13) . str_pad((string) rand(0, 99999999), 8, '0', STR_PAD_LEFT);
+        $phone = '08'.rand(11, 13).str_pad((string) rand(0, 99999999), 8, '0', STR_PAD_LEFT);
         $lastPosition = $data['last_position'];
         $edu = $data['education_level'];
 
@@ -332,19 +338,19 @@ class ApplicantReferralSeeder extends Seeder
             'applicant_last_position' => $lastPosition,
             'applicant_last_education' => $edu,
             'cover_letter' => "Dengan hormat,\n\n"
-                . "Saya yang bertanda tangan di bawah ini:\n\n"
-                . "Nama: $name\n"
-                . "Pendidikan: $edu\n"
-                . "Domisili: {$job->location} dan sekitarnya\n\n"
-                . "Bersama dengan surat ini, saya mengajukan lamaran pekerjaan untuk posisi {$job->title} di SRT Corp. "
-                . "Informasi lowongan ini saya peroleh dari $referralSource.\n\n"
-                . ($data['last_company']
+                ."Saya yang bertanda tangan di bawah ini:\n\n"
+                ."Nama: $name\n"
+                ."Pendidikan: $edu\n"
+                ."Domisili: {$job->location} dan sekitarnya\n\n"
+                ."Bersama dengan surat ini, saya mengajukan lamaran pekerjaan untuk posisi {$job->title} di SRT Corp. "
+                ."Informasi lowongan ini saya peroleh dari $referralSource.\n\n"
+                .($data['last_company']
                     ? "Saat ini saya memiliki pengalaman sebagai {$data['last_position']} di {$data['last_company']}. "
-                      . "Saya yakin pengalaman dan keterampilan yang saya miliki dapat berkontribusi secara positif bagi perusahaan.\n\n"
+                      ."Saya yakin pengalaman dan keterampilan yang saya miliki dapat berkontribusi secara positif bagi perusahaan.\n\n"
                     : "Saya adalah seorang fresh graduate yang antusias dan siap untuk belajar serta berkembang di lingkungan profesional.\n\n")
-                . "Besar harapan saya untuk dapat mengikuti tahapan seleksi selanjutnya.\n\n"
-                . "Atas perhatian Bapak/Ibu, saya ucapkan terima kasih.\n\n"
-                . "Hormat saya,\n$name",
+                ."Besar harapan saya untuk dapat mengikuti tahapan seleksi selanjutnya.\n\n"
+                ."Atas perhatian Bapak/Ibu, saya ucapkan terima kasih.\n\n"
+                ."Hormat saya,\n$name",
             'snapshot_data' => json_encode([
                 'profile' => ['name' => $name, 'email' => $email],
                 'referral' => $referralSource,
@@ -362,7 +368,7 @@ class ApplicantReferralSeeder extends Seeder
             }
 
             $note = match (true) {
-                $seqStatus === 'Baru' => 'Pendaftaran online melalui website. (Referal ' . $referralSource . ')',
+                $seqStatus === 'Baru' => 'Pendaftaran online melalui website. (Referal '.$referralSource.')',
                 $seqStatus === 'Diterima' => 'Kandidat dinyatakan lulus seluruh proses rekrutmen dan diterima.',
                 $seqStatus === 'Tidak Lanjut' && $quotaExceeded => 'Lamaran ditolak karena kuota M28 untuk posisi ini sudah terpenuhi.',
                 $seqStatus === 'Tidak Lanjut' => $this->ditolakStageMap[$rawStatus] ?? 'Kandidat tidak memenuhi kualifikasi yang dibutuhkan.',

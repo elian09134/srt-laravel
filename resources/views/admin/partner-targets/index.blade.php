@@ -120,35 +120,7 @@
                                 </div>
 
                                 <div class="p-3 border-t border-slate-200 bg-white rounded-b-xl">
-                                    <button type="button"
-                                            onclick="toggleForm({{ $target->id }})"
-                                            class="w-full py-2 text-xs font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
-                                        <i class="fas fa-plus mr-1"></i> Tambah Posisi
-                                    </button>
-
-                                    <form id="position-form-{{ $target->id }}"
-                                          action="{{ route('admin.partner-targets.positions.store', $target) }}"
-                                          method="POST" class="hidden mt-2">
-                                        @csrf
-                                        <div class="space-y-2">
-                                            <select name="position" required
-                                                    class="w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
-                                                <option value="">-- Pilih Posisi --</option>
-                                                @foreach($availablePositions as $pos)
-                                                    <option value="{{ $pos }}">{{ $pos }}</option>
-                                                @endforeach
-                                            </select>
-                                            <div class="flex gap-2">
-                                                <input type="number" name="target_count" required min="1"
-                                                       class="w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                                                       placeholder="Target">
-                                                <button type="submit"
-                                                        class="px-3 py-1.5 bg-purple-600 text-white text-xs font-medium rounded-lg hover:bg-purple-700 transition-colors whitespace-nowrap">
-                                                    Simpan
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
+                                    <p class="text-xs text-slate-400 text-center">Target posisi diatur saat menambah target</p>
                                 </div>
                             </div>
                         @endforeach
@@ -182,11 +154,32 @@
                             </select>
                         </div>
 
-                        <div>
-                            <label class="block text-xs font-medium text-slate-600 mb-1">Jumlah Target</label>
-                            <input type="number" name="target_count" required min="1"
-                                   class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                                   placeholder="Contoh: 10">
+                        <div class="sm:col-span-4">
+                            <div class="flex items-center justify-between">
+                                <label class="block text-xs font-medium text-slate-600 mb-1">Target Posisi</label>
+                                <button type="button" onclick="addPositionRow()"
+                                        class="text-xs text-purple-600 hover:text-purple-800 font-medium">
+                                    <i class="fas fa-plus mr-0.5"></i> Tambah Posisi
+                                </button>
+                            </div>
+                            <div id="position-rows" class="space-y-2">
+                                <div class="position-row flex gap-2 items-start">
+                                    <select name="positions[0][position]"
+                                            class="flex-1 px-2 py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                        <option value="">-- Pilih Posisi --</option>
+                                        @foreach($availablePositions as $pos)
+                                            <option value="{{ $pos }}">{{ $pos }}</option>
+                                        @endforeach
+                                    </select>
+                                    <input type="number" name="positions[0][target_count]" min="1" placeholder="Target"
+                                           class="w-20 px-2 py-1.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                    <button type="button" onclick="removePositionRow(this)"
+                                            class="text-red-400 hover:text-red-600 text-sm p-1.5">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Opsional: atur target per posisi untuk mitra ini.</p>
                         </div>
 
                         <button type="submit"
@@ -203,9 +196,28 @@
 
 @push('scripts')
 <script>
-function toggleForm(targetId) {
-    const form = document.getElementById('position-form-' + targetId);
-    form.classList.toggle('hidden');
+let positionIndex = 1;
+
+function addPositionRow() {
+    const container = document.getElementById('position-rows');
+    const template = container.querySelector('.position-row');
+    const newRow = template.cloneNode(true);
+
+    newRow.querySelectorAll('[name]').forEach(el => {
+        el.name = el.name.replace(/\[\d+\]/, '[' + positionIndex + ']');
+        el.value = '';
+    });
+
+    container.appendChild(newRow);
+    positionIndex++;
+}
+
+function removePositionRow(btn) {
+    const container = document.getElementById('position-rows');
+    const rows = container.querySelectorAll('.position-row');
+    if (rows.length > 1) {
+        btn.closest('.position-row').remove();
+    }
 }
 </script>
 @endpush

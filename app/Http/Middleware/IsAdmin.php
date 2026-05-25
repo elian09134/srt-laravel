@@ -4,28 +4,27 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
 
 class IsAdmin
 {
     /**
      * Handle an incoming request.
-        * Handle an incoming request.
-        *
-        * @param  \Illuminate\Http\Request  $request
-        * @param  \Closure  $next
-        * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Http\RedirectResponse
+     * Handle an incoming request.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Http\RedirectResponse
      */
-        public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next): Response
     {
         // Optimized logging - only log failures, not every request
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             Log::info('IsAdmin middleware - Unauthenticated access attempt', [
                 'path' => $request->path(),
                 'ip' => $request->ip(),
             ]);
+
             return redirect('/');
         }
 
@@ -35,6 +34,7 @@ class IsAdmin
                 'user_role' => Auth::user()->role,
                 'path' => $request->path(),
             ]);
+
             return redirect('/');
         }
 

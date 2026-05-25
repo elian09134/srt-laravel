@@ -12,8 +12,9 @@ class PartnerTargetSeeder extends Seeder
     public function run(): void
     {
         $user = User::where('email', 'm28@partner.com')->first();
-        if (!$user) {
+        if (! $user) {
             $this->command->error('M28 user not found. Run PartnerSeeder first.');
+
             return;
         }
 

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SiteContent;
-use App\Models\Gallery; // Tambahkan ini
-use Illuminate\Http\Request;
-use App\Models\Job;
 use App\Models\Application;
+use App\Models\Gallery; // Tambahkan ini
+use App\Models\Job;
+use App\Models\SiteContent;
+use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
@@ -43,7 +43,7 @@ class PageController extends Controller
 
         // Terapkan filter jika ada
         if ($request->filled('keyword')) {
-            $query->where('title', 'like', '%' . $request->keyword . '%');
+            $query->where('title', 'like', '%'.$request->keyword.'%');
         }
         if ($request->filled('location') && $request->location != 'all') {
             $query->where('location', $request->location);
@@ -56,7 +56,7 @@ class PageController extends Controller
 
         return view('karir', [
             'jobs' => $jobs,
-            'locations' => $locations
+            'locations' => $locations,
         ]);
     }
 
@@ -69,7 +69,7 @@ class PageController extends Controller
 
         return view('karir_show', [
             'job' => $job,
-            'applicationCount' => $applicationCount
+            'applicationCount' => $applicationCount,
         ]);
     }
 }

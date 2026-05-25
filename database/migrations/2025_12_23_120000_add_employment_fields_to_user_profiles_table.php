@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('user_profiles', function (Blueprint $table) {
-            if (!Schema::hasColumn('user_profiles', 'currently_employed')) {
+            if (! Schema::hasColumn('user_profiles', 'currently_employed')) {
                 $table->boolean('currently_employed')->default(false)->after('last_company_duration');
             }
 
-            if (!Schema::hasColumn('user_profiles', 'expected_salary')) {
+            if (! Schema::hasColumn('user_profiles', 'expected_salary')) {
                 $table->unsignedBigInteger('expected_salary')->nullable()->after('currently_employed');
             }
         });

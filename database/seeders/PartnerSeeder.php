@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -13,7 +13,7 @@ class PartnerSeeder extends Seeder
     {
         $email = 'm28@partner.com';
 
-        if (!User::where('email', $email)->exists()) {
+        if (! User::where('email', $email)->exists()) {
             User::create([
                 'name' => 'M28',
                 'email' => $email,

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\TalentPool;
 use App\Models\User;
 use App\Models\UserProfile;
 use App\Models\WorkExperience;
@@ -10,11 +11,10 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\DB;
-use App\Models\TalentPool;
 
 class RegisteredUserController extends Controller
 {
@@ -69,7 +69,7 @@ class RegisteredUserController extends Controller
         try {
             // 2. Handle Upload File
             $cvPath = $request->file('cv')->store('cvs', 'public');
-            
+
             $formalPhotoPath = $request->file('formal_photo')->store('formal_photos', 'public');
             $ktpPath = $request->file('ktp')->store('ktps', 'public');
             $kkPath = $request->file('kk')->store('kks', 'public');
@@ -78,11 +78,11 @@ class RegisteredUserController extends Controller
                 $npwpPath = $request->file('npwp')->store('npwps', 'public');
             }
             $ijazahPath = $request->file('ijazah')->store('ijazahs', 'public');
-            
-            $certificatePath = $request->hasFile('certificate') 
-                ? $request->file('certificate')->store('certificates', 'public') 
+
+            $certificatePath = $request->hasFile('certificate')
+                ? $request->file('certificate')->store('certificates', 'public')
                 : null;
-            
+
             $photoPath = null;
             if ($request->hasFile('photo')) {
                 try {
@@ -143,13 +143,13 @@ class RegisteredUserController extends Controller
             // 6. Simpan Pengalaman Kerja
             if ($request->has('experience')) {
                 foreach ($request->experience as $exp) {
-                    if (!empty($exp['company'])) {
+                    if (! empty($exp['company'])) {
                         // Combine position and jobdesk into job_description
                         $parts = [];
-                        if (!empty($exp['position'])) {
+                        if (! empty($exp['position'])) {
                             $parts[] = trim($exp['position']);
                         }
-                        if (!empty($exp['jobdesk'])) {
+                        if (! empty($exp['jobdesk'])) {
                             $parts[] = trim($exp['jobdesk']);
                         }
                         $jobDescription = $parts ? implode(' — ', $parts) : null;
@@ -176,6 +176,7 @@ class RegisteredUserController extends Controller
         } catch (\Exception $e) {
             // Jika ada error, batalkan semua perubahan
             DB::rollBack();
+
             // (Opsional) Log error
             // Log::error($e->getMessage());
             return back()->with('error', 'Terjadi kesalahan saat pendaftaran. Silakan coba lagi.');

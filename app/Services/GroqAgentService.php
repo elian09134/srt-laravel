@@ -8,7 +8,8 @@ class GroqAgentService
 {
     /**
      * Send chat messages to Groq and return response.
-     * @param array $messages Array of message objects or single string message
+     *
+     * @param  array  $messages  Array of message objects or single string message
      * @return array|null
      */
     public function chat(array $messages)

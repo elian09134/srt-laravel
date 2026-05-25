@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
@@ -18,6 +18,7 @@ class EmployeeController extends Controller
     public function index()
     {
         $employees = Employee::with('user')->latest('join_date')->get();
+
         return view('admin.employees.index', compact('employees'));
     }
 
@@ -66,6 +67,7 @@ class EmployeeController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return back()->withErrors(['error' => 'Gagal membuat akun. Silakan coba lagi.']);
         }
     }
@@ -76,6 +78,7 @@ class EmployeeController extends Controller
     public function show(Employee $employee)
     {
         $employee->load(['user.profile', 'user.educationHistory']);
+
         return view('admin.employees.show', compact('employee'));
     }
 }

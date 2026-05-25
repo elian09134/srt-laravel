@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Application;
+use App\Models\ApplicationStatusHistory;
 use App\Models\Job;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\ApplicationStatusHistory;
 use Illuminate\Support\Facades\Log;
 
 class ApplicationController extends Controller
@@ -94,7 +94,7 @@ class ApplicationController extends Controller
             'email' => $user->email,
             'job_id' => $job->id,
             'job_title' => $job->title,
-            'application_id' => $application->id
+            'application_id' => $application->id,
         ]);
 
         return redirect()->back()->with('success', 'Lamaran berhasil dikirim. Terima kasih!');

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\M28;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Application;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,9 +21,9 @@ class DashboardController extends Controller
 
         if ($bulan === 'all') {
             $userQuery = User::where('referral_source', $partnerName);
-            $appQuery = Application::whereHas('user', fn($q) => $q->where('referral_source', $partnerName));
+            $appQuery = Application::whereHas('user', fn ($q) => $q->where('referral_source', $partnerName));
         } else {
-            $selectedDate = \Carbon\Carbon::parse($bulan . '-01');
+            $selectedDate = \Carbon\Carbon::parse($bulan.'-01');
             $monthStart = $selectedDate->copy()->startOfMonth();
             $monthEnd = $selectedDate->copy()->endOfMonth();
 
@@ -32,13 +32,13 @@ class DashboardController extends Controller
 
             $appQuery = Application::whereHas('user', function ($q) use ($partnerName, $monthStart, $monthEnd) {
                 $q->where('referral_source', $partnerName)
-                  ->whereBetween('created_at', [$monthStart, $monthEnd]);
+                    ->whereBetween('created_at', [$monthStart, $monthEnd]);
             });
         }
 
         if ($posisi) {
-            $userQuery->whereHas('applications', fn($q) => $q->whereHas('job', fn($j) => $j->where('title', $posisi)));
-            $appQuery->whereHas('job', fn($j) => $j->where('title', $posisi));
+            $userQuery->whereHas('applications', fn ($q) => $q->whereHas('job', fn ($j) => $j->where('title', $posisi)));
+            $appQuery->whereHas('job', fn ($j) => $j->where('title', $posisi));
         }
 
         $positionOptions = \App\Models\Job::orderBy('title')->pluck('title');
@@ -72,7 +72,7 @@ class DashboardController extends Controller
         $yearlyActual = User::where('referral_source', $partnerName)
             ->whereYear('created_at', now()->year)
             ->when($posisi, function ($q) use ($posisi) {
-                $q->whereHas('applications', fn($app) => $app->whereHas('job', fn($j) => $j->where('title', $posisi)));
+                $q->whereHas('applications', fn ($app) => $app->whereHas('job', fn ($j) => $j->where('title', $posisi)));
             })
             ->count();
 
@@ -92,13 +92,13 @@ class DashboardController extends Controller
             ->get();
 
         $monthlyBreakdown = $targetMonthlyRows->map(function ($target) use ($partnerName, $posisi, $bulan) {
-            if ($bulan !== 'all' && $target->month !== (int) \Carbon\Carbon::parse($bulan . '-01')->month) {
+            if ($bulan !== 'all' && $target->month !== (int) \Carbon\Carbon::parse($bulan.'-01')->month) {
                 return null;
             }
 
             $positionTargets = DB::table('partner_target_positions')
                 ->where('partner_target_id', $target->id)
-                ->when($posisi, fn($q) => $q->where('position', $posisi))
+                ->when($posisi, fn ($q) => $q->where('position', $posisi))
                 ->get();
 
             $positionProgress = [];
@@ -110,7 +110,7 @@ class DashboardController extends Controller
                     ->whereYear('created_at', $target->year)
                     ->whereMonth('created_at', $target->month)
                     ->whereHas('applications', function ($q) use ($pt) {
-                        $q->whereHas('job', fn($j) => $j->where('title', $pt->position));
+                        $q->whereHas('job', fn ($j) => $j->where('title', $pt->position));
                     })
                     ->count();
 

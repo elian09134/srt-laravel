@@ -41,7 +41,7 @@ class ImageController extends Controller
         foreach ($imageMap as $inputName => $sectionName) {
             if ($request->hasFile($inputName)) {
                 $file = $request->file($inputName);
-                
+
                 // Validasi file
                 $request->validate([
                     $inputName => 'image|max:2048', // maks 2MB
@@ -61,7 +61,7 @@ class ImageController extends Controller
                         ['content_value' => $path]
                     );
                 } catch (\Exception $e) {
-                    return back()->with('error', 'Gagal memperbarui gambar ' . $sectionName . ': ' . $e->getMessage());
+                    return back()->with('error', 'Gagal memperbarui gambar '.$sectionName.': '.$e->getMessage());
                 }
             }
         }
@@ -80,7 +80,7 @@ class ImageController extends Controller
                     'alt_text' => $request->gallery_alt_text,
                 ]);
             } catch (\Exception $e) {
-                return back()->with('error', 'Gagal mengunggah gambar galeri: ' . $e->getMessage());
+                return back()->with('error', 'Gagal mengunggah gambar galeri: '.$e->getMessage());
             }
         }
 
@@ -97,9 +97,10 @@ class ImageController extends Controller
                 Storage::disk('public')->delete($gallery->file_path);
             }
             $gallery->delete();
+
             return back()->with('success', 'Gambar galeri berhasil dihapus.');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal menghapus gambar galeri: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menghapus gambar galeri: '.$e->getMessage());
         }
     }
 }
