@@ -3,196 +3,136 @@
 @section('title', 'Kelola Konten Website')
 
 @section('content')
+@php
+    $members = old('content.hr_department.members');
+    if (!$members && isset($content['hr_department']['members'])) {
+        $members = is_string($content['hr_department']['members'])
+            ? json_decode($content['hr_department']['members'], true)
+            : $content['hr_department']['members'];
+    }
+    if (empty($members)) {
+        $members = [[]];
+    }
+    $memberCount = count($members);
+
+    $missionValue = $content['about_us']['mission_text'] ?? '';
+    if ($missionValue && is_string($missionValue)) {
+        $decoded = json_decode($missionValue, true);
+        if (is_array($decoded)) {
+            $missionValue = implode("\n", $decoded);
+        }
+    }
+    $cardLists = [];
+    for ($i = 1; $i <= 5; $i++) {
+        $val = $content['business_scope']['card'.$i.'_list'] ?? '';
+        if ($val && is_string($val)) {
+            $decoded = json_decode($val, true);
+            if (is_array($decoded)) {
+                $val = implode("\n", $decoded);
+            }
+        }
+        $cardLists[$i] = $val;
+    }
+@endphp
     <div class="mb-6">
         <h1 class="text-xl font-semibold text-slate-800 mb-1">Kelola Konten Website</h1>
         <p class="text-sm text-gray-600">Atur dan kelola semua konten yang tampil di halaman utama</p>
     </div>
-    
-    <form action="{{ route('admin.content.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+
+    <form action="{{ route('admin.content.update') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
         @csrf
-        
-        <!-- Section: Hero -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-100">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-home text-white text-lg"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900">Hero Section</h2>
-                        <p class="text-xs text-gray-600">Banner utama halaman depan</p>
-                    </div>
+
+        <x-admin.content-section icon="fa-home" icon-bg="bg-indigo-600" title="Hero Section" desc="Banner utama halaman depan">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                    <x-admin.input label="Judul Utama" name="content[hero][title]" :value="$content['hero']['title'] ?? ''" placeholder="Masukkan judul hero..." />
+                </div>
+                <div class="md:col-span-2">
+                    <x-admin.textarea label="Deskripsi" name="content[hero][description]" rows="3" :value="$content['hero']['description'] ?? ''" placeholder="Deskripsi singkat untuk hero section..." />
+                </div>
+                <x-admin.input label="Teks Badge (Atas Judul)" name="content[hero][badge_text]" :value="$content['hero']['badge_text'] ?? '✨ Bergabung dengan Tim Terbaik'" />
+                <x-admin.input label="Teks Tombol Utama" name="content[hero][button_text]" :value="$content['hero']['button_text'] ?? 'Lihat Lowongan'" />
+            </div>
+
+            <div class="border-t border-gray-100 pt-4">
+                <h3 class="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-3">Statistik</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <x-admin.input label="Jumlah Karyawan" name="content[hero][stats_employees]" :value="$content['hero']['stats_employees'] ?? '1000+'" />
+                    <x-admin.input label="Label Keamanan" name="content[hero][stats_security]" :value="$content['hero']['stats_security'] ?? 'Terpercaya'" />
+                    <x-admin.input label="Label Jangkauan" name="content[hero][stats_global]" :value="$content['hero']['stats_global'] ?? 'Global'" />
                 </div>
             </div>
-            <div class="p-6 space-y-5">
-                <div>
-                    <label for="hero_title" class="block text-sm font-medium text-gray-700 mb-2">Judul Utama</label>
-                    <input type="text" name="content[hero][title]" id="hero_title" value="{{ old('content.hero.title', $content['hero']['title'] ?? '') }}" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="Masukkan judul hero...">
-                </div>
-                <div>
-                    <label for="hero_description" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
-                    <textarea name="content[hero][description]" id="hero_description" rows="3" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="Deskripsi singkat untuk hero section...">{{ old('content.hero.description', $content['hero']['description'] ?? '') }}</textarea>
-                </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="border-t border-gray-100 pt-4">
+                <h3 class="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-3">Kartu Melayang <span class="text-gray-400 font-normal normal-case">(Floating Card)</span></h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <x-admin.input label="Judul Kartu" name="content[hero][floating_card_title]" :value="$content['hero']['floating_card_title'] ?? 'Pertumbuhan Karir Cepat'" />
+                    <x-admin.input label="Deskripsi Kartu" name="content[hero][floating_card_desc]" :value="$content['hero']['floating_card_desc'] ?? 'Mulai perjalanan profesionalmu hari ini'" />
+                </div>
+            </div>
+        </x-admin.content-section>
+
+        <x-admin.content-section icon="fa-users" icon-bg="bg-purple-600" title="Seksi Departemen HR" desc="Informasi departemen Human Resources">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <x-admin.input label="Judul Seksi" name="content[hr_department][title]" :value="$content['hr_department']['title'] ?? ''" placeholder="Departemen HR / Human Resources" />
+                <x-admin.input label="Judul Tim (Meet Our Team)" name="content[hr_department][team_title]" :value="$content['hr_department']['team_title'] ?? ''" placeholder="Meet Our Team" />
+                <div class="md:col-span-2">
+                    <x-admin.textarea label="Deskripsi Departemen" name="content[hr_department][description]" rows="3" :value="$content['hr_department']['description'] ?? ''" placeholder="Deskripsi singkat tentang departemen HR..." />
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100">
+                <div class="flex items-center justify-between mb-3">
                     <div>
-                        <label for="hero_badge_text" class="block text-sm font-medium text-gray-700 mb-2">Teks Badge (Atas Judul)</label>
-                        <input type="text" name="content[hero][badge_text]" id="hero_badge_text" value="{{ old('content.hero.badge_text', $content['hero']['badge_text'] ?? '✨ Bergabung dengan Tim Terbaik') }}" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                        <h3 class="text-xs font-semibold text-gray-900 uppercase tracking-wider">Anggota Tim HR</h3>
+                        <p class="text-xs text-gray-500 mt-0.5">Kelola data tim Human Resources</p>
                     </div>
-                    <div>
-                        <label for="hero_button_text" class="block text-sm font-medium text-gray-700 mb-2">Teks Tombol Utama</label>
-                        <input type="text" name="content[hero][button_text]" id="hero_button_text" value="{{ old('content.hero.button_text', $content['hero']['button_text'] ?? 'Lihat Lowongan') }}" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-                    </div>
+                    <button type="button" id="addMemberBtn" class="px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-1.5">
+                        <i class="fas fa-plus text-[10px]"></i>
+                        <span>Tambah</span>
+                    </button>
                 </div>
 
-                <div class="border-t border-gray-100 pt-4">
-                    <h3 class="text-sm font-medium text-gray-900 mb-3">Statistik</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label for="hero_stats_employees" class="block text-xs font-medium text-gray-700 mb-1">Jumlah Karyawan</label>
-                            <input type="text" name="content[hero][stats_employees]" id="hero_stats_employees" value="{{ old('content.hero.stats_employees', $content['hero']['stats_employees'] ?? '1000+') }}" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                        <div>
-                            <label for="hero_stats_security" class="block text-xs font-medium text-gray-700 mb-1">Label Keamanan</label>
-                            <input type="text" name="content[hero][stats_security]" id="hero_stats_security" value="{{ old('content.hero.stats_security', $content['hero']['stats_security'] ?? 'Terpercaya') }}" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                        <div>
-                            <label for="hero_stats_global" class="block text-xs font-medium text-gray-700 mb-1">Label Jangkauan</label>
-                            <input type="text" name="content[hero][stats_global]" id="hero_stats_global" value="{{ old('content.hero.stats_global', $content['hero']['stats_global'] ?? 'Global') }}" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="border-t border-gray-100 pt-4">
-                    <h3 class="text-sm font-medium text-gray-900 mb-3">Kartu Melayang (Floating Card)</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="hero_floating_card_title" class="block text-xs font-medium text-gray-700 mb-1">Judul Kartu</label>
-                            <input type="text" name="content[hero][floating_card_title]" id="hero_floating_card_title" value="{{ old('content.hero.floating_card_title', $content['hero']['floating_card_title'] ?? 'Pertumbuhan Karir Cepat') }}" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                        <div>
-                            <label for="hero_floating_card_desc" class="block text-xs font-medium text-gray-700 mb-1">Deskripsi Kartu</label>
-                            <input type="text" name="content[hero][floating_card_desc]" id="hero_floating_card_desc" value="{{ old('content.hero.floating_card_desc', $content['hero']['floating_card_desc'] ?? 'Mulai perjalanan profesionalmu hari ini') }}" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Anggota Tim HR - Form Biasa -->
-                <div class="pt-4 border-t border-gray-100">
-                    <div class="flex justify-between items-center mb-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Anggota Tim HR</label>
-                            <p class="text-xs text-gray-500 mt-1">Kelola data tim Human Resources</p>
-                        </div>
-                        <button type="button" id="addMemberBtn" class="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors flex items-center space-x-2">
-                            <i class="fas fa-plus text-xs"></i>
-                            <span>Tambah Anggota</span>
-                        </button>
-                    </div>
-                
-                    @php
-                        $members = old('content.hr_department.members');
-                        if (!$members && isset($content['hr_department']['members'])) {
-                            $members = is_string($content['hr_department']['members']) 
-                                ? json_decode($content['hr_department']['members'], true) 
-                                : $content['hr_department']['members'];
-                        }
-                        if (empty($members)) {
-                            $members = [[]]; // At least one empty member for initial form
-                        }
-                        $memberCount = count($members);
-                    @endphp
-
-                <div id="membersContainer" class="space-y-4" data-initial-count="{{ $memberCount }}">
-                    
+                <div id="membersContainer" class="space-y-3" data-initial-count="{{ $memberCount }}">
                     @foreach($members as $index => $member)
-                    <div class="member-item border border-gray-200 rounded-lg p-5 bg-gradient-to-br from-gray-50 to-white hover:shadow-md transition-all">
-                        <div class="flex justify-between items-center mb-4">
-                            <div class="flex items-center space-x-2">
-                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                    <span class="member-number text-sm font-semibold text-blue-700">{{ $index + 1 }}</span>
+                    <div class="member-item border border-gray-200 rounded-lg p-4 bg-white hover:border-gray-300 transition-all">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center">
+                                    <span class="member-number text-xs font-semibold text-indigo-700">{{ $index + 1 }}</span>
                                 </div>
-                                <h4 class="font-medium text-gray-900">Anggota Tim</h4>
+                                <h4 class="text-sm font-medium text-gray-900">Anggota Tim</h4>
                             </div>
-                            <button type="button" class="removeMemberBtn text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded-lg text-sm transition-colors flex items-center space-x-1">
-                                <i class="fas fa-trash-alt text-xs"></i>
+                            <button type="button" class="removeMemberBtn text-red-400 hover:text-red-600 hover:bg-red-50 px-2 py-1 rounded text-xs transition-colors flex items-center gap-1">
+                                <i class="fas fa-trash-alt text-[10px]"></i>
                                 <span>Hapus</span>
                             </button>
                         </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <x-admin.input label="Nama Lengkap" name="content[hr_department][members][{{ $index }}][name]" :value="$member['name'] ?? ''" placeholder="Nama anggota..." required />
+                            <x-admin.input label="Jabatan" name="content[hr_department][members][{{ $index }}][role]" :value="$member['role'] ?? ''" placeholder="HR Manager, Recruiter..." required />
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1.5">Nama Lengkap <span class="text-red-500">*</span></label>
-                                <input type="text" name="content[hr_department][members][{{ $index }}][name]" 
-                                       value="{{ old("content.hr_department.members.$index.name", $member['name'] ?? '') }}"
-                                       class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                                       placeholder="Nama anggota...">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1.5">Jabatan <span class="text-red-500">*</span></label>
-                                <input type="text" name="content[hr_department][members][{{ $index }}][role]" 
-                                       value="{{ old("content.hr_department.members.$index.role", $member['role'] ?? '') }}"
-                                       class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                                       placeholder="HR Manager, Recruiter, dll...">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1.5">Foto <span class="text-red-500">*</span></label>
-                                <input type="file" name="content[hr_department][members][{{ $index }}][photo_file]" 
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Foto @if(!isset($member['photo']))<span class="text-red-500">*</span>@endif</label>
+                                <input type="file" name="content[hr_department][members][{{ $index }}][photo_file]"
                                        accept="image/jpeg,image/png,image/jpg,image/webp"
-                                       class="block w-full text-sm text-gray-900 border border-gray-200 rounded-lg cursor-pointer bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                       class="block w-full text-xs text-gray-900 border border-gray-200 rounded-lg cursor-pointer bg-white focus:outline-none file:mr-3 file:py-1.5 file:px-3 file:rounded-l-lg file:border-0 file:text-xs file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                                 @if(isset($member['photo']) && $member['photo'])
                                     <input type="hidden" name="content[hr_department][members][{{ $index }}][photo_existing]" value="{{ $member['photo'] }}">
-                                    <div class="mt-2 flex items-center space-x-2">
-                                        <img src="{{ Storage::url($member['photo']) }}" alt="Current photo" class="w-16 h-16 object-cover rounded-lg border">
-                                        <span class="text-xs text-gray-600">Foto saat ini</span>
+                                    <div class="mt-1.5 flex items-center gap-2">
+                                        <img src="{{ Storage::url($member['photo']) }}" alt="Current photo" class="w-10 h-10 object-cover rounded-lg border">
+                                        <span class="text-[10px] text-gray-500">Foto saat ini</span>
                                     </div>
                                 @endif
-                                <p class="text-xs text-gray-500 mt-1">
-                                    <i class="fas fa-info-circle"></i> Format: JPG, PNG, WebP. Max 2MB
-                                </p>
                             </div>
-                            
+                            <x-admin.input label="Email" type="email" name="content[hr_department][members][{{ $index }}][email]" :value="$member['email'] ?? ''" placeholder="email@terang.id" />
+                            <x-admin.input label="No. Telepon" name="content[hr_department][members][{{ $index }}][phone]" :value="$member['phone'] ?? ''" placeholder="+62 812-3456-7890" />
+                            <x-admin.input label="LinkedIn" name="content[hr_department][members][{{ $index }}][linkedin]" :value="$member['social']['linkedin'] ?? ''" placeholder="https://linkedin.com/in/username" />
+                            <x-admin.input label="Instagram" name="content[hr_department][members][{{ $index }}][instagram]" :value="$member['social']['instagram'] ?? ''" placeholder="@username" icon="fab fa-instagram text-pink-500" />
                             <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1.5">Email</label>
-                                   <input type="email" name="content[hr_department][members][{{ $index }}][email]" 
-                                       value="{{ old("content.hr_department.members.$index.email", $member['email'] ?? '') }}"
-                                       class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                                       placeholder="email@terang.id">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1.5">No. Telepon</label>
-                                <input type="text" name="content[hr_department][members][{{ $index }}][phone]" 
-                                       value="{{ old("content.hr_department.members.$index.phone", $member['phone'] ?? '') }}"
-                                       placeholder="+62 812-3456-7890"
-                                       class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1.5">LinkedIn</label>
-                                <input type="url" name="content[hr_department][members][{{ $index }}][linkedin]"
-                                       value="{{ old("content.hr_department.members.$index.linkedin", $member['social']['linkedin'] ?? '') }}"
-                                       placeholder="https://linkedin.com/in/username"
-                                       class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                            
-                            <div class="md:col-span-2">
-                                <label class="block text-xs font-medium text-gray-700 mb-1.5">
-                                    <i class="fab fa-instagram text-pink-500"></i> Instagram
-                                </label>
-                                <input type="text" name="content[hr_department][members][{{ $index }}][instagram]" 
-                                       value="{{ old("content.hr_department.members.$index.instagram", $member['social']['instagram'] ?? '') }}"
-                                       placeholder="@username"
-                                       class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-xs font-medium text-gray-700 mb-1.5">Departemen</label>
+                                <label class="block text-xs font-medium text-gray-700 mb-1">Departemen</label>
                                 <select name="content[hr_department][members][{{ $index }}][department]"
-                                        class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                    <option value="" {{ ($member['department'] ?? '') == '' ? 'selected' : '' }}>Pilih Departemen</option>
+                                        class="block w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white">
+                                    <option value="">Pilih Departemen</option>
                                     <option value="HCM Manager" {{ ($member['department'] ?? '') == 'HCM Manager' ? 'selected' : '' }}>HCM Manager</option>
                                     <option value="Digital Technology" {{ ($member['department'] ?? '') == 'Digital Technology' ? 'selected' : '' }}>Digital Technology</option>
                                     <option value="Personalia" {{ ($member['department'] ?? '') == 'Personalia' ? 'selected' : '' }}>Personalia</option>
@@ -203,243 +143,83 @@
                                     <option value="General Affairs" {{ ($member['department'] ?? '') == 'General Affairs' ? 'selected' : '' }}>General Affairs</option>
                                 </select>
                             </div>
-                            
-                            <div class="md:col-span-2">
-                                <label class="block text-xs font-medium text-gray-700 mb-1.5">Bio Singkat</label>
-                                <textarea name="content[hr_department][members][{{ $index }}][bio]" 
-                                       rows="3"
-                                       class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                                       placeholder="Deskripsi singkat tentang anggota tim...">{{ old("content.hr_department.members.$index.bio", $member['bio'] ?? '') }}</textarea>
+                            <div class="md:col-span-3">
+                                <x-admin.textarea label="Bio Singkat" name="content[hr_department][members][{{ $index }}][bio]" rows="2" :value="$member['bio'] ?? ''" placeholder="Deskripsi singkat tentang anggota tim..." />
                             </div>
                         </div>
                     </div>
                     @endforeach
                 </div>
-                
-                <p class="text-xs text-gray-500 bg-blue-50 border border-blue-100 rounded-lg p-3 flex items-start space-x-2">
-                    <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
-                    <span><strong>Catatan:</strong> Field bertanda <span class="text-red-500">*</span> wajib diisi. Upload foto langsung dari device Anda (PC/Laptop/HP). Format yang diterima: JPG, PNG, WebP dengan ukuran maksimal 2MB.</span>
-                </p>
-            </div>
-        </div>
-    </div>
 
-        <!-- Section: Departemen HR -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="bg-gradient-to-r from-purple-50 to-pink-50 px-6 py-4 border-b border-gray-100">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-users text-white text-lg"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900">Seksi Departemen HR</h2>
-                        <p class="text-xs text-gray-600">Informasi departemen Human Resources</p>
-                    </div>
+                <div class="mt-3 flex items-start gap-2 text-[11px] text-gray-500 bg-indigo-50/50 border border-indigo-100 rounded-lg px-3 py-2.5">
+                    <i class="fas fa-info-circle text-indigo-400 mt-0.5"></i>
+                    <span>Field bertanda <span class="text-red-500">*</span> wajib diisi. Format foto: JPG, PNG, WebP. Maks 2MB.</span>
                 </div>
             </div>
-            <div class="p-6 space-y-5">
-                <div>
-                    <label for="hr_department_title" class="block text-sm font-medium text-gray-700 mb-2">Judul Seksi</label>
-                    <input type="text" name="content[hr_department][title]" id="hr_department_title" value="{{ old('content.hr_department.title', $content['hr_department']['title'] ?? '') }}" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" placeholder="Departemen HR / Human Resources">
-                </div>
-                <div>
-                    <label for="hr_department_team_title" class="block text-sm font-medium text-gray-700 mb-2">Judul Tim (Meet Our Team)</label>
-                    <input type="text" name="content[hr_department][team_title]" id="hr_department_team_title" value="{{ old('content.hr_department.team_title', $content['hr_department']['team_title'] ?? '') }}" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" placeholder="Meet Our Team">
-                </div>
-                <div>
-                    <label for="hr_department_description" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi Departemen</label>
-                    <textarea name="content[hr_department][description]" id="hr_department_description" rows="4" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" placeholder="Deskripsi singkat tentang departemen HR...">{{ old('content.hr_department.description', $content['hr_department']['description'] ?? '') }}</textarea>
-                </div>
-            </div>
-        </div>
+        </x-admin.content-section>
 
-        <!-- Section: Tentang Kami -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b border-gray-100">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-info-circle text-white text-lg"></i>
+        <x-admin.content-section icon="fa-info-circle" icon-bg="bg-green-600" title="Seksi Tentang Kami" desc="Sejarah, visi, dan misi perusahaan">
+            <div class="space-y-4">
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <i class="fas fa-history text-green-600 text-sm"></i>
                     </div>
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900">Seksi Tentang Kami</h2>
-                        <p class="text-xs text-gray-600">Sejarah, visi, dan misi perusahaan</p>
+                    <div class="flex-1">
+                        <x-admin.textarea label="Sejarah Kami" name="content[about_us][history_text]" rows="3" :value="$content['about_us']['history_text'] ?? ''" placeholder="Ceritakan sejarah singkat perusahaan..." />
                     </div>
                 </div>
-            </div>
-            <div class="p-6 space-y-5">
-                <div>
-                    <label for="about_us_history_text" class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="fas fa-history text-green-600"></i> Sejarah Kami
-                    </label>
-                    <textarea name="content[about_us][history_text]" id="about_us_history_text" rows="4" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all" placeholder="Ceritakan sejarah singkat perusahaan...">{{ old('content.about_us.history_text', $content['about_us']['history_text'] ?? '') }}</textarea>
-                </div>
-                <div>
-                    <label for="about_us_vision_text" class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="fas fa-eye text-green-600"></i> Visi
-                    </label>
-                    <textarea name="content[about_us][vision_text]" id="about_us_vision_text" rows="2" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all" placeholder="Visi perusahaan...">{{ old('content.about_us.vision_text', $content['about_us']['vision_text'] ?? '') }}</textarea>
-                </div>
-                <div>
-                    <label for="about_us_mission_text" class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="fas fa-bullseye text-green-600"></i> Misi
-                    </label>
-                    <textarea name="content[about_us][mission_text]" id="about_us_mission_text" rows="5" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all" placeholder="Masukkan poin misi, satu per baris...">{{ old('content.about_us.mission_text', isset($content['about_us']['mission_text']) ? implode("\n", json_decode($content['about_us']['mission_text'])) : '') }}</textarea>
-                    <p class="text-xs text-gray-500 mt-2">Pisahkan setiap poin misi dengan enter (satu baris = satu poin)</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section: Lingkup Bisnis -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="bg-gradient-to-r from-orange-50 to-amber-50 px-6 py-4 border-b border-gray-100">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-briefcase text-white text-lg"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900">Seksi Lingkup Bisnis</h2>
-                        <p class="text-xs text-gray-600">Kelola kartu bisnis perusahaan</p>
-                    </div>
-                </div>
-            </div>
-            <div class="p-6 space-y-5">
-                <div>
-                    <label for="business_scope_title" class="block text-sm font-medium text-gray-700 mb-2">Judul Section</label>
-                    <input type="text" name="content[business_scope][title]" id="business_scope_title" value="{{ old('content.business_scope.title', $content['business_scope']['title'] ?? 'Scope Bisnis') }}" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Scope Bisnis">
-                </div>
-                <div>
-                    <label for="business_scope_description" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi Section</label>
-                    <textarea name="content[business_scope][description]" id="business_scope_description" rows="2" class="block w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Deskripsi singkat...">{{ old('content.business_scope.description', $content['business_scope']['description'] ?? 'Lini Bisnis Kami') }}</textarea>
-                </div>
-                
-                <div class="pt-4 border-t border-gray-100">
-                    <label class="block text-sm font-medium text-gray-700 mb-4">Kartu Bisnis (5 Kartu Tetap)</label>
-
-                <!-- Card 1 -->
-                <div class="border border-gray-200 rounded-lg p-5 bg-gradient-to-br from-orange-50/50 to-white hover:shadow-md transition-all">
-                    <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center">
-                            <span class="text-white font-bold text-sm">1</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <i class="fas fa-eye text-green-600 text-sm"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900">Wrapping</h3>
-                    </div>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Judul Kartu</label>
-                            <input type="text" name="content[business_scope][card1_title]" value="{{ old('content.business_scope.card1_title', $content['business_scope']['card1_title'] ?? '') }}" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Judul...">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Deskripsi</label>
-                            <textarea name="content[business_scope][card1_desc]" rows="2" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Deskripsi singkat...">{{ old('content.business_scope.card1_desc', $content['business_scope']['card1_desc'] ?? '') }}</textarea>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Poin-poin (satu per baris)</label>
-                            <textarea name="content[business_scope][card1_list]" rows="3" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="• Poin 1&#10;• Poin 2&#10;• Poin 3">{{ old('content.business_scope.card1_list', isset($content['business_scope']['card1_list']) ? implode("\n", json_decode($content['business_scope']['card1_list'])) : '') }}</textarea>
+                        <div class="flex-1">
+                            <x-admin.textarea label="Visi" name="content[about_us][vision_text]" rows="2" :value="$content['about_us']['vision_text'] ?? ''" placeholder="Visi perusahaan..." />
                         </div>
                     </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="border border-gray-200 rounded-lg p-5 bg-gradient-to-br from-orange-50/50 to-white hover:shadow-md transition-all">
-                    <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center">
-                            <span class="text-white font-bold text-sm">2</span>
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <i class="fas fa-bullseye text-green-600 text-sm"></i>
                         </div>
-                        <h3 class="font-semibold text-gray-900">F&B (Food & Beverage)</h3>
-                    </div>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Judul Kartu</label>
-                            <input type="text" name="content[business_scope][card2_title]" value="{{ old('content.business_scope.card2_title', $content['business_scope']['card2_title'] ?? '') }}" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Judul...">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Deskripsi</label>
-                            <textarea name="content[business_scope][card2_desc]" rows="2" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Deskripsi singkat...">{{ old('content.business_scope.card2_desc', $content['business_scope']['card2_desc'] ?? '') }}</textarea>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Poin-poin (satu per baris)</label>
-                            <textarea name="content[business_scope][card2_list]" rows="3" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="• Poin 1&#10;• Poin 2&#10;• Poin 3">{{ old('content.business_scope.card2_list', isset($content['business_scope']['card2_list']) ? implode("\n", json_decode($content['business_scope']['card2_list'])) : '') }}</textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="border border-gray-200 rounded-lg p-5 bg-gradient-to-br from-orange-50/50 to-white hover:shadow-md transition-all">
-                    <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center">
-                            <span class="text-white font-bold text-sm">3</span>
-                        </div>
-                        <h3 class="font-semibold text-gray-900">Minimarket</h3>
-                    </div>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Judul Kartu</label>
-                            <input type="text" name="content[business_scope][card3_title]" value="{{ old('content.business_scope.card3_title', $content['business_scope']['card3_title'] ?? '') }}" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Judul...">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Deskripsi</label>
-                            <textarea name="content[business_scope][card3_desc]" rows="2" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Deskripsi singkat...">{{ old('content.business_scope.card3_desc', $content['business_scope']['card3_desc'] ?? '') }}</textarea>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Poin-poin (satu per baris)</label>
-                            <textarea name="content[business_scope][card3_list]" rows="3" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="• Poin 1&#10;• Poin 2&#10;• Poin 3">{{ old('content.business_scope.card3_list', isset($content['business_scope']['card3_list']) ? implode("\n", json_decode($content['business_scope']['card3_list'])) : '') }}</textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="border border-gray-200 rounded-lg p-5 bg-gradient-to-br from-orange-50/50 to-white hover:shadow-md transition-all">
-                    <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center">
-                            <span class="text-white font-bold text-sm">4</span>
-                        </div>
-                        <h3 class="font-semibold text-gray-900">Reflexology</h3>
-                    </div>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Judul Kartu</label>
-                            <input type="text" name="content[business_scope][card4_title]" value="{{ old('content.business_scope.card4_title', $content['business_scope']['card4_title'] ?? '') }}" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Judul...">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Deskripsi</label>
-                            <textarea name="content[business_scope][card4_desc]" rows="2" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Deskripsi singkat...">{{ old('content.business_scope.card4_desc', $content['business_scope']['card4_desc'] ?? '') }}</textarea>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Poin-poin (satu per baris)</label>
-                            <textarea name="content[business_scope][card4_list]" rows="3" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="• Poin 1&#10;• Poin 2&#10;• Poin 3">{{ old('content.business_scope.card4_list', isset($content['business_scope']['card4_list']) ? implode("\n", json_decode($content['business_scope']['card4_list'])) : '') }}</textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 5 -->
-                <div class="border border-gray-200 rounded-lg p-5 bg-gradient-to-br from-orange-50/50 to-white hover:shadow-md transition-all">
-                    <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-8 h-8 bg-orange-600 rounded-lg flex items-center justify-center">
-                            <span class="text-white font-bold text-sm">5</span>
-                        </div>
-                        <h3 class="font-semibold text-gray-900">Celluler</h3>
-                    </div>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Judul Kartu</label>
-                            <input type="text" name="content[business_scope][card5_title]" value="{{ old('content.business_scope.card5_title', $content['business_scope']['card5_title'] ?? '') }}" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Judul...">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Deskripsi</label>
-                            <textarea name="content[business_scope][card5_desc]" rows="2" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="Deskripsi singkat...">{{ old('content.business_scope.card5_desc', $content['business_scope']['card5_desc'] ?? '') }}</textarea>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-600 mb-1.5">Poin-poin (satu per baris)</label>
-                            <textarea name="content[business_scope][card5_list]" rows="3" class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent" placeholder="• Poin 1&#10;• Poin 2&#10;• Poin 3">{{ old('content.business_scope.card5_list', isset($content['business_scope']['card5_list']) ? implode("\n", json_decode($content['business_scope']['card5_list'])) : '') }}</textarea>
+                        <div class="flex-1">
+                            <x-admin.textarea label="Misi" name="content[about_us][mission_text]" rows="4" :value="$missionValue" placeholder="Masukkan poin misi, satu per baris..." />
+                            <p class="text-[11px] text-gray-500 mt-1">Pisahkan setiap poin misi dengan enter (satu baris = satu poin)</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </x-admin.content-section>
 
-        <!-- Submit Button -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <button type="submit" class="w-full px-6 py-3.5 font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg hover:from-blue-700 hover:to-blue-800 focus:ring-4 focus:ring-blue-200 transition-all transform hover:scale-[1.02] active:scale-100 flex items-center justify-center space-x-2">
+        <x-admin.content-section icon="fa-briefcase" icon-bg="bg-orange-600" title="Seksi Lingkup Bisnis" desc="Kelola kartu bisnis perusahaan">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <x-admin.input label="Judul Section" name="content[business_scope][title]" :value="$content['business_scope']['title'] ?? 'Scope Bisnis'" placeholder="Scope Bisnis" />
+                <x-admin.textarea label="Deskripsi Section" name="content[business_scope][description]" rows="2" :value="$content['business_scope']['description'] ?? 'Lini Bisnis Kami'" placeholder="Deskripsi singkat..." />
+            </div>
+
+            <div class="pt-3 border-t border-gray-100">
+                <h3 class="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2">Kartu Bisnis</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                    @foreach(['Wrapping' => 1, 'F&B (Food & Beverage)' => 2, 'Minimarket' => 3, 'Reflexology' => 4, 'Celluler' => 5] as $label => $num)
+                    <div class="border border-gray-200 rounded-lg p-2.5 bg-white hover:border-orange-200 transition-all">
+                        <div class="flex items-center gap-1.5 mb-1.5">
+                            <div class="w-4 h-4 bg-orange-600 rounded flex items-center justify-center">
+                                <span class="text-white font-bold text-[8px]">{{ $num }}</span>
+                            </div>
+                            <h4 class="text-[11px] font-medium text-gray-900">{{ $label }}</h4>
+                        </div>
+                        <div class="space-y-1.5">
+                            <x-admin.input label="Judul Kartu" name="content[business_scope][card{{ $num }}_title]" :value="$content['business_scope']['card'.$num.'_title'] ?? ''" placeholder="Judul..." />
+                            <x-admin.textarea label="Deskripsi" name="content[business_scope][card{{ $num }}_desc]" rows="1" :value="$content['business_scope']['card'.$num.'_desc'] ?? ''" placeholder="Deskripsi singkat..." />
+                            <x-admin.textarea label="Poin-poin" name="content[business_scope][card{{ $num }}_list]" rows="1" :value="$cardLists[$num]" placeholder="• Poin 1&#10;• Poin 2" />
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </x-admin.content-section>
+
+        <div class="bg-gradient-to-br from-indigo-50 to-white rounded-xl border border-indigo-100 p-5">
+            <button type="submit" class="w-full px-6 py-3 font-semibold text-white bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-lg hover:from-indigo-700 hover:to-indigo-800 focus:ring-4 focus:ring-indigo-200 transition-all hover:shadow-md flex items-center justify-center gap-2 text-sm">
                 <i class="fas fa-save"></i>
                 <span>Simpan Semua Perubahan</span>
             </button>
@@ -447,142 +227,114 @@
     </form>
 @endsection
 
-@php
-    $memberCount = count($members ?? []);
-@endphp
-
-@section('scripts')
+@push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('membersContainer');
     const addBtn = document.getElementById('addMemberBtn');
     let memberIndex = parseInt(container.dataset.initialCount, 10) || 0;
-    
-    // Member template
+
     function createMemberHtml(index) {
         return `
-            <div class="member-item border border-gray-200 rounded-lg p-5 bg-gradient-to-br from-gray-50 to-white hover:shadow-md transition-all">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span class="member-number text-sm font-semibold text-blue-700">${index + 1}</span>
+            <div class="member-item border border-gray-200 rounded-lg p-4 bg-white hover:border-gray-300 transition-all">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <span class="member-number text-xs font-semibold text-indigo-700">${index + 1}</span>
                         </div>
-                        <h4 class="font-medium text-gray-900">Anggota Tim</h4>
+                        <h4 class="text-sm font-medium text-gray-900">Anggota Tim</h4>
                     </div>
-                    <button type="button" class="removeMemberBtn text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded-lg text-sm transition-colors flex items-center space-x-1">
-                        <i class="fas fa-trash-alt text-xs"></i>
+                    <button type="button" class="removeMemberBtn text-red-400 hover:text-red-600 hover:bg-red-50 px-2 py-1 rounded text-xs transition-colors flex items-center gap-1">
+                        <i class="fas fa-trash-alt text-[10px]"></i>
                         <span>Hapus</span>
                     </button>
                 </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1.5">Nama Lengkap <span class="text-red-500">*</span></label>
-                        <input type="text" name="content[hr_department][members][${index}][name]" 
-                               class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
+                        <input type="text" name="content[hr_department][members][${index}][name]"
+                               class="block w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                                placeholder="Nama anggota...">
                     </div>
-                    
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1.5">Jabatan <span class="text-red-500">*</span></label>
-                        <input type="text" name="content[hr_department][members][${index}][role]" 
-                               class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                               placeholder="HR Manager, Recruiter, dll...">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Jabatan <span class="text-red-500">*</span></label>
+                        <input type="text" name="content[hr_department][members][${index}][role]"
+                               class="block w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                               placeholder="HR Manager, Recruiter...">
                     </div>
-                    
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1.5">Foto <span class="text-red-500">*</span></label>
-                        <input type="file" name="content[hr_department][members][${index}][photo_file]" 
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Foto <span class="text-red-500">*</span></label>
+                        <input type="file" name="content[hr_department][members][${index}][photo_file]"
                                accept="image/jpeg,image/png,image/jpg,image/webp"
-                               class="block w-full text-sm text-gray-900 border border-gray-200 rounded-lg cursor-pointer bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                        <p class="text-xs text-gray-500 mt-1">
-                            <i class="fas fa-info-circle"></i> Format: JPG, PNG, WebP. Max 2MB
-                        </p>
+                               class="block w-full text-xs text-gray-900 border border-gray-200 rounded-lg cursor-pointer bg-white focus:outline-none file:mr-3 file:py-1.5 file:px-3 file:rounded-l-lg file:border-0 file:text-xs file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                     </div>
-                    
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1.5">Email</label>
-                        <input type="email" name="content[hr_department][members][${index}][email]" 
-                               class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" name="content[hr_department][members][${index}][email]"
+                               class="block w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                                placeholder="email@srtcorp.com">
                     </div>
-                    
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1.5">No. Telepon</label>
-                        <input type="text" name="content[hr_department][members][${index}][phone]" 
+                        <label class="block text-xs font-medium text-gray-700 mb-1">No. Telepon</label>
+                        <input type="text" name="content[hr_department][members][${index}][phone]"
                                placeholder="+62 812-3456-7890"
-                               class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                               class="block w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                     </div>
-                    
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1.5">
-                            <i class="fab fa-linkedin text-blue-600"></i> LinkedIn
-                        </label>
-                        <input type="text" name="content[hr_department][members][${index}][linkedin]" 
+                        <label class="block text-xs font-medium text-gray-700 mb-1"><i class="fab fa-linkedin text-blue-600"></i> LinkedIn</label>
+                        <input type="text" name="content[hr_department][members][${index}][linkedin]"
                                placeholder="https://linkedin.com/in/username"
-                               class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                               class="block w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                     </div>
-                    
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-medium text-gray-700 mb-1.5">
-                            <i class="fab fa-instagram text-pink-500"></i> Instagram
-                        </label>
-                        <input type="text" name="content[hr_department][members][${index}][instagram]" 
-                               placeholder="@username"
-                               class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    </div>
-
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1.5">Departemen</label>
+                        <label class="block text-xs font-medium text-gray-700 mb-1"><i class="fab fa-instagram text-pink-500"></i> Instagram</label>
+                        <input type="text" name="content[hr_department][members][${index}][instagram]"
+                               placeholder="@username"
+                               class="block w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Departemen</label>
                         <select name="content[hr_department][members][${index}][department]"
-                                class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                class="block w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white">
                             <option value="">Pilih Departemen</option>
-                            <option value="HCM">HCM</option>
-                            <option value="IT Development">IT Development</option>
-                            <option value="General Affair">General Affair</option>
-                            <option value="Finance">Finance</option>
+                            <option value="HCM Manager">HCM Manager</option>
+                            <option value="Digital Technology">Digital Technology</option>
+                            <option value="Personalia">Personalia</option>
                             <option value="Legal">Legal</option>
+                            <option value="HR Comben DM">HR Comben DM</option>
+                            <option value="HR Comben">HR Comben</option>
+                            <option value="HR Recruitment">HR Recruitment</option>
+                            <option value="General Affairs">General Affairs</option>
                         </select>
                     </div>
-                    
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-medium text-gray-700 mb-1.5">Bio / Deskripsi Singkat</label>
+                    <div class="md:col-span-3">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Bio Singkat</label>
                         <textarea name="content[hr_department][members][${index}][bio]" rows="2"
-                                  class="block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                                  class="block w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                                   placeholder="Deskripsi singkat tentang anggota tim..."></textarea>
                     </div>
                 </div>
             </div>
         `;
     }
-    
-    // Add member
+
     addBtn.addEventListener('click', function() {
-        const memberHtml = createMemberHtml(memberIndex);
-        container.insertAdjacentHTML('beforeend', memberHtml);
+        container.insertAdjacentHTML('beforeend', createMemberHtml(memberIndex));
         memberIndex++;
         updateMemberNumbers();
     });
-    
-    // Remove member (event delegation)
+
     container.addEventListener('click', function(e) {
-        if (e.target.classList.contains('removeMemberBtn')) {
-            if (container.children.length > 1) {
-                e.target.closest('.member-item').remove();
-                updateMemberNumbers();
-            } else {
-                alert('Minimal harus ada satu anggota tim.');
-            }
+        const btn = e.target.closest('.removeMemberBtn');
+        if (btn && container.children.length > 1) {
+            btn.closest('.member-item').remove();
+            updateMemberNumbers();
         }
     });
-    
-    // Update member numbers
+
     function updateMemberNumbers() {
-        const memberItems = container.querySelectorAll('.member-item');
-        memberItems.forEach((item, idx) => {
-            item.querySelector('.member-number').textContent = idx + 1;
-        });
+        container.querySelectorAll('.member-number').forEach((el, i) => el.textContent = i + 1);
     }
 });
 </script>
-@endsection
+@endpush
