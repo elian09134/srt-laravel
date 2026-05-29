@@ -99,7 +99,36 @@ class FptkController extends Controller
     {
         $request->validate([
             'admin_note' => 'nullable|string|max:2000',
-            'admin_signature' => 'required|string',
+            'admin_signature' => ['required', 'string', function ($attribute, $value, $fail) {
+                if (! preg_match('/^data:image\/(png|jpeg|webp|gif);base64,/', $value)) {
+                    $fail('Tanda tangan tidak valid — format data URL gambar tidak dikenali.');
+
+                    return;
+                }
+
+                $base64 = preg_replace('/^data:image\/(png|jpeg|webp|gif);base64,/', '', $value);
+                $decoded = base64_decode($base64, true);
+
+                if ($decoded === false) {
+                    $fail('Tanda tangan tidak valid — data base64 corrupt.');
+
+                    return;
+                }
+
+                $size = strlen($decoded);
+
+                if ($size < 200) {
+                    $fail('Tanda tangan tidak valid — ukuran terlalu kecil, kemungkinan tandatangan kosong.');
+
+                    return;
+                }
+
+                if ($size > 512000) {
+                    $fail('Tanda tangan terlalu besar — maksimal 500KB.');
+
+                    return;
+                }
+            }],
         ]);
 
         $fptk->status = 'approved';

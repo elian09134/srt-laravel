@@ -84,11 +84,19 @@ class ContentController extends Controller
             unset($content_array['hr_department']['members']);
         }
 
+        $allowedTags = '<span><a><b><i><strong><em><br><u><p><div><ul><ol><li>';
+
         foreach ($content_array as $section_name => $keys) {
             foreach ($keys as $content_key => $content_value) {
                 // Perlakuan khusus untuk list yang disimpan sebagai JSON
                 if (str_contains($content_key, '_list') || $content_key === 'mission_text') {
                     $content_value = json_encode(array_filter(array_map('trim', explode("\n", $content_value))));
+                }
+
+                // Sanitasi HTML untuk mencegah stored XSS
+                // Hanya izinkan safe tags, semua atribut (onclick, onload, dll) distrip
+                if (is_string($content_value)) {
+                    $content_value = strip_tags($content_value, $allowedTags);
                 }
 
                 SiteContent::updateOrCreate(

@@ -14,7 +14,9 @@
                 <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600">
                     <i class="fas fa-users"></i>
                 </div>
-                <span class="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">+12%</span>
+                <span class="text-xs font-medium px-2 py-0.5 rounded-full {{ $applicant_percentage > 0 ? 'text-emerald-600 bg-emerald-50' : ($applicant_percentage < 0 ? 'text-red-600 bg-red-50' : 'text-slate-400 bg-slate-50') }}">
+                    {{ $applicant_percentage > 0 ? '+' : '' }}{{ $applicant_percentage }}%
+                </span>
             </div>
             <div class="text-2xl font-semibold text-slate-800">{{ number_format($total_applicants) }}</div>
             <div class="text-xs text-slate-400 mt-0.5">Total Pelamar</div>

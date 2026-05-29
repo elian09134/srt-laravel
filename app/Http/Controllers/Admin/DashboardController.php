@@ -17,6 +17,23 @@ class DashboardController extends Controller
     {
         // 1. Mengambil data untuk Ringkasan Umum
         $total_applicants = Application::count();
+
+        $applicants_this_month = Application::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+
+        $applicants_last_month = Application::whereMonth('created_at', now()->subMonth()->month)
+            ->whereYear('created_at', now()->subMonth()->year)
+            ->count();
+
+        if ($applicants_last_month > 0) {
+            $applicant_percentage = round((($applicants_this_month - $applicants_last_month) / $applicants_last_month) * 100);
+        } elseif ($applicants_this_month > 0) {
+            $applicant_percentage = 100;
+        } else {
+            $applicant_percentage = 0;
+        }
+
         $total_jobs = Job::count();
         $total_talent_pool = TalentPool::count();
 
@@ -36,6 +53,7 @@ class DashboardController extends Controller
         // Mengirim semua data ke view
         return view('admin.dashboard', [
             'total_applicants' => $total_applicants,
+            'applicant_percentage' => $applicant_percentage,
             'total_jobs' => $total_jobs,
             'total_talent_pool' => $total_talent_pool,
             'status_distribution' => $status_distribution,
