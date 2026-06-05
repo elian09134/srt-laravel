@@ -22,6 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
         //     \App\Http\Middleware\BlockSuspiciousIps::class,
         // ]);
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
-        //
+    ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->render(function (\Illuminate\Http\Exceptions\PostTooLargeException $e, \Illuminate\Http\Request $request) {
+            return redirect()->back()->withInput()->with('error', 'Maaf, ukuran file terlalu besar. Maksimal ukuran file yang diizinkan adalah 2MB.');
+        });
     })->create();

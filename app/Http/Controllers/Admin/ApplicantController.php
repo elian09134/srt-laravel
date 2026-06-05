@@ -115,6 +115,7 @@ class ApplicantController extends Controller
             }
 
             // Cek partner target (M28) — limit jumlah user Diterima per posisi per bulan
+            /*
             $referralSource = $application->user?->referral_source;
             if ($referralSource) {
                 $partner = \App\Models\User::where('name', $referralSource)->where('role', 'partner')->first();
@@ -146,6 +147,7 @@ class ApplicantController extends Controller
                     }
                 }
             }
+            */
         }
 
         $data = ['status' => $newStatus];

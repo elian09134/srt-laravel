@@ -124,7 +124,7 @@
                         <span x-show="sidebarOpen" class="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">{{ $pendingFptk }}</span>
                     @endif
                 </a>
-                <a href="{{ route('admin.partner-targets.index') }}"
+                {{-- <a href="{{ route('admin.partner-targets.index') }}"
                    class="flex items-center rounded-lg transition-all duration-200 group text-sm"
                    :class="[
                        sidebarOpen
@@ -133,7 +133,7 @@
                    ]">
                     <i class="fas fa-bullseye w-5 text-center text-sm flex-shrink-0 {{ request()->routeIs('admin.partner-targets.*') ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-500' }}"></i>
                     <span x-show="sidebarOpen" class="ml-3 font-medium whitespace-nowrap">Target Mitra</span>
-                </a>
+                </a> --}}
 
                 <div x-show="sidebarOpen" class="mt-5 px-3 pb-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Content & System</div>
                 <a href="{{ route('admin.content.edit') }}"

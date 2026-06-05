@@ -66,12 +66,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/images', [ImageController::class, 'index'])->name('admin.images.index');
     Route::post('/images', [ImageController::class, 'update'])->name('admin.images.update');
     Route::delete('/gallery/{gallery}', [ImageController::class, 'destroyGalleryImage'])->name('admin.gallery.destroy');
-    // Partner target management
-    Route::get('/partner-targets', [App\Http\Controllers\Admin\PartnerTargetController::class, 'index'])->name('admin.partner-targets.index');
-    Route::post('/partner-targets', [App\Http\Controllers\Admin\PartnerTargetController::class, 'store'])->name('admin.partner-targets.store');
-    Route::delete('/partner-targets/{partnerTarget}', [App\Http\Controllers\Admin\PartnerTargetController::class, 'destroy'])->name('admin.partner-targets.destroy');
-    Route::post('/partner-targets/{partnerTarget}/positions', [App\Http\Controllers\Admin\PartnerTargetController::class, 'storePosition'])->name('admin.partner-targets.positions.store');
-    Route::delete('/partner-targets/positions/{partnerTargetPosition}', [App\Http\Controllers\Admin\PartnerTargetController::class, 'destroyPosition'])->name('admin.partner-targets.positions.destroy');
+    // Partner target management (DISABLED)
+    // Route::get('/partner-targets', [App\Http\Controllers\Admin\PartnerTargetController::class, 'index'])->name('admin.partner-targets.index');
+    // Route::post('/partner-targets', [App\Http\Controllers\Admin\PartnerTargetController::class, 'store'])->name('admin.partner-targets.store');
+    // Route::delete('/partner-targets/{partnerTarget}', [App\Http\Controllers\Admin\PartnerTargetController::class, 'destroy'])->name('admin.partner-targets.destroy');
+    // Route::post('/partner-targets/{partnerTarget}/positions', [App\Http\Controllers\Admin\PartnerTargetController::class, 'storePosition'])->name('admin.partner-targets.positions.store');
+    // Route::delete('/partner-targets/positions/{partnerTargetPosition}', [App\Http\Controllers\Admin\PartnerTargetController::class, 'destroyPosition'])->name('admin.partner-targets.positions.destroy');
 
     // Employee invitation routes removed — site is recruitment-only
     // Route::get('/invitations', [EmployeeInvitationController::class, 'index'])->name('admin.invitations.index');
@@ -112,9 +112,9 @@ Route::get('/dashboard', function () {
     if ($role === 'admin' || $role === 'superadmin') {
         return redirect('/admin');
     }
-    if ($role === 'partner') {
-        return redirect('/m28');
-    }
+    // if ($role === 'partner') {
+    //     return redirect('/m28');
+    // }
 
     // Operasional redirect ke homepage, bukan /fptk
     return redirect('/');
@@ -123,10 +123,10 @@ Route::get('/dashboard', function () {
 // AI agent endpoint (web route returning JSON). Uses throttle to limit requests.
 Route::post('/api/ai/agent/query', [AgentController::class, 'query'])->middleware('throttle:10,1');
 
-// --- PARTNER / MITRA ROUTES (M28) ---
-Route::middleware(['auth', 'partner'])->prefix('m28')->name('m28.')->group(function () {
-    Route::get('/', [M28DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/candidates', [M28CandidateController::class, 'index'])->name('candidates.index');
-    Route::get('/candidates/export', [M28CandidateController::class, 'export'])->name('candidates.export');
-    Route::get('/candidates/{user}', [M28CandidateController::class, 'show'])->name('candidates.show');
-});
+// --- PARTNER / MITRA ROUTES (M28) (DISABLED) ---
+// Route::middleware(['auth', 'partner'])->prefix('m28')->name('m28.')->group(function () {
+//     Route::get('/', [M28DashboardController::class, 'index'])->name('dashboard');
+//     Route::get('/candidates', [M28CandidateController::class, 'index'])->name('candidates.index');
+//     Route::get('/candidates/export', [M28CandidateController::class, 'export'])->name('candidates.export');
+//     Route::get('/candidates/{user}', [M28CandidateController::class, 'show'])->name('candidates.show');
+// });
