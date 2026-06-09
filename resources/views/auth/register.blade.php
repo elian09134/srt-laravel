@@ -408,55 +408,49 @@
                 if (checkbox) checkbox.addEventListener('change', update);
                 update();
 
-                // Prevent ERR_UPLOAD_FILE_CHANGED on Mobile
-                const form = document.querySelector('form');
-                if (form) {
-                    form.addEventListener('submit', async function(e) {
-                        if (form.dataset.validating === "1") {
-                            e.preventDefault();
-                            return;
-                        }
-                        if (form.dataset.validated === "1") {
-                            return;
-                        }
-                        e.preventDefault();
-                        form.dataset.validating = "1";
-                        
-                        const fileInputs = form.querySelectorAll('input[type="file"]');
-                        let hasError = false;
-                        
-                        const checkFile = (file) => {
-                            return new Promise((resolve, reject) => {
-                                const reader = new FileReader();
-                                reader.onload = () => resolve(true);
-                                reader.onerror = () => reject(reader.error);
-                                reader.readAsArrayBuffer(file.slice(0, 1));
-                            });
-                        };
+                // Prevent ERR_UPLOAD_FILE_CHANGED on Mobile by caching files in memory immediately
+                const fileInputs = document.querySelectorAll('input[type="file"]');
+                fileInputs.forEach(input => {
+                    input.addEventListener('change', function(e) {
+                        if (this.files && this.files.length > 0) {
+                            const file = this.files[0];
+                            
+                            // Prevent running again if we just set it from DataTransfer
+                            if (file.isMemoryCached) return;
 
-                        for (const input of fileInputs) {
-                            if (input.files.length > 0) {
-                                const file = input.files[0];
+                            const reader = new FileReader();
+                            reader.onload = function(evt) {
                                 try {
-                                    await checkFile(file);
+                                    // Create a new memory-backed File object
+                                    const newFile = new File([evt.target.result], file.name, { type: file.type });
+                                    newFile.isMemoryCached = true; // Flag to prevent infinite loop
+                                    
+                                    // Assign back to the input
+                                    const dataTransfer = new DataTransfer();
+                                    dataTransfer.items.add(newFile);
+                                    input.files = dataTransfer.files;
                                 } catch (err) {
-                                    hasError = true;
-                                    alert('Maaf, file "' + file.name + '" sudah tidak dapat diakses (mungkin dipindahkan atau dihapus oleh sistem HP Anda). Silakan pilih ulang file tersebut.');
-                                    input.value = ''; // Reset the invalid file
+                                    console.error("Failed to cache file in memory:", err);
                                 }
-                            }
+                            };
+                            reader.onerror = function() {
+                                alert('Maaf, file "' + file.name + '" gagal dibaca oleh browser. Silakan pilih ulang.');
+                                input.value = '';
+                            };
+                            
+                            // Read the file entirely into RAM
+                            reader.readAsArrayBuffer(file);
                         }
-                        
-                        form.dataset.validating = "0";
-                        if (!hasError) {
-                            form.dataset.validated = "1";
-                            if (button) {
-                                button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mendaftar...';
-                                button.classList.add('opacity-80', 'cursor-not-allowed');
-                                button.setAttribute('disabled', 'disabled');
-                            }
-                            form.submit();
-                        }
+                    });
+                });
+                
+                // Form submit handler for loading state
+                const form = document.querySelector('form');
+                if (form && button) {
+                    form.addEventListener('submit', function() {
+                        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mendaftar...';
+                        button.classList.add('opacity-80', 'cursor-not-allowed');
+                        button.setAttribute('disabled', 'disabled');
                     });
                 }
             });

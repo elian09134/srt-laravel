@@ -178,8 +178,8 @@ class RegisteredUserController extends Controller
             DB::rollBack();
 
             // (Opsional) Log error
-            // Log::error($e->getMessage());
-            return back()->with('error', 'Terjadi kesalahan saat pendaftaran. Silakan coba lagi.');
+            \Illuminate\Support\Facades\Log::error('Registration Error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            return back()->with('error', 'Terjadi kesalahan saat pendaftaran: ' . $e->getMessage());
         }
     }
 }
