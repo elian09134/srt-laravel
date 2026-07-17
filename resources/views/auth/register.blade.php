@@ -354,10 +354,25 @@
         
         <script>
             function registerFlow() {
+                const hasErrors = {{ $errors->any() ? 'true' : 'false' }};
+                const oldSource = {!! json_encode(old('referral_source', '')) !!};
+                
+                let initialReferralSource = '';
+                let initialReferralOther = '';
+                
+                if (oldSource) {
+                    if (oldSource === 'Sosial Media' || oldSource === 'M28') {
+                        initialReferralSource = oldSource;
+                    } else {
+                        initialReferralSource = 'other';
+                        initialReferralOther = oldSource;
+                    }
+                }
+
                 return {
-                    step: 'source',
-                    referralSource: '',
-                    referralOther: '',
+                    step: (hasErrors || oldSource) ? 'form' : 'source',
+                    referralSource: initialReferralSource,
+                    referralOther: initialReferralOther,
                     get finalSource() {
                         if (this.referralSource === 'other') {
                             return this.referralOther;
