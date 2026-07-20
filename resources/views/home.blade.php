@@ -9,8 +9,8 @@
                 @php
                     $heroImage = !empty($content['hero']['image']) ? asset('storage/' . $content['hero']['image']) : 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop';
                 @endphp
+                <div class="absolute inset-0 w-full h-full bg-cover bg-center z-0" style="background-image: url('{{ $heroImage }}');"></div>
                 <div class="absolute inset-0 bg-slate-900/60 z-10"></div> <!-- Dark overlay -->
-                <div class="w-full h-full bg-cover bg-center" style="background-image: url('{{ $heroImage }}');"></div>
             </div>
             
             <div class="max-w-7xl mx-auto px-6 lg:px-12 w-full relative z-20">
@@ -108,12 +108,12 @@
                         item.style.opacity = opacity;
                         item.style.transform = `scale(${scale})`;
                         
-                        // Highlight color when close to center (Dark color instead of white)
+                        // Highlight color when close to center (White text)
                         if(easedRatio > 0.8) {
-                            item.style.color = '#0f172a'; // slate-900
-                            item.style.textShadow = '0 1px 3px rgba(255,255,255,0.5)'; // subtle white shadow for contrast
+                            item.style.color = '#ffffff'; 
+                            item.style.textShadow = '0 2px 10px rgba(0,0,0,0.5)'; 
                         } else {
-                            item.style.color = 'rgba(15, 23, 42, 0.4)'; // dimmed dark text
+                            item.style.color = 'rgba(255, 255, 255, 0.4)'; 
                             item.style.textShadow = 'none';
                         }
                     });
