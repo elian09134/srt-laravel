@@ -28,3 +28,4 @@ deploy/keys/
 *.md
 .env*
 terangbysrt.env*
+.agents/

@@ -3,78 +3,128 @@
         <!-- =================================================================== -->
         <!-- HERO SECTION -->
         <!-- =================================================================== -->
-        <section id="home" class="relative bg-white text-slate-900 overflow-hidden">
-            <div class="max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-20">
-                <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <section id="home" class="relative min-h-[600px] h-screen flex items-center overflow-hidden">
+            <!-- Background Image & Overlay -->
+            <div class="absolute inset-0 z-0">
+                @php
+                    $heroImage = !empty($content['hero']['image']) ? asset('storage/' . $content['hero']['image']) : 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop';
+                @endphp
+                <div class="absolute inset-0 bg-slate-900/60 z-10"></div> <!-- Dark overlay -->
+                <div class="w-full h-full bg-cover bg-center" style="background-image: url('{{ $heroImage }}');"></div>
+            </div>
+            
+            <div class="max-w-7xl mx-auto px-6 lg:px-12 w-full relative z-20">
+                <div class="grid lg:grid-cols-2 gap-12 items-center h-full">
+                    
                     <!-- Content Left -->
-                    <div class="flex flex-col items-start space-y-8 max-w-xl">
-                        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
-                            <span class="text-primary text-sm font-bold">{{ $content['hero']['badge_text'] ?? '✨ Bergabung dengan Tim Terbaik' }}</span>
-                        </div>
-                        <h1 class="text-5xl lg:text-6xl font-extrabold leading-[1.15] text-slate-900 tracking-tight">
-                            {!! $content['hero']['title'] ?? 'Bangun Karir <span class="text-primary">Impian Anda</span> Bersama SRT Corp' !!}
+                    <div class="flex flex-col items-start space-y-6 max-w-xl text-white pt-20 lg:pt-0">
+                        <!-- Custom SRT Logo Image -->
+                        <img src="{{ asset('images/terang.png') }}" alt="SRT Corp" class="h-32 lg:h-48 object-contain drop-shadow-md mb-4">
+                        <h1 class="text-4xl lg:text-6xl font-extrabold leading-[1.15] drop-shadow-lg tracking-tight">
+                            {!! $content['hero']['title'] ?? 'Bangun Karir Anda<br>Bersama SRT Corp' !!}
                         </h1>
-                        <p class="text-lg text-slate-600 leading-relaxed font-normal">
+                        <p class="text-lg text-white/90 leading-relaxed font-medium drop-shadow-md max-w-md">
                             {{ $content['hero']['description'] ?? 'Tempat terbaik untuk mengasah potensi dan membangun masa depan yang solid. Jelajahi peluang karier yang dirancang khusus untuk pertumbuhan profesional Anda.' }}
                         </p>
-                        <div class="flex flex-wrap gap-4 w-full sm:w-auto">
-                            <a href="/karir" class="flex-1 sm:flex-none px-8 py-4 bg-primary text-white font-bold rounded-lg shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all text-center">
-                                {{ $content['hero']['button_text'] ?? 'Lihat Lowongan' }}
-                            </a>
-                            <a href="#about-us" class="flex-1 sm:flex-none px-8 py-4 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg hover:bg-slate-50 transition-all text-center">
-                                Tentang Kami
-                            </a>
-                        </div>
-                        <!-- Stats/Social Proof (Embedded in Hero Grid) -->
-                        <div class="pt-8 grid grid-cols-3 gap-6 w-full border-t border-slate-100">
-                            <div class="space-y-1">
-                                <div class="flex items-center gap-2 text-primary">
-                                    <span class="material-symbols-outlined text-xl">groups</span>
-                                    <span class="text-2xl font-bold text-slate-900">{{ $content['hero']['stats_employees'] ?? '1000+' }}</span>
-                                </div>
-                                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Karyawan</p>
-                            </div>
-                            <div class="space-y-1 border-x border-slate-100 px-6">
-                                <div class="flex items-center gap-2 text-primary">
-                                    <span class="material-symbols-outlined text-xl">verified</span>
-                                    <span class="text-xl font-bold text-slate-900 leading-none">{{ $content['hero']['stats_security'] ?? 'Terpercaya' }}</span>
-                                </div>
-                                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Keamanan</p>
-                            </div>
-                            <div class="space-y-1">
-                                <div class="flex items-center gap-2 text-primary">
-                                    <span class="material-symbols-outlined text-xl">public</span>
-                                    <span class="text-xl font-bold text-slate-900 leading-none">{{ $content['hero']['stats_global'] ?? 'Global' }}</span>
-                                </div>
-                                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Jangkauan</p>
-                            </div>
-                        </div>
                     </div>
-                    <!-- Hero Image Right -->
-                    <div class="relative group">
-                        <!-- Decorative background element -->
-                        <div class="absolute -inset-4 bg-primary/5 rounded-2xl blur-2xl group-hover:bg-primary/10 transition-colors"></div>
-                        <div class="relative overflow-hidden rounded-xl aspect-[4/3] shadow-2xl">
-                             @php
-                                $heroImage = !empty($content['hero']['image']) ? asset('storage/' . $content['hero']['image']) : 'https://lh3.googleusercontent.com/aida-public/AB6AXuDIPs6WZqBK5ndm49ovZKlqcj99hWH-JxeJoNDXz8rxyxaAlJGnAKmE7KNiCyuChrkPPxO89LxDdMofmcIUEyjmzQCmYg78H5WeyPROkyR-dY2vQ31I_Vn53VS1aZBlphSOLdG9hUV3RFpt-ZWVpn9x42mlTh3VfWo5c6Cu3jxPIYCsbpXWfbi9sQi8D1mEkRNUwDh_UxN54jnkFxbuGXv2zA94oS-c27E1zNlBOPmqNBmay-NsVYaCg6AXoIQ7WO_efcvOlHP-kQc';
-                            @endphp
-                            <div class="w-full h-full bg-slate-200 bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="Modern collaborative glass office building interior with professional growth vibe" style="background-image: url('{{ $heroImage }}');">
-                            </div>
-                            <!-- Floating Card Element -->
-                            <div class="absolute bottom-6 left-6 right-6 p-4 bg-white/90 backdrop-blur-md rounded-lg border border-white/20 shadow-lg flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                                    <span class="material-symbols-outlined">trending_up</span>
-                                </div>
-                                <div>
-                                    <p class="text-sm font-bold text-slate-900">{{ $content['hero']['floating_card_title'] ?? 'Pertumbuhan Karir Cepat' }}</p>
-                                    <p class="text-xs text-slate-500">{{ $content['hero']['floating_card_desc'] ?? 'Mulai perjalanan profesionalmu hari ini' }}</p>
-                                </div>
+                    
+                    <!-- Content Right: Nonstop Continuous Marquee -->
+                    <div class="relative h-[300px] lg:h-[500px] flex items-center lg:justify-end mt-12 lg:mt-0 pb-10 lg:pb-0 overflow-hidden" id="marquee-container">
+                        <div class="relative w-full max-w-sm pl-16 h-full flex flex-col justify-center">
+                            <!-- Blue Triangle Indicator (Fixed exactly at center) -->
+                            <div class="absolute left-4 top-1/2 -translate-y-1/2 w-0 h-0 border-t-[12px] border-t-transparent border-l-[22px] border-l-[#4BA3FF] border-b-[12px] border-b-transparent z-30 drop-shadow-[0_0_8px_rgba(75,163,255,0.6)]"></div>
+                            
+                            <!-- Wrapper for Continuous Scroll -->
+                            <div id="hero-scroll-wrapper" class="relative z-10 w-full flex flex-col items-start" style="will-change: transform;">
+                                @php
+                                    $baseItems = ['Wrapping', 'Food & Beverage', 'Minimarket', 'Reflexiology', 'Handle Passsenger', 'Celluller', 'Money Changer'];
+                                    // Duplicate items to ensure seamless infinite looping
+                                    $listItems = array_merge($baseItems, $baseItems, $baseItems, $baseItems);
+                                @endphp
+                                @foreach($listItems as $index => $item)
+                                    <div class="hero-scroll-item h-[50px] lg:h-[70px] shrink-0 flex items-center text-3xl lg:text-[40px] font-bold origin-left leading-none" data-index="{{ $index }}">
+                                        {{ $item }}
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const wrapper = document.getElementById('hero-scroll-wrapper');
+            const container = document.getElementById('marquee-container');
+            const items = document.querySelectorAll('.hero-scroll-item');
+            
+            if(!wrapper || !container || items.length === 0) return;
+
+            let translateY = 0;
+            const speed = 0.4; // Slower speed (pixels per frame)
+            
+            // Wait for styles to apply
+            setTimeout(() => {
+                const itemHeight = items[0].offsetHeight;
+                const totalOriginalItems = 7; // The number of unique items
+                const singleSetHeight = itemHeight * totalOriginalItems;
+                
+                // Start position in the middle to avoid blank spaces at the beginning
+                translateY = singleSetHeight; 
+
+                function animate() {
+                    translateY += speed;
+                    
+                    // Seamless loop: if scrolled past one full set, jump back exactly one set height
+                    if (translateY >= singleSetHeight * 2) {
+                        translateY -= singleSetHeight;
+                    }
+                    
+                    wrapper.style.transform = `translateY(-${translateY}px)`;
+                    
+                    // Calculate center
+                    const containerCenterY = container.offsetHeight / 2;
+                    const absoluteCenterY = translateY + containerCenterY;
+
+                    items.forEach((item, index) => {
+                        // Center of the current item relative to the wrapper
+                        const itemCenterY = (index * itemHeight) + (itemHeight / 2);
+                        // Distance to the absolute center point
+                        const distance = Math.abs(itemCenterY - absoluteCenterY);
+                        
+                        // Fading & Scaling Logic
+                        const maxDist = itemHeight * 2.2; // Distance at which items start disappearing completely
+                        let ratio = 1 - (distance / maxDist);
+                        if(ratio < 0) ratio = 0;
+                        
+                        // Non-linear ease for a nice pop-out effect at the center
+                        const easedRatio = Math.pow(ratio, 2);
+                        
+                        // Opacity drops completely to 0 when far away
+                        const opacity = easedRatio;
+                        const scale = 0.85 + (0.2 * easedRatio);
+                        
+                        item.style.opacity = opacity;
+                        item.style.transform = `scale(${scale})`;
+                        
+                        // Highlight color when close to center (Dark color instead of white)
+                        if(easedRatio > 0.8) {
+                            item.style.color = '#0f172a'; // slate-900
+                            item.style.textShadow = '0 1px 3px rgba(255,255,255,0.5)'; // subtle white shadow for contrast
+                        } else {
+                            item.style.color = 'rgba(15, 23, 42, 0.4)'; // dimmed dark text
+                            item.style.textShadow = 'none';
+                        }
+                    });
+                    
+                    requestAnimationFrame(animate);
+                }
+                
+                requestAnimationFrame(animate);
+            }, 100); // short delay to ensure elements have height
+        });
+        </script>
         <!-- =================================================================== -->
         <!-- MEMBER TIM SECTION -->
         <!-- =================================================================== -->
@@ -86,8 +136,8 @@
                 $members = [];
             }
         @endphp
-        <section id="team" class="flex flex-col items-center text-center mb-20">
-            <span class="text-primary font-bold tracking-[0.2em] uppercase text-[10px] mb-4 bg-primary/10 px-4 py-1.5 rounded-full">Our Excellence</span>
+        <section id="team" class="flex flex-col items-center text-center mb-20 w-full relative z-10" style="margin-top: 120px;">
+            <span class="text-primary font-bold tracking-[0.2em] uppercase text-[10px] mb-4 bg-primary/10 px-4 py-1.5 rounded-full inline-block">Our Excellence</span>
             <h1 class="text-slate-900 dark:text-white text-4xl md:text-6xl font-black leading-[1.1] tracking-tight mb-8 max-w-4xl">
                 Meet the Minds Behind <span class="text-primary">TERANG By SRT</span>
             </h1>

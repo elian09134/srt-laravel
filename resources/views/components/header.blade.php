@@ -52,8 +52,8 @@
                 </form>
             @else
                 <!-- Tampilan jika belum login -->
-                <a href="/login" class="px-5 py-2.5 text-sm font-semibold text-blue-600 bg-blue-50 rounded-xl hover:bg-blue-100 transition-all duration-300">Login</a>
-                <a href="/karir" class="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 hover:shadow-lg">Lihat Lowongan</a>
+                <a href="/login" class="px-5 py-2.5 text-sm font-bold text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-all duration-300">Login</a>
+                <a href="/karir" class="px-5 py-2.5 text-sm font-bold text-white bg-indigo-500 rounded-lg hover:bg-indigo-600 transition-all duration-300 hover:shadow-lg">Lihat Lowongan</a>
             @endauth
             
             <!-- PWA Install Button (hidden by default, shown when installable) -->
@@ -93,8 +93,8 @@
                     <button type="submit" class="w-full mt-2 text-center py-2 font-medium text-red-600 border border-red-600 rounded-lg hover:bg-red-50">Logout</button>
                 </form>
             @else
-                <a href="/login" class="block text-center py-2 font-medium text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50">Login</a>
-                <a href="/karir" class="block mt-2 text-center py-2 font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">Lihat Lowongan</a>
+                <a href="/login" class="block text-center py-2 font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600">Login</a>
+                <a href="/karir" class="block mt-2 text-center py-2 font-medium text-white bg-indigo-500 rounded-lg hover:bg-indigo-600">Lihat Lowongan</a>
             @endauth
             
             <!-- PWA Install Button (Mobile, hidden by default) -->
