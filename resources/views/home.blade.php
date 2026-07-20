@@ -10,7 +10,7 @@
                     $heroImage = !empty($content['hero']['image']) ? asset('storage/' . $content['hero']['image']) : 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop';
                 @endphp
                 <div class="absolute inset-0 w-full h-full bg-cover bg-center z-0" style="background-image: url('{{ $heroImage }}');"></div>
-                <div class="absolute inset-0 bg-slate-900/60 z-10"></div> <!-- Dark overlay -->
+                <div class="absolute inset-0 z-10" style="background-color: rgba(0, 0, 0, 0.7);"></div> <!-- Dark overlay (Inline CSS) -->
             </div>
             
             <div class="max-w-7xl mx-auto px-6 lg:px-12 w-full relative z-20">
