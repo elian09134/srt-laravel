@@ -3,7 +3,7 @@
         <!-- =================================================================== -->
         <!-- HERO SECTION -->
         <!-- =================================================================== -->
-        <section id="home" class="relative min-h-[100dvh] lg:h-screen flex items-center overflow-hidden py-32 lg:py-0">
+        <section id="home" class="relative min-h-[100dvh] lg:h-screen flex items-center overflow-hidden py-20 lg:py-0">
             <!-- Background Image & Overlay -->
             <div class="absolute inset-0 z-0">
                 @php
@@ -14,22 +14,22 @@
             </div>
             
             <div class="max-w-7xl mx-auto px-6 lg:px-12 w-full relative z-20">
-                <div class="grid lg:grid-cols-2 gap-12 items-center h-full">
+                <div class="grid lg:grid-cols-2 gap-4 lg:gap-12 items-center h-full">
                     
                     <!-- Content Left -->
                     <div class="flex flex-col items-start space-y-6 max-w-xl text-white pt-20 lg:pt-0">
                         <!-- Custom SRT Logo Image -->
                         <img src="{{ asset('images/terang.png') }}" alt="SRT Corp" class="h-16 md:h-24 lg:h-48 object-contain drop-shadow-md mb-4">
-                        <h1 class="text-4xl lg:text-6xl font-extrabold leading-[1.15] drop-shadow-lg tracking-tight">
+                        <h1 class="text-3xl md:text-4xl lg:text-6xl font-extrabold leading-[1.15] drop-shadow-lg tracking-tight">
                             {!! $content['hero']['title'] ?? 'Bangun Karir Anda<br>Bersama SRT Corp' !!}
                         </h1>
-                        <p class="text-lg text-white/90 leading-relaxed font-medium drop-shadow-md max-w-md">
+                        <p class="text-base md:text-lg text-white/90 leading-relaxed font-medium drop-shadow-md max-w-md">
                             {{ $content['hero']['description'] ?? 'Tempat terbaik untuk mengasah potensi dan membangun masa depan yang solid. Jelajahi peluang karier yang dirancang khusus untuk pertumbuhan profesional Anda.' }}
                         </p>
                     </div>
                     
                     <!-- Content Right: Nonstop Continuous Marquee -->
-                    <div class="relative h-[250px] md:h-[300px] lg:h-[500px] flex items-center lg:justify-end mt-4 lg:mt-0 pb-4 lg:pb-0 overflow-hidden" id="marquee-container">
+                    <div class="relative h-[180px] md:h-[250px] lg:h-[500px] flex items-center lg:justify-end mt-4 lg:mt-0 overflow-hidden" id="marquee-container">
                         <div class="relative w-full max-w-sm pl-16 h-full flex flex-col justify-center">
                             <!-- Blue Triangle Indicator (Fixed exactly at center) -->
                             <div class="absolute left-4 top-1/2 -translate-y-1/2 w-0 h-0 border-t-[12px] border-t-transparent border-l-[22px] border-l-[#4BA3FF] border-b-[12px] border-b-transparent z-30 drop-shadow-[0_0_8px_rgba(75,163,255,0.6)]"></div>
@@ -42,7 +42,7 @@
                                     $listItems = array_merge($baseItems, $baseItems, $baseItems, $baseItems);
                                 @endphp
                                 @foreach($listItems as $index => $item)
-                                    <div class="hero-scroll-item h-[50px] lg:h-[70px] shrink-0 flex items-center text-3xl lg:text-[40px] font-bold origin-left leading-none" data-index="{{ $index }}">
+                                    <div class="hero-scroll-item h-[40px] lg:h-[70px] shrink-0 flex items-center text-2xl lg:text-[40px] font-bold origin-left leading-none" data-index="{{ $index }}">
                                         {{ $item }}
                                     </div>
                                 @endforeach
