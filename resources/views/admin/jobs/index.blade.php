@@ -42,18 +42,35 @@
                                 {{ $job->salary_range ?? '-' }}
                             </td>
                             <td class="px-5 py-4 text-center">
-                                <span data-job-id-state="{{ $job->id }}">
+                                <div id="status-container-{{ $job->id }}">
                                     @if ($job->is_active)
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-600 border border-emerald-200">
-                                            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5"></span> Aktif
-                                        </span>
+                                        <button type="button" 
+                                                onclick="toggleJobStatus({{ $job->id }}, '{{ route('admin.jobs.toggleActive', $job) }}')"
+                                                id="badge-btn-{{ $job->id }}"
+                                                class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition shadow-sm cursor-pointer" 
+                                                title="Klik untuk menonaktifkan lowongan">
+                                            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5 animate-pulse"></span> Aktif
+                                        </button>
                                     @else
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-slate-50 text-slate-500 border border-slate-200">
+                                        <button type="button" 
+                                                onclick="toggleJobStatus({{ $job->id }}, '{{ route('admin.jobs.toggleActive', $job) }}')"
+                                                id="badge-btn-{{ $job->id }}"
+                                                class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 transition shadow-sm cursor-pointer" 
+                                                title="Klik untuk mengaktifkan lowongan">
                                             <span class="w-1.5 h-1.5 bg-slate-400 rounded-full mr-1.5"></span> Non-Aktif
-                                        </span>
+                                        </button>
                                     @endif
-                                </span>
-                                <button data-toggle-job="{{ $job->id }}" class="block mx-auto mt-1.5 text-[11px] text-slate-400 hover:text-indigo-600 transition-colors">Ubah Status</button>
+                                </div>
+                                <form id="toggle-form-{{ $job->id }}" action="{{ route('admin.jobs.toggleActive', $job) }}" method="POST" class="hidden">
+                                    @csrf
+                                    @method('PATCH')
+                                </form>
+                                <button type="button" 
+                                        onclick="toggleJobStatus({{ $job->id }}, '{{ route('admin.jobs.toggleActive', $job) }}')"
+                                        id="text-btn-{{ $job->id }}" 
+                                        class="block mx-auto mt-1.5 text-[11px] font-medium text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer">
+                                    Ubah Status
+                                </button>
                             </td>
                             <td class="px-5 py-4 text-center">
                                 <div class="flex items-center justify-center gap-1">
@@ -94,44 +111,83 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggleButtons = document.querySelectorAll('[data-toggle-job]');
+        function toggleJobStatus(jobId, targetUrl) {
+            const container = document.getElementById(`status-container-${jobId}`);
+            const textBtn = document.getElementById(`text-btn-${jobId}`);
+            const badgeBtn = document.getElementById(`badge-btn-${jobId}`);
+            const form = document.getElementById(`toggle-form-${jobId}`);
 
-            toggleButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const jobId = this.getAttribute('data-toggle-job');
-                    const statusContainer = document.querySelector(`[data-job-id-state="${jobId}"]`);
+            const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+            const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : (form ? form.querySelector('input[name="_token"]').value : '');
 
-                    fetch(`/admin/jobs/${jobId}/toggle-active`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            if (data.is_active) {
-                                statusContainer.innerHTML = `
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-600 border border-emerald-200">
-                                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5"></span> Aktif
-                                    </span>
-                                `;
-                            } else {
-                                statusContainer.innerHTML = `
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-slate-50 text-slate-500 border border-slate-200">
-                                        <span class="w-1.5 h-1.5 bg-slate-400 rounded-full mr-1.5"></span> Non-Aktif
-                                    </span>
-                                `;
-                            }
-                        } else {
-                            alert('Gagal mengubah status');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-                });
+            if (textBtn) {
+                textBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Memproses...';
+                textBtn.disabled = true;
+            }
+            if (badgeBtn) {
+                badgeBtn.disabled = true;
+            }
+
+            fetch(targetUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-HTTP-Method-Override': 'PATCH'
+                },
+                body: JSON.stringify({
+                    _method: 'PATCH'
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    if (data.is_active) {
+                        container.innerHTML = `
+                            <button type="button" 
+                                    onclick="toggleJobStatus(${jobId}, '${targetUrl}')"
+                                    id="badge-btn-${jobId}"
+                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition shadow-sm cursor-pointer" 
+                                    title="Klik untuk menonaktifkan lowongan">
+                                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5 animate-pulse"></span> Aktif
+                            </button>
+                        `;
+                    } else {
+                        container.innerHTML = `
+                            <button type="button" 
+                                    onclick="toggleJobStatus(${jobId}, '${targetUrl}')"
+                                    id="badge-btn-${jobId}"
+                                    class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200 transition shadow-sm cursor-pointer" 
+                                    title="Klik untuk mengaktifkan lowongan">
+                                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full mr-1.5"></span> Non-Aktif
+                            </button>
+                        `;
+                    }
+                } else {
+                    if (form) form.submit();
+                }
+            })
+            .catch(error => {
+                console.warn('Fetch toggle failed, falling back to form submit:', error);
+                if (form) {
+                    form.submit();
+                } else {
+                    alert('Gagal memperbarui status lowongan. Silakan coba kembali.');
+                }
+            })
+            .finally(() => {
+                if (textBtn) {
+                    textBtn.innerHTML = 'Ubah Status';
+                    textBtn.disabled = false;
+                }
             });
-        });
+        }
     </script>
 @endsection

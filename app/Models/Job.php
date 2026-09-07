@@ -28,6 +28,16 @@ class Job extends Model
         'show_image',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'is_active' => 'boolean',
+        'show_image' => 'boolean',
+    ];
+
     public function applications()
     {
         return $this->hasMany(Application::class);

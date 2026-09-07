@@ -59,8 +59,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::resource('jobs', JobController::class)->names('admin.jobs');
-    // Toggle job active state via AJAX
-    Route::patch('/jobs/{job}/toggle-active', [JobController::class, 'toggleActive'])->name('admin.jobs.toggleActive');
+    // Toggle job active state via AJAX or direct form
+    Route::match(['post', 'patch'], '/jobs/{job}/toggle-active', [JobController::class, 'toggleActive'])->name('admin.jobs.toggleActive');
     Route::get('/content', [ContentController::class, 'edit'])->name('admin.content.edit');
     Route::post('/content', [ContentController::class, 'update'])->name('admin.content.update');
     Route::get('/images', [ImageController::class, 'index'])->name('admin.images.index');

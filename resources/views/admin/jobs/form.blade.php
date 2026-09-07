@@ -161,7 +161,19 @@
 
                 <!-- Action Card -->
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 sticky top-24">
-                    <h3 class="text-lg font-semibold text-slate-800 mb-4 border-b border-slate-100 pb-2">Publikasi</h3>
+                    <h3 class="text-lg font-semibold text-slate-800 mb-4 border-b border-slate-100 pb-2">Publikasi & Status</h3>
+                    
+                    <div class="mb-5 p-3 bg-slate-50 rounded-lg border border-slate-200 flex items-center justify-between">
+                        <div>
+                            <label for="is_active" class="text-sm font-medium text-slate-700 block">Status Lowongan</label>
+                            <span class="text-xs text-slate-500">Tampilkan di portal karir</span>
+                        </div>
+                        <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                            <input type="checkbox" name="is_active" id="is_active" value="1" @if(old('is_active', $job->is_active ?? true)) checked @endif class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 checked:right-0 checked:border-blue-600"/>
+                            <label for="is_active" class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer"></label>
+                        </div>
+                    </div>
+
                     <p class="text-sm text-slate-600 mb-4">Pastikan semua data sudah benar sebelum menyimpan.</p>
                     
                     <div class="space-y-3">

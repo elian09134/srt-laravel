@@ -46,6 +46,7 @@ class JobController extends Controller
             'benefits' => 'nullable|string',
             'fptk_id' => 'nullable|exists:fptks,id',
             'image' => 'nullable|image|max:2048',
+            'is_active' => 'nullable|boolean',
         ]);
 
         Job::create([
@@ -59,6 +60,7 @@ class JobController extends Controller
             'fptk_id' => $validated['fptk_id'] ?? null,
             'image' => $request->hasFile('image') ? $request->file('image')->store('jobs', 'public') : null,
             'show_image' => $request->has('show_image'),
+            'is_active' => $request->has('is_active') ? $request->boolean('is_active') : true,
         ]);
 
         return redirect()->route('admin.jobs.index')->with('success', 'Lowongan berhasil ditambahkan.');
@@ -95,6 +97,7 @@ class JobController extends Controller
             'benefits' => 'nullable|string',
             'fptk_id' => 'nullable|exists:fptks,id',
             'image' => 'nullable|image|max:2048', // Allow only images max 2MB
+            'is_active' => 'nullable|boolean',
         ]);
 
         $data = [
@@ -107,6 +110,7 @@ class JobController extends Controller
             'benefits' => json_encode(array_values(array_filter(array_map('trim', explode("\n", $validated['benefits'] ?? ''))))),
             'fptk_id' => $validated['fptk_id'] ?? null,
             'show_image' => $request->has('show_image'),
+            'is_active' => $request->has('is_active') ? $request->boolean('is_active') : false,
         ];
 
         if ($request->hasFile('image')) {
@@ -143,16 +147,22 @@ class JobController extends Controller
     }
 
     /**
-     * Toggle the active state via AJAX.
+     * Toggle the active state via AJAX or direct request.
      */
-    public function toggleActive(Job $job)
+    public function toggleActive(Request $request, Job $job)
     {
         $job->is_active = ! $job->is_active;
         $job->save();
 
-        return response()->json([
-            'success' => true,
-            'is_active' => (bool) $job->is_active,
-        ]);
+        if ($request->wantsJson() || $request->ajax() || $request->header('Accept') === 'application/json') {
+            return response()->json([
+                'success' => true,
+                'is_active' => (bool) $job->is_active,
+                'status_label' => $job->is_active ? 'Aktif' : 'Non-Aktif',
+                'message' => 'Status lowongan "' . $job->title . '" berhasil diubah menjadi ' . ($job->is_active ? 'Aktif' : 'Non-Aktif') . '.',
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Status lowongan "' . $job->title . '" berhasil diubah menjadi ' . ($job->is_active ? 'Aktif' : 'Non-Aktif') . '.');
     }
 }
