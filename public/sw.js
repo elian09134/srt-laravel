@@ -1,4 +1,4 @@
-const CACHE_NAME = 'terang-srt-v3';
+const CACHE_NAME = 'terang-srt-v4';
 const urlsToCache = [
   '/offline.html',
   '/images/terang.png',
@@ -11,7 +11,6 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Opened cache');
         return cache.addAll(urlsToCache.map(url => new Request(url, {cache: 'reload'})));
       })
       .catch(err => {
@@ -29,7 +28,7 @@ self.addEventListener('fetch', event => {
   // Skip chrome extensions and other schemes
   if (!event.request.url.startsWith('http')) return;
   
-  // DO NOT cache auth pages, login, register, or pages with CSRF tokens
+  // DO NOT intercept or cache auth pages, login, register, admin, or API requests
   const url = new URL(event.request.url);
   const skipCachePatterns = [
     '/login',
@@ -40,16 +39,17 @@ self.addEventListener('fetch', event => {
     '/admin',
     '/profile',
     '/dashboard',
+    '/fptk',
+    '/applications',
+    '/karir',
     '/api'
   ];
   
   const shouldSkipCache = skipCachePatterns.some(pattern => url.pathname.includes(pattern));
   
   if (shouldSkipCache) {
-    // For auth pages, always fetch from network (never cache)
-    return event.respondWith(
-      fetch(event.request).catch(() => caches.match('/offline.html'))
-    );
+    // Completely bypass service worker to let browser handle native network request
+    return;
   }
   
   // Network-first strategy for HTML pages to get fresh auth state

@@ -39,10 +39,7 @@
         <link rel="manifest" href="{{ asset('manifest.json') }}">
         
         <!-- Apple Touch Icons -->
-        <link rel="apple-touch-icon" href="{{ asset('images/icon-192x192.png') }}">
-        <link rel="apple-touch-icon" sizes="152x152" href="{{ asset('images/icon-152x152.png') }}">
-        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/icon-192x192.png') }}">
-        <link rel="apple-touch-icon" sizes="167x167" href="{{ asset('images/icon-192x192.png') }}">
+        <link rel="apple-touch-icon" href="{{ asset('images/terang.png') }}">
 
         <!-- Tailwind CSS should be built via Vite; do not use CDN in production -->
         
