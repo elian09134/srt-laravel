@@ -21,7 +21,7 @@
                         <!-- Custom SRT Logo Image -->
                         <img src="{{ asset('images/terang.png') }}" alt="SRT Corp" class="h-16 md:h-24 lg:h-48 object-contain drop-shadow-md mb-4">
                         <h1 class="text-3xl md:text-4xl lg:text-6xl font-extrabold leading-[1.15] drop-shadow-lg tracking-tight">
-                            {!! $content['hero']['title'] ?? 'Bangun Karir Anda<br>Bersama SRT Corp' !!}
+                            {!! nl2br(e($content['hero']['title'] ?? "Bangun Karir Anda\nBersama SRT Corp")) !!}
                         </h1>
                         <p class="text-base md:text-lg text-white/90 leading-relaxed font-medium drop-shadow-md max-w-md">
                             {{ $content['hero']['description'] ?? 'Tempat terbaik untuk mengasah potensi dan membangun masa depan yang solid. Jelajahi peluang karier yang dirancang khusus untuk pertumbuhan profesional Anda.' }}

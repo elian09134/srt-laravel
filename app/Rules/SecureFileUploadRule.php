@@ -97,7 +97,8 @@ class SecureFileUploadRule implements ValidationRule
             return;
         }
 
-        if (preg_match('/<\?(?:php|=)/i', $content) || preg_match('/<script[\s>]/i', $content)) {
+        // `<? ` covers short_open_tag webshells; `<?xpacket`/`<?xml` (legit PDF XMP metadata) stay allowed
+        if (preg_match('/<\?(?:php\b|=|\s)/i', $content) || preg_match('/<script[\s>]/i', $content)) {
             $fail('Berkas terdeteksi mengandung kode script berbahaya (anti-webshell protection).');
             return;
         }

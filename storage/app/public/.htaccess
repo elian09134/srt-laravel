@@ -1,0 +1,11 @@
+# Uploads are data, never code. Kill every handler in this tree (and public/storage,
+# which symlinks here) so a file that slips past validation still cannot execute.
+Options -ExecCGI -Indexes
+SetHandler none
+RemoveHandler .php .php3 .php4 .php5 .php7 .php8 .phtml .phar .cgi .pl .py .sh
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<FilesMatch "(?i)\.(php[0-9]?|phtml|phar|sh|cgi|pl|py|exe|htaccess)$">
+    Require all denied
+</FilesMatch>

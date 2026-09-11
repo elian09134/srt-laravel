@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Gallery;
+use App\Rules\SecureFileUploadRule;
 use App\Models\SiteContent;
+use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,7 +31,7 @@ class ImageController extends Controller
     /**
      * Handle updating site images and gallery.
      */
-    public function update(Request $request)
+    public function update(Request $request, FileUploadService $fileUploadService)
     {
         // Pemetaan dari nama input form ke nama seksi di database
         $imageMap = [
@@ -44,7 +46,7 @@ class ImageController extends Controller
 
                 // Validasi file
                 $request->validate([
-                    $inputName => 'image|max:2048', // maks 2MB
+                    $inputName => ['required', 'file', new SecureFileUploadRule(['jpg', 'jpeg', 'png'], 2048)],
                 ]);
 
                 try {
@@ -55,7 +57,7 @@ class ImageController extends Controller
                     }
 
                     // Simpan gambar baru
-                    $path = $file->store('images', 'public');
+                    $path = $fileUploadService->storePublicImage($file, 'images');
                     SiteContent::updateOrCreate(
                         ['section_name' => $sectionName, 'content_key' => 'image'],
                         ['content_value' => $path]
@@ -70,11 +72,11 @@ class ImageController extends Controller
         if ($request->hasFile('gallery_image')) {
             $request->validate([
                 'gallery_alt_text' => 'required|string|max:255',
-                'gallery_image' => 'required|image|max:2048', // maks 2MB
+                'gallery_image' => ['required', 'file', new SecureFileUploadRule(['jpg', 'jpeg', 'png'], 2048)],
             ]);
 
             try {
-                $path = $request->file('gallery_image')->store('gallery', 'public');
+                $path = $fileUploadService->storePublicImage($request->file('gallery_image'), 'gallery');
                 Gallery::create([
                     'file_path' => $path,
                     'alt_text' => $request->gallery_alt_text,

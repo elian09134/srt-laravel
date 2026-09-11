@@ -6,7 +6,8 @@
     RewriteEngine On
 
     # Block script execution in storage and uploads directories (Anti-Webshell)
-    RewriteRule ^(storage|uploads)/.*(\.(php[0-9]?|phtml|phar|sh|cgi|pl|py|exe))$ - [F,L,NC]
+    # Trailing (/|$) also blocks PATH_INFO smuggling, e.g. /storage/x.php/fake.jpg
+    RewriteRule ^(storage|uploads)/.*\.(php[0-9]?|phtml|phar|sh|cgi|pl|py|exe)(/|$) - [F,L,NC]
 
     # Add CORS headers for static assets
     <IfModule mod_headers.c>

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Gallery;
 use App\Models\SiteContent;
+use App\Rules\SecureFileUploadRule;
+use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 
 class ContentController extends Controller
@@ -30,7 +32,7 @@ class ContentController extends Controller
     /**
      * Update the site content in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, FileUploadService $fileUploadService)
     {
         $content_array = $request->input('content', []);
 
@@ -47,11 +49,11 @@ class ContentController extends Controller
                     if ($request->hasFile("content.hr_department.members.$index.photo_file")) {
                         // Validate and upload new photo
                         $request->validate([
-                            "content.hr_department.members.$index.photo_file" => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+                            "content.hr_department.members.$index.photo_file" => ['required', 'file', new SecureFileUploadRule(['jpg', 'jpeg', 'png'], 2048)],
                         ]);
 
                         $file = $request->file("content.hr_department.members.$index.photo_file");
-                        $photoPath = $file->store('hr_team', 'public');
+                        $photoPath = $fileUploadService->storePublicImage($file, 'hr_team');
 
                         // Delete old photo if exists
                         if (! empty($member['photo_existing']) && \Storage::disk('public')->exists($member['photo_existing'])) {
