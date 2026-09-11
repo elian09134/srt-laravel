@@ -1,4 +1,4 @@
-const CACHE_NAME = 'terang-srt-v4';
+const CACHE_NAME = 'terang-srt-v5';
 const urlsToCache = [
   '/offline.html',
   '/images/terang.png',
@@ -42,7 +42,9 @@ self.addEventListener('fetch', event => {
     '/fptk',
     '/applications',
     '/karir',
-    '/api'
+    '/api',
+    '/cdn-cgi',
+    'email-decode'
   ];
   
   const shouldSkipCache = skipCachePatterns.some(pattern => url.pathname.includes(pattern));
@@ -87,6 +89,12 @@ self.addEventListener('fetch', event => {
           response => {
             // Check if valid response
             if(!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // Do not cache HTML responses as static assets
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('text/html')) {
               return response;
             }
 
