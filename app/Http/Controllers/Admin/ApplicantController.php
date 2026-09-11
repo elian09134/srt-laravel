@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\UpdateApplicationStatusRequest;
 use App\Models\Application;
 use App\Models\Job;
 use App\Models\TalentPool;
+use App\Support\Security;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,7 +33,7 @@ class ApplicantController extends Controller
         $query = Application::with(['user.profile', 'job']);
 
         if ($request->filled('search')) {
-            $search = $request->search;
+            $search = Security::escapeLike($request->search);
             $query->where(function ($q) use ($search) {
                 $q->where('applicant_name', 'like', '%'.$search.'%')
                     ->orWhereHas('user', function ($uq) use ($search) {
@@ -100,10 +102,8 @@ class ApplicantController extends Controller
         ]);
     }
 
-    public function updateStatus(Request $request, Application $application)
+    public function updateStatus(UpdateApplicationStatusRequest $request, Application $application)
     {
-        $request->validate(['status' => 'required|string', 'join_date' => 'nullable|date']);
-
         $oldStatus = $application->status;
         $newStatus = $request->status;
 

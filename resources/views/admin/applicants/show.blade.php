@@ -19,7 +19,7 @@
             <div class="px-6 pb-6">
                 <div class="relative flex justify-center -mt-12 mb-4">
                     @if($application->user && $application->user->profile && $application->user->profile->photo_path)
-                        <img class="h-24 w-24 rounded-2xl object-cover ring-4 ring-white shadow-md" src="{{ asset('storage/' . $application->user->profile->photo_path) }}" alt="Foto">
+                        <img class="h-24 w-24 rounded-2xl object-cover ring-4 ring-white shadow-md" src="{{ route('documents.show', ['user' => $application->user_id, 'type' => 'photo']) }}" alt="Foto">
                     @else
                         <div class="h-24 w-24 rounded-2xl bg-slate-100 ring-4 ring-white shadow-md flex items-center justify-center text-slate-400 font-bold text-2xl border border-slate-100">
                             {{ substr($application->user->name ?? $application->applicant_name, 0, 1) }}
@@ -60,7 +60,7 @@
                     @endphp
 
                     @if($cvPath)
-                        <a href="{{ asset('storage/' . $cvPath) }}" target="_blank" class="flex items-center justify-center px-4 py-2.5 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-all font-medium border border-indigo-100">
+                        <a href="{{ route('documents.application.cv', $application) }}" target="_blank" class="flex items-center justify-center px-4 py-2.5 bg-indigo-50 text-indigo-600 rounded-lg hover:bg-indigo-100 transition-all font-medium border border-indigo-100">
                             <i class="fas fa-file-pdf mr-2"></i> Lihat CV / Resume
                         </a>
                     @endif
@@ -223,19 +223,19 @@
                     @php
                         $userProfile = optional($application->user)->profile;
                         $docs = [
-                            ['title' => 'Foto Formal', 'path' => optional($userProfile)->formal_photo_path, 'icon' => 'fa-id-badge', 'color' => 'text-blue-500', 'bg' => 'bg-blue-50'],
-                            ['title' => 'KTP', 'path' => optional($userProfile)->ktp_path, 'icon' => 'fa-address-card', 'color' => 'text-indigo-500', 'bg' => 'bg-indigo-50'],
-                            ['title' => 'Kartu Keluarga (KK)', 'path' => optional($userProfile)->kk_path, 'icon' => 'fa-users', 'color' => 'text-purple-500', 'bg' => 'bg-purple-50'],
-                            ['title' => 'NPWP', 'path' => optional($userProfile)->npwp_path, 'icon' => 'fa-file-invoice-dollar', 'color' => 'text-emerald-500', 'bg' => 'bg-emerald-50'],
-                            ['title' => 'Ijazah Terakhir', 'path' => optional($userProfile)->ijazah_path, 'icon' => 'fa-graduation-cap', 'color' => 'text-amber-500', 'bg' => 'bg-amber-50'],
-                            ['title' => 'Sertifikat', 'path' => optional($userProfile)->certificate_path, 'icon' => 'fa-certificate', 'color' => 'text-rose-500', 'bg' => 'bg-rose-50'],
+                            ['type' => 'formal_photo', 'title' => 'Foto Formal', 'path' => optional($userProfile)->formal_photo_path, 'icon' => 'fa-id-badge', 'color' => 'text-blue-500', 'bg' => 'bg-blue-50'],
+                            ['type' => 'ktp', 'title' => 'KTP', 'path' => optional($userProfile)->ktp_path, 'icon' => 'fa-address-card', 'color' => 'text-indigo-500', 'bg' => 'bg-indigo-50'],
+                            ['type' => 'kk', 'title' => 'Kartu Keluarga (KK)', 'path' => optional($userProfile)->kk_path, 'icon' => 'fa-users', 'color' => 'text-purple-500', 'bg' => 'bg-purple-50'],
+                            ['type' => 'npwp', 'title' => 'NPWP', 'path' => optional($userProfile)->npwp_path, 'icon' => 'fa-file-invoice-dollar', 'color' => 'text-emerald-500', 'bg' => 'bg-emerald-50'],
+                            ['type' => 'ijazah', 'title' => 'Ijazah Terakhir', 'path' => optional($userProfile)->ijazah_path, 'icon' => 'fa-graduation-cap', 'color' => 'text-amber-500', 'bg' => 'bg-amber-50'],
+                            ['type' => 'certificate', 'title' => 'Sertifikat', 'path' => optional($userProfile)->certificate_path, 'icon' => 'fa-certificate', 'color' => 'text-rose-500', 'bg' => 'bg-rose-50'],
                         ];
                     @endphp
                     
                     <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                         @foreach($docs as $doc)
                             @if($doc['path'])
-                                <a href="{{ asset('storage/' . $doc['path']) }}" target="_blank" 
+                                <a href="{{ route('documents.show', ['user' => $application->user_id, 'type' => $doc['type']]) }}" target="_blank" 
                                    class="group flex flex-col items-center p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all text-center">
                                     <div class="w-12 h-12 {{ $doc['bg'] }} {{ $doc['color'] }} rounded-xl flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
                                         <i class="fas {{ $doc['icon'] }}"></i>

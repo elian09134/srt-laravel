@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\TalentPool;
 use App\Models\User;
 use App\Models\UserProfile;
 use App\Models\WorkExperience;
+use App\Services\FileUploadService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -31,62 +33,33 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(RegisterRequest $request, FileUploadService $fileUploadService): RedirectResponse
     {
-        // 1. Validasi semua input dari form
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'nickname' => ['required', 'string', 'max:255'],
-            'phone_number' => ['required', 'string', 'max:20'],
-            'date_of_birth' => ['required', 'date'],
-            'about_me' => ['required', 'string'],
-            'education_level' => ['required', 'string'],
-            'institution' => ['required', 'string', 'max:255'],
-            'major' => ['required', 'string', 'max:255'],
-            'referral_source' => ['required', 'string', 'max:255'],
-            'cv' => ['required', 'file', 'mimes:pdf', 'max:2048'], // maks 2MB
-            'photo' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:2048'], // maks 2MB
-            'formal_photo' => ['required', 'file', 'image', 'max:2048'],
-            'ktp' => ['required', 'file', 'image', 'max:2048'],
-            'kk' => ['required', 'file', 'image', 'max:2048'],
-            'npwp' => ['nullable', 'file', 'image', 'max:2048'],
-            'ijazah' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
-            'certificate' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
-            'experience' => ['nullable', 'array'],
-            'experience.*.company' => ['nullable', 'string', 'max:255'],
-            'experience.*.position' => ['nullable', 'string', 'max:255'],
-            'experience.*.duration' => ['nullable', 'string', 'max:255'],
-            'experience.*.jobdesk' => ['nullable', 'string'],
-            'currently_employed' => ['nullable', 'boolean'],
-            'expected_salary' => ['required', 'numeric', 'min:0'],
-        ]);
-
         // Memulai transaksi database untuk memastikan semua data aman
         DB::beginTransaction();
 
         try {
-            // 2. Handle Upload File
-            $cvPath = $request->file('cv')->store('cvs', 'public');
+            // 2. Handle Upload File securely via FileUploadService into private storage
+            $cvPath = $fileUploadService->storeApplicantDocument($request->file('cv'), 'cvs');
+            $formalPhotoPath = $fileUploadService->storeApplicantDocument($request->file('formal_photo'), 'formal_photos');
+            $ktpPath = $fileUploadService->storeApplicantDocument($request->file('ktp'), 'ktps');
+            $kkPath = $fileUploadService->storeApplicantDocument($request->file('kk'), 'kks');
 
-            $formalPhotoPath = $request->file('formal_photo')->store('formal_photos', 'public');
-            $ktpPath = $request->file('ktp')->store('ktps', 'public');
-            $kkPath = $request->file('kk')->store('kks', 'public');
             $npwpPath = null;
             if ($request->hasFile('npwp')) {
-                $npwpPath = $request->file('npwp')->store('npwps', 'public');
+                $npwpPath = $fileUploadService->storeApplicantDocument($request->file('npwp'), 'npwps');
             }
-            $ijazahPath = $request->file('ijazah')->store('ijazahs', 'public');
+
+            $ijazahPath = $fileUploadService->storeApplicantDocument($request->file('ijazah'), 'ijazahs');
 
             $certificatePath = $request->hasFile('certificate')
-                ? $request->file('certificate')->store('certificates', 'public')
+                ? $fileUploadService->storeApplicantDocument($request->file('certificate'), 'certificates')
                 : null;
 
             $photoPath = null;
             if ($request->hasFile('photo')) {
                 try {
-                    $photoPath = $request->file('photo')->store('photos', 'public');
+                    $photoPath = $fileUploadService->storeApplicantDocument($request->file('photo'), 'photos');
                 } catch (\Exception $e) {
                     return back()->withErrors(['photo' => 'The photo failed to upload. Please try again.']);
                 }

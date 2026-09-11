@@ -99,7 +99,7 @@
                     <div class="mt-2">
                         @if($user->profile && $user->profile->photo_path)
                             <div class="flex items-center gap-4">
-                                <img src="{{ asset('storage/' . $user->profile->photo_path) }}" 
+                                <img src="{{ route('documents.show', ['user' => $user->id, 'type' => 'photo']) }}" 
                                      alt="Current Photo" 
                                      class="w-24 h-24 rounded-xl object-cover border-2 border-gray-200 dark:border-gray-600 shadow-md">
                                 <div class="flex-1">
@@ -167,6 +167,7 @@
                     <select id="education_level" name="education_level" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" required>
                         <option value="">Pilih Tingkat Pendidikan</option>
                         <option value="SMA" {{ old('education_level', $user->profile->education_level ?? '') == 'SMA' ? 'selected' : '' }}>SMA</option>
+                        <option value="SMK/Sederajat" {{ old('education_level', $user->profile->education_level ?? '') == 'SMK/Sederajat' ? 'selected' : '' }}>SMK/Sederajat</option>
                         <option value="D3" {{ old('education_level', $user->profile->education_level ?? '') == 'D3' ? 'selected' : '' }}>D3</option>
                         <option value="S1" {{ old('education_level', $user->profile->education_level ?? '') == 'S1' ? 'selected' : '' }}>S1</option>
                         <option value="S2" {{ old('education_level', $user->profile->education_level ?? '') == 'S2' ? 'selected' : '' }}>S2</option>
@@ -308,7 +309,7 @@
                     <x-input-label for="formal_photo" value="Pas Foto Formal (Wajib saat lamar)" />
                     @if($user->profile->formal_photo_path ?? false)
                         <div class="mt-1 flex items-center text-sm font-medium text-green-600 mb-2">
-                            <i class="fas fa-check-circle mr-1"></i> Sudah terunggah
+                            <i class="fas fa-check-circle mr-1"></i> Sudah terunggah <a href="{{ route('documents.show', ['user' => $user->id, 'type' => 'formal_photo']) }}" target="_blank" class="text-blue-500 hover:text-blue-700 text-xs ml-1">(Lihat)</a>
                         </div>
                     @else
                         <div class="mt-1 flex items-center text-sm font-medium text-red-500 mb-2">
@@ -324,7 +325,7 @@
                     <x-input-label for="ktp" value="Foto KTP (Wajib saat lamar)" />
                     @if($user->profile->ktp_path ?? false)
                         <div class="mt-1 flex items-center text-sm font-medium text-green-600 mb-2">
-                            <i class="fas fa-check-circle mr-1"></i> Sudah terunggah
+                            <i class="fas fa-check-circle mr-1"></i> Sudah terunggah <a href="{{ route('documents.show', ['user' => $user->id, 'type' => 'ktp']) }}" target="_blank" class="text-blue-500 hover:text-blue-700 text-xs ml-1">(Lihat)</a>
                         </div>
                     @else
                         <div class="mt-1 flex items-center text-sm font-medium text-red-500 mb-2">
@@ -343,7 +344,7 @@
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
-                        <span>Sudah terunggah <a href="{{ asset('storage/' . $user->profile->kk_path) }}" target="_blank" class="text-blue-500 hover:text-blue-700 text-xs">(Lihat)</a></span>
+                        <span>Sudah terunggah <a href="{{ route('documents.show', ['user' => $user->id, 'type' => 'kk']) }}" target="_blank" class="text-blue-500 hover:text-blue-700 text-xs">(Lihat)</a></span>
                     </div>
                 @else
                     <div class="mt-1 text-sm text-red-500 mb-2">Belum ada foto KK. Wajib diunggah.</div>
@@ -360,7 +361,7 @@
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
-                        <span>Sudah terunggah <a href="{{ asset('storage/' . $user->profile->npwp_path) }}" target="_blank" class="text-blue-500 hover:text-blue-700 text-xs">(Lihat)</a></span>
+                        <span>Sudah terunggah <a href="{{ route('documents.show', ['user' => $user->id, 'type' => 'npwp']) }}" target="_blank" class="text-blue-500 hover:text-blue-700 text-xs">(Lihat)</a></span>
                     </div>
                 @else
                     <div class="mt-1 text-sm text-gray-500 mb-2">Belum ada NPWP (Opsional).</div>
@@ -374,7 +375,7 @@
                     <x-input-label for="ijazah" value="Ijazah Terakhir (Wajib saat lamar)" />
                     @if($user->profile->ijazah_path ?? false)
                         <div class="mt-1 flex items-center text-sm font-medium text-green-600 mb-2">
-                            <i class="fas fa-check-circle mr-1"></i> Sudah terunggah <a href="{{ asset('storage/' . $user->profile->ijazah_path) }}" target="_blank" class="text-blue-600 hover:underline ml-2">(Lihat)</a>
+                            <i class="fas fa-check-circle mr-1"></i> Sudah terunggah <a href="{{ route('documents.show', ['user' => $user->id, 'type' => 'ijazah']) }}" target="_blank" class="text-blue-600 hover:underline ml-2">(Lihat)</a>
                         </div>
                     @else
                         <div class="mt-1 flex items-center text-sm font-medium text-red-500 mb-2">
@@ -390,7 +391,7 @@
                     <x-input-label for="certificate" value="Sertifikat Pendukung (Opsional)" />
                     @if($user->profile->certificate_path ?? false)
                         <div class="mt-1 flex items-center text-sm font-medium text-green-600 mb-2">
-                            <i class="fas fa-check-circle mr-1"></i> Sudah ada <a href="{{ asset('storage/' . $user->profile->certificate_path) }}" target="_blank" class="text-blue-600 hover:underline ml-2">(Lihat)</a>
+                            <i class="fas fa-check-circle mr-1"></i> Sudah ada <a href="{{ route('documents.show', ['user' => $user->id, 'type' => 'certificate']) }}" target="_blank" class="text-blue-600 hover:underline ml-2">(Lihat)</a>
                         </div>
                     @endif
                     <input type="file" id="certificate" name="certificate" accept=".pdf,image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition" />

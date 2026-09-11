@@ -33,7 +33,7 @@ class ApplicationSeeder extends Seeder
             $email = Str::slug($name).'@example.com';
 
             // Create user for applicant
-            $user = User::create([
+            $user = User::forceCreate([
                 'name' => $name,
                 'email' => $email,
                 'password' => Hash::make('password'),

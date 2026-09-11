@@ -14,7 +14,7 @@ class PartnerSeeder extends Seeder
         $email = 'm28@partner.com';
 
         if (! User::where('email', $email)->exists()) {
-            User::create([
+            User::forceCreate([
                 'name' => 'M28',
                 'email' => $email,
                 'email_verified_at' => now(),

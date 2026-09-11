@@ -45,6 +45,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Secure Document Access (Anti-Webshell & Private Storage Access)
+    Route::get('/documents/user/{user}/{type}', [\App\Http\Controllers\DocumentController::class, 'showUserDocument'])->name('documents.show');
+    Route::get('/documents/application/{application}/cv', [\App\Http\Controllers\DocumentController::class, 'applicationCv'])->name('documents.application.cv');
+
     // FPTK (Form Permintaan Tenaga Kerja) landing for operasional users
     Route::get('/fptk', [App\Http\Controllers\FptkController::class, 'index'])->name('fptk.index');
     Route::post('/fptk', [App\Http\Controllers\FptkController::class, 'store'])->name('fptk.store')->middleware('throttle:5,1');

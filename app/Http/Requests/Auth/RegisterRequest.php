@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Auth;
 
 use App\Models\User;
 use App\Rules\SecureFileUploadRule;
 use App\Support\Security;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules;
 
-class ProfileUpdateRequest extends FormRequest
+class RegisterRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -24,6 +25,7 @@ class ProfileUpdateRequest extends FormRequest
             'about_me' => Security::cleanInput($this->about_me),
             'institution' => Security::cleanInput($this->institution),
             'major' => Security::cleanInput($this->major),
+            'referral_source' => Security::cleanInput($this->referral_source),
             'skills' => Security::cleanInput($this->skills),
             'languages' => Security::cleanInput($this->languages),
             'job_interest' => Security::cleanInput($this->job_interest),
@@ -39,10 +41,8 @@ class ProfileUpdateRequest extends FormRequest
                     $cleanedExp[$key] = [
                         'company' => isset($exp['company']) ? Security::cleanInput($exp['company']) : null,
                         'position' => isset($exp['position']) ? Security::cleanInput($exp['position']) : null,
-                        'start_date' => $exp['start_date'] ?? null,
-                        'end_date' => $exp['end_date'] ?? null,
-                        'duration_months' => $exp['duration_months'] ?? null,
-                        'description' => isset($exp['description']) ? Security::cleanInput($exp['description']) : null,
+                        'duration' => isset($exp['duration']) ? Security::cleanInput($exp['duration']) : null,
+                        'jobdesk' => isset($exp['jobdesk']) ? Security::cleanInput($exp['jobdesk']) : null,
                     ];
                 }
             }
@@ -55,50 +55,42 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'email' => [
-                'sometimes',
-                'required',
-                'string',
-                'lowercase',
-                'email',
-                'max:255',
-                Rule::unique(User::class)->ignore($this->user()?->id),
-            ],
-            'nickname' => ['sometimes', 'required', 'string', 'max:255'],
-            'phone_number' => ['sometimes', 'required', 'string', 'max:20'],
-            'date_of_birth' => ['sometimes', 'required', 'date'],
-            'about_me' => ['sometimes', 'required', 'string'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'nickname' => ['required', 'string', 'max:255'],
+            'phone_number' => ['required', 'string', 'max:20'],
+            'date_of_birth' => ['required', 'date'],
+            'about_me' => ['required', 'string'],
             'education_level' => [
-                'sometimes',
                 'required',
                 'string',
                 Rule::in(['SMA', 'SMK', 'SMA/SMK', 'SMK/Sederajat', 'SMA/Sederajat', 'D1', 'D2', 'D3', 'D4', 'S1', 'S2', 'S3']),
             ],
-            'institution' => ['sometimes', 'required', 'string', 'max:255'],
-            'major' => ['sometimes', 'required', 'string', 'max:255'],
-            'last_company' => ['nullable', 'string', 'max:255'],
-            'last_position' => ['nullable', 'string', 'max:255'],
-            'last_company_duration' => ['nullable', 'string', 'max:255'],
-            'skills' => ['nullable', 'string'],
-            'languages' => ['nullable', 'string'],
-            'job_interest' => ['nullable', 'string', 'max:255'],
-            'expected_salary' => ['sometimes', 'required', 'numeric', 'min:0'],
+            'institution' => ['required', 'string', 'max:255'],
+            'major' => ['required', 'string', 'max:255'],
+            'referral_source' => ['required', 'string', 'max:255'],
+            'cv' => ['required', 'file', new SecureFileUploadRule(['pdf'])],
             'photo' => ['nullable', 'file', new SecureFileUploadRule(['jpg', 'jpeg', 'png'])],
-            'formal_photo' => ['nullable', 'file', new SecureFileUploadRule(['jpg', 'jpeg', 'png'])],
-            'ktp' => ['nullable', 'file', new SecureFileUploadRule(['jpg', 'jpeg', 'png'])] ,
-            'kk' => ['nullable', 'file', new SecureFileUploadRule(['jpg', 'jpeg', 'png'])],
+            'formal_photo' => ['required', 'file', new SecureFileUploadRule(['jpg', 'jpeg', 'png'])],
+            'ktp' => ['required', 'file', new SecureFileUploadRule(['jpg', 'jpeg', 'png'])],
+            'kk' => ['required', 'file', new SecureFileUploadRule(['jpg', 'jpeg', 'png'])],
             'npwp' => ['nullable', 'file', new SecureFileUploadRule(['jpg', 'jpeg', 'png'])],
-            'ijazah' => ['nullable', 'file', new SecureFileUploadRule(['pdf', 'jpg', 'jpeg', 'png'])],
+            'ijazah' => ['required', 'file', new SecureFileUploadRule(['pdf', 'jpg', 'jpeg', 'png'])],
             'certificate' => ['nullable', 'file', new SecureFileUploadRule(['pdf', 'jpg', 'jpeg', 'png'])],
-            'cv' => ['nullable', 'file', new SecureFileUploadRule(['pdf'])],
             'experience' => ['nullable', 'array'],
             'experience.*.company' => ['nullable', 'string', 'max:255'],
             'experience.*.position' => ['nullable', 'string', 'max:255'],
-            'experience.*.start_date' => ['nullable', 'date'],
-            'experience.*.end_date' => ['nullable', 'date'],
-            'experience.*.duration_months' => ['nullable', 'integer', 'min:0'],
-            'experience.*.description' => ['nullable', 'string'],
+            'experience.*.duration' => ['nullable', 'string', 'max:255'],
+            'experience.*.jobdesk' => ['nullable', 'string'],
+            'currently_employed' => ['nullable', 'boolean'],
+            'expected_salary' => ['required', 'numeric', 'min:0'],
+            'skills' => ['nullable', 'string'],
+            'languages' => ['nullable', 'string'],
+            'job_interest' => ['nullable', 'string', 'max:255'],
+            'last_company' => ['nullable', 'string', 'max:255'],
+            'last_position' => ['nullable', 'string', 'max:255'],
+            'last_company_duration' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

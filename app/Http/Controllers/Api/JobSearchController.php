@@ -13,10 +13,11 @@ class JobSearchController extends Controller
         $q = $request->query('q', '');
         $query = Job::query();
         if (! empty($q)) {
-            $query->where(function ($qry) use ($q) {
-                $qry->where('title', 'like', "%{$q}%")
-                    ->orWhere('location', 'like', "%{$q}%")
-                    ->orWhere('type', 'like', "%{$q}%");
+            $safeQ = \App\Support\Security::escapeLike($q);
+            $query->where(function ($qry) use ($safeQ) {
+                $qry->where('title', 'like', "%{$safeQ}%")
+                    ->orWhere('location', 'like', "%{$safeQ}%")
+                    ->orWhere('type', 'like', "%{$safeQ}%");
             });
         }
         $jobs = $query->latest()->limit(20)->get(['id', 'title', 'location', 'type', 'salary_range']);

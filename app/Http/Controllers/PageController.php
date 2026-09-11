@@ -43,7 +43,8 @@ class PageController extends Controller
 
         // Terapkan filter jika ada
         if ($request->filled('keyword')) {
-            $query->where('title', 'like', '%'.$request->keyword.'%');
+            $keyword = \App\Support\Security::escapeLike($request->keyword);
+            $query->where('title', 'like', '%'.$keyword.'%');
         }
         if ($request->filled('location') && $request->location != 'all') {
             $query->where('location', $request->location);

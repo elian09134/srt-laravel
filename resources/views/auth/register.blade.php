@@ -185,6 +185,7 @@
                             <label class="block text-sm font-medium text-gray-700 mb-1">Jenjang Pendidikan <span class="text-red-500">*</span></label>
                             <select name="education_level" required class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                                 <option value="">Pilih Jenjang</option>
+                                <option value="SMA" @if(old('education_level')=='SMA') selected @endif>SMA</option>
                                 <option value="SMK/Sederajat" @if(old('education_level')=='SMK/Sederajat') selected @endif>SMK/Sederajat</option>
                                 <option value="D3" @if(old('education_level')=='D3') selected @endif>D3</option>
                                 <option value="S1" @if(old('education_level')=='S1') selected @endif>S1</option>

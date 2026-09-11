@@ -44,7 +44,7 @@ class EmployeeController extends Controller
         try {
             $temporaryPassword = Str::random(10);
 
-            $user = User::create([
+            $user = User::forceCreate([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($temporaryPassword),

@@ -101,7 +101,7 @@ class M28CandidateSeeder extends Seeder
             $email = Str::slug($data['name']).'.m28@example.com';
             $daysAgo = rand(5, 60);
 
-            $user = User::create([
+            $user = User::forceCreate([
                 'name' => $data['name'],
                 'email' => $email,
                 'password' => Hash::make('password'),

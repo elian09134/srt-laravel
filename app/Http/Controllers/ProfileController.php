@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProfileDestroyRequest;
+use App\Http\Requests\ProfileUpdateRequest;
+use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +36,7 @@ class ProfileController extends Controller
     /**
      * Memperbarui profil user reguler di database.
      */
-    public function update(Request $request)
+    public function update(ProfileUpdateRequest $request, FileUploadService $fileUploadService)
     {
         $user = Auth::user();
 
@@ -46,66 +49,69 @@ class ProfileController extends Controller
             $user->load('profile');
         }
 
-        $request->validate([
-            'nickname' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:20',
-            'date_of_birth' => 'required|date',
-            'about_me' => 'required|string',
-            'education_level' => 'required|string',
-            'institution' => 'required|string|max:255',
-            'major' => 'required|string|max:255',
-            'last_company' => 'nullable|string|max:255',
-            'last_position' => 'nullable|string|max:255',
-            'last_company_duration' => 'nullable|string|max:255',
-            'skills' => 'nullable|string',
-            'languages' => 'nullable|string',
-            'job_interest' => 'nullable|string',
-            'expected_salary' => 'required|numeric|min:0',
-            'photo' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'formal_photo' => 'nullable|file|image|max:2048',
-            'ktp' => 'nullable|file|image|max:2048',
-            'kk' => 'nullable|file|image|max:2048',
-            'npwp' => 'nullable|file|image|max:2048',
-            'ijazah' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-        ]);
-
         DB::beginTransaction();
         try {
-            // 1. Handle upload foto jika ada
+            // Update User fields if provided
+            if ($request->filled('name')) {
+                $user->name = $request->name;
+            }
+            if ($request->filled('email')) {
+                $user->email = $request->email;
+            }
+
+            if ($user->isDirty('email')) {
+                $user->email_verified_at = null;
+            }
+
+            $user->save();
+
+            // 1. Handle upload berkas/foto secara aman via FileUploadService ke private storage
             $photoPath = $user->profile->photo_path;
             if ($request->hasFile('photo')) {
-                $photoPath = $request->file('photo')->store('photos', 'public');
+                $fileUploadService->deleteFile($photoPath);
+                $photoPath = $fileUploadService->storeApplicantDocument($request->file('photo'), 'photos');
             }
 
             $formalPhotoPath = $user->profile->formal_photo_path;
             if ($request->hasFile('formal_photo')) {
-                $formalPhotoPath = $request->file('formal_photo')->store('formal_photos', 'public');
+                $fileUploadService->deleteFile($formalPhotoPath);
+                $formalPhotoPath = $fileUploadService->storeApplicantDocument($request->file('formal_photo'), 'formal_photos');
             }
 
             $ktpPath = $user->profile->ktp_path;
             if ($request->hasFile('ktp')) {
-                $ktpPath = $request->file('ktp')->store('ktps', 'public');
+                $fileUploadService->deleteFile($ktpPath);
+                $ktpPath = $fileUploadService->storeApplicantDocument($request->file('ktp'), 'ktps');
             }
 
             $kkPath = $user->profile->kk_path;
             if ($request->hasFile('kk')) {
-                $kkPath = $request->file('kk')->store('kks', 'public');
+                $fileUploadService->deleteFile($kkPath);
+                $kkPath = $fileUploadService->storeApplicantDocument($request->file('kk'), 'kks');
             }
 
             $npwpPath = $user->profile->npwp_path;
             if ($request->hasFile('npwp')) {
-                $npwpPath = $request->file('npwp')->store('npwps', 'public');
+                $fileUploadService->deleteFile($npwpPath);
+                $npwpPath = $fileUploadService->storeApplicantDocument($request->file('npwp'), 'npwps');
             }
 
             $ijazahPath = $user->profile->ijazah_path;
             if ($request->hasFile('ijazah')) {
-                $ijazahPath = $request->file('ijazah')->store('ijazahs', 'public');
+                $fileUploadService->deleteFile($ijazahPath);
+                $ijazahPath = $fileUploadService->storeApplicantDocument($request->file('ijazah'), 'ijazahs');
             }
 
             $certificatePath = $user->profile->certificate_path;
             if ($request->hasFile('certificate')) {
-                $certificatePath = $request->file('certificate')->store('certificates', 'public');
+                $fileUploadService->deleteFile($certificatePath);
+                $certificatePath = $fileUploadService->storeApplicantDocument($request->file('certificate'), 'certificates');
+            }
+
+            $cvPath = $user->profile->cv_path;
+            if ($request->hasFile('cv')) {
+                $fileUploadService->deleteFile($cvPath);
+                $cvPath = $fileUploadService->storeApplicantDocument($request->file('cv'), 'cvs');
             }
 
             // 2. Update profil user
@@ -131,6 +137,7 @@ class ProfileController extends Controller
                 'npwp_path' => $npwpPath,
                 'ijazah_path' => $ijazahPath,
                 'certificate_path' => $certificatePath,
+                'cv_path' => $cvPath,
             ]);
 
             // 3. Update pengalaman kerja jika ada
@@ -167,7 +174,7 @@ class ProfileController extends Controller
     /**
      * Menghapus akun user reguler.
      */
-    public function destroy(Request $request)
+    public function destroy(ProfileDestroyRequest $request)
     {
         $user = Auth::user();
 
@@ -175,20 +182,19 @@ class ProfileController extends Controller
             return redirect()->route('m28.dashboard')->with('error', 'Halaman profil tidak tersedia untuk mitra.');
         }
 
-        $request->validate([
-            'password' => 'required|string',
-        ]);
-
         // Verifikasi password
         if (! Auth::guard('web')->validate([
             'email' => $user->email,
             'password' => $request->password,
         ])) {
-            return back()->withErrors(['password' => 'Password yang dimasukkan salah.']);
+            return back()->withErrors(['password' => 'Password yang dimasukkan salah.'], 'userDeletion');
         }
 
         DB::beginTransaction();
         try {
+            // Logout user before deleting to prevent remember_token re-saving
+            Auth::logout();
+
             // Hapus semua data terkait user
             $user->profile()->delete();
             $user->workExperiences()->delete();
@@ -200,8 +206,8 @@ class ProfileController extends Controller
 
             DB::commit();
 
-            // Logout user
-            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
             return redirect('/')->with('success', 'Akun Anda telah berhasil dihapus.');
 

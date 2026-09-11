@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Fptk\StoreFptkRequest;
 use App\Models\Fptk;
 use Illuminate\Http\Request;
 
@@ -47,36 +48,10 @@ class FptkController extends Controller
         return view('fptk.detail', compact('fptk'));
     }
 
-    public function store(Request $request)
+    public function store(StoreFptkRequest $request)
     {
         $user = $request->user();
-        if (! $user || $user->role !== 'operasional') {
-            abort(403);
-        }
-
-        $data = $request->validate([
-            'position' => 'required|string|max:255',
-            'locations' => 'nullable|string|max:255',
-            'qty' => 'nullable|integer|min:0',
-            'qty_female' => 'nullable|integer|min:0',
-            // additional fields saved into notes as JSON
-            'division' => 'nullable|string|max:255',
-            'dasar_permintaan' => 'nullable|array',
-            'dasar_permintaan.*' => 'string|max:1000',
-            'date_needed' => 'nullable|date',
-            'status_type' => 'nullable|string|max:100',
-            'golongan_gaji' => 'nullable|string|max:255',
-            'penempatan' => 'nullable|string|max:255',
-            'gaji' => 'nullable|numeric',
-            'usia' => 'nullable|string|max:255',
-            'pendidikan' => 'nullable|string|max:255',
-            'keterampilan' => 'nullable|string|max:2000',
-            'pengalaman' => 'nullable|string|max:2000',
-            'uraian' => 'nullable|string|max:4000',
-            'notes' => 'nullable|string|max:2000',
-            'signature' => 'required|string',
-            'signer_name' => 'required|string|max:255',
-        ]);
+        $data = $request->validated();
 
         // Pack all extra fields into notes JSON temporarily until ALTER TABLE is run
         $male = isset($data['qty']) ? (int) $data['qty'] : 0;

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\EmployeeRegisterRequest;
 use App\Models\Employee;
 use App\Models\EmployeeEducation;
 use App\Models\EmployeeInvitation;
@@ -58,42 +59,14 @@ class EmployeeRegisterController extends Controller
     /**
      * Menyimpan data pendaftaran karyawan baru.
      */
-    public function store(Request $request)
+    public function store(EmployeeRegisterRequest $request)
     {
-        $request->validate([
-            'invitation_code' => 'required|string|exists:employee_invitations,invitation_code',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'phone_number' => 'required|string|max:20',
-            'place_of_birth' => 'required|string|max:255',
-            'date_of_birth' => 'required|date',
-            'current_address' => 'required|string',
-            'id_card_address' => 'required|string',
-            'gender' => 'required|string',
-            'religion' => 'required|string',
-            'marital_status' => 'required|string',
-            'ptkp_status' => 'required|string',
-            'id_card_number' => 'required|string|max:255|unique:employees,id_card_number',
-            'father_name' => 'required|string',
-            'mother_name' => 'required|string',
-            'department' => 'required|string',
-            'location' => 'required|string',
-            'position' => 'required|string',
-            'join_date' => 'required|date',
-            'employment_status' => 'required|string',
-            'bank_name' => 'required|string',
-            'account_number' => 'required|string',
-            'account_holder_name' => 'required|string',
-            'emergency_contact_name' => 'required|string',
-            'emergency_contact_phone' => 'required|string',
-            'emergency_contact_relation' => 'required|string',
-        ]);
-
         $invitation = EmployeeInvitation::where('invitation_code', $request->invitation_code)->whereNull('used_at')->firstOrFail();
 
         DB::beginTransaction();
         try {
             // 1. Buat user baru dengan role 'employee'
-            $user = User::create([
+            $user = User::forceCreate([
                 'name' => $invitation->full_name,
                 'email' => $invitation->email,
                 'password' => Hash::make($request->password),

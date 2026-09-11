@@ -54,7 +54,7 @@ class GoogleController extends Controller
 
                 return redirect()->intended(route('home'));
             } else {
-                $newUser = User::create([
+                $newUser = User::forceCreate([
                     'name' => $user->name,
                     'email' => $user->email,
                     'google_id' => $user->id,

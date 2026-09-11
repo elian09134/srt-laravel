@@ -23,7 +23,7 @@ class CandidateController extends Controller
             ->with(['applications.job', 'applications.statusHistories', 'profile']);
 
         if ($request->filled('search')) {
-            $search = $request->search;
+            $search = \App\Support\Security::escapeLike($request->search);
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', '%'.$search.'%')
                     ->orWhere('email', 'like', '%'.$search.'%');
@@ -72,7 +72,7 @@ class CandidateController extends Controller
             ->with(['applications.job', 'applications.statusHistories', 'profile']);
 
         if ($request->filled('search')) {
-            $search = $request->search;
+            $search = \App\Support\Security::escapeLike($request->search);
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', '%'.$search.'%')
                     ->orWhere('email', 'like', '%'.$search.'%');

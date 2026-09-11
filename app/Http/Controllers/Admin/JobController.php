@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreJobRequest;
+use App\Http\Requests\Admin\UpdateJobRequest;
 use App\Models\Job;
+use App\Services\FileUploadService;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
@@ -34,20 +37,14 @@ class JobController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreJobRequest $request, FileUploadService $fileUploadService)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'type' => 'required|string',
-            'salary_range' => 'nullable|string|max:100',
-            'jobdesk' => 'required|string',
-            'requirement' => 'required|string',
-            'benefits' => 'nullable|string',
-            'fptk_id' => 'nullable|exists:fptks,id',
-            'image' => 'nullable|image|max:2048',
-            'is_active' => 'nullable|boolean',
-        ]);
+        $validated = $request->validated();
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $fileUploadService->storePublicImage($request->file('image'), 'jobs');
+        }
 
         Job::create([
             'title' => $validated['title'],
@@ -58,7 +55,7 @@ class JobController extends Controller
             'requirement' => json_encode(array_values(array_filter(array_map('trim', explode("\n", $validated['requirement'] ?? ''))))),
             'benefits' => json_encode(array_values(array_filter(array_map('trim', explode("\n", $validated['benefits'] ?? ''))))),
             'fptk_id' => $validated['fptk_id'] ?? null,
-            'image' => $request->hasFile('image') ? $request->file('image')->store('jobs', 'public') : null,
+            'image' => $imagePath,
             'show_image' => $request->has('show_image'),
             'is_active' => $request->has('is_active') ? $request->boolean('is_active') : true,
         ]);
@@ -85,20 +82,9 @@ class JobController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Job $job)
+    public function update(UpdateJobRequest $request, Job $job, FileUploadService $fileUploadService)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'type' => 'required|string',
-            'salary_range' => 'nullable|string|max:100',
-            'jobdesk' => 'required|string',
-            'requirement' => 'required|string',
-            'benefits' => 'nullable|string',
-            'fptk_id' => 'nullable|exists:fptks,id',
-            'image' => 'nullable|image|max:2048', // Allow only images max 2MB
-            'is_active' => 'nullable|boolean',
-        ]);
+        $validated = $request->validated();
 
         $data = [
             'title' => $validated['title'],
@@ -114,11 +100,8 @@ class JobController extends Controller
         ];
 
         if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($job->image && \Illuminate\Support\Facades\Storage::disk('public')->exists($job->image)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($job->image);
-            }
-            $data['image'] = $request->file('image')->store('jobs', 'public');
+            $fileUploadService->deleteFile($job->image, ['public']);
+            $data['image'] = $fileUploadService->storePublicImage($request->file('image'), 'jobs');
         }
 
         $job->update($data);

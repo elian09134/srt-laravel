@@ -23,7 +23,7 @@
                     <div class="relative shrink-0 mt-2 md:mt-0">
                         <div class="relative w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-white/90 shadow-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-300">
                             @if($user->profile && $user->profile->photo_path)
-                                <img src="{{ asset('storage/' . $user->profile->photo_path) }}" 
+                                <img src="{{ route('documents.show', ['user' => $user->id, 'type' => 'photo']) }}" 
                                      alt="{{ $user->name }}" 
                                      class="w-full h-full object-cover">
                             @else

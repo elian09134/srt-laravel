@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Application\StoreApplicationRequest;
 use App\Models\Application;
 use App\Models\ApplicationStatusHistory;
 use App\Models\Job;
@@ -14,13 +15,10 @@ class ApplicationController extends Controller
     /**
      * Store a newly created application in storage.
      */
-    public function store(Job $job, Request $request)
+    public function store(Job $job, StoreApplicationRequest $request)
     {
         $user = Auth::user();
 
-        $request->validate([
-            'cover_letter' => 'nullable|string|max:2000',
-        ]);
 
         // Prevent duplicate applications
         $exists = Application::where('job_id', $job->id)

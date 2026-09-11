@@ -22,7 +22,7 @@ class AdminUserSeeder extends Seeder
             return;
         }
 
-        User::create([
+        User::forceCreate([
             'name' => 'Administrator',
             'email' => $email,
             'email_verified_at' => now(),

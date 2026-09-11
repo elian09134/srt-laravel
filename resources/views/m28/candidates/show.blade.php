@@ -17,7 +17,7 @@
             <div class="px-6 pb-6">
                 <div class="relative flex justify-center -mt-12 mb-4">
                     @if($candidate->profile && $candidate->profile->photo_path)
-                        <img class="h-24 w-24 rounded-2xl object-cover ring-4 ring-white shadow-md" src="{{ asset('storage/' . $candidate->profile->photo_path) }}" alt="Foto">
+                        <img class="h-24 w-24 rounded-2xl object-cover ring-4 ring-white shadow-md" src="{{ route('documents.show', ['user' => $candidate->id, 'type' => 'photo']) }}" alt="Foto">
                     @else
                         <div class="h-24 w-24 rounded-2xl bg-purple-100 ring-4 ring-white shadow-md flex items-center justify-center text-purple-600 font-bold text-2xl border border-purple-100">
                             {{ substr($candidate->name, 0, 1) }}

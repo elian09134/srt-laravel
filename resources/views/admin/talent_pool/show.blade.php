@@ -36,7 +36,7 @@
             <div class="px-6 pb-6">
                 <div class="relative flex justify-center -mt-12 mb-4">
                     @if($profile && $profile->photo_path)
-                        <img class="h-24 w-24 rounded-2xl object-cover ring-4 ring-white shadow-md bg-white border border-slate-100" src="{{ asset('storage/' . $profile->photo_path) }}" alt="{{ $user->name }}">
+                        <img class="h-24 w-24 rounded-2xl object-cover ring-4 ring-white shadow-md bg-white border border-slate-100" src="{{ route('documents.show', ['user' => $user->id, 'type' => 'photo']) }}" alt="{{ $user->name }}">
                     @else
                         <div class="h-24 w-24 rounded-2xl bg-slate-100 ring-4 ring-white shadow-md flex items-center justify-center text-slate-400 font-bold text-3xl border border-slate-200">
                             {{ substr($user->name, 0, 1) }}
@@ -274,22 +274,22 @@
             </h3>
 
             @php
-                 $docs = [
-                    ['title' => 'CV / Resume', 'path' => optional($profile)->cv_path, 'icon' => 'fa-file-pdf', 'color' => 'text-blue-600', 'bg' => 'bg-blue-50'],
-                    ['title' => 'Foto Formal', 'path' => optional($profile)->formal_photo_path, 'icon' => 'fa-id-badge', 'color' => 'text-blue-500', 'bg' => 'bg-blue-50'],
-                    ['title' => 'KTP', 'path' => optional($profile)->ktp_path, 'icon' => 'fa-address-card', 'color' => 'text-indigo-500', 'bg' => 'bg-indigo-50'],
-                    ['title' => 'Kartu Keluarga', 'path' => optional($profile)->kk_path, 'icon' => 'fa-users', 'color' => 'text-purple-500', 'bg' => 'bg-purple-50'],
-                    ['title' => 'NPWP', 'path' => optional($profile)->npwp_path, 'icon' => 'fa-file-invoice-dollar', 'color' => 'text-emerald-500', 'bg' => 'bg-emerald-50'],
-                    ['title' => 'Ijazah Terakhir', 'path' => optional($profile)->ijazah_path, 'icon' => 'fa-graduation-cap', 'color' => 'text-amber-500', 'bg' => 'bg-amber-50'],
-                    ['title' => 'Sertifikat', 'path' => optional($profile)->certificate_path, 'icon' => 'fa-certificate', 'color' => 'text-rose-500', 'bg' => 'bg-rose-50'],
-                ];
-            @endphp
-            
-            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                @foreach($docs as $doc)
-                    @if($doc['path'])
-                        <a href="{{ asset('storage/' . $doc['path']) }}" target="_blank" 
-                           class="group flex flex-col items-center p-4 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all text-center">
+                  $docs = [
+                     ['type' => 'cv', 'title' => 'CV / Resume', 'path' => optional($profile)->cv_path, 'icon' => 'fa-file-pdf', 'color' => 'text-blue-600', 'bg' => 'bg-blue-50'],
+                     ['type' => 'formal_photo', 'title' => 'Foto Formal', 'path' => optional($profile)->formal_photo_path, 'icon' => 'fa-id-badge', 'color' => 'text-blue-500', 'bg' => 'bg-blue-50'],
+                     ['type' => 'ktp', 'title' => 'KTP', 'path' => optional($profile)->ktp_path, 'icon' => 'fa-address-card', 'color' => 'text-indigo-500', 'bg' => 'bg-indigo-50'],
+                     ['type' => 'kk', 'title' => 'Kartu Keluarga', 'path' => optional($profile)->kk_path, 'icon' => 'fa-users', 'color' => 'text-purple-500', 'bg' => 'bg-purple-50'],
+                     ['type' => 'npwp', 'title' => 'NPWP', 'path' => optional($profile)->npwp_path, 'icon' => 'fa-file-invoice-dollar', 'color' => 'text-emerald-500', 'bg' => 'bg-emerald-50'],
+                     ['type' => 'ijazah', 'title' => 'Ijazah Terakhir', 'path' => optional($profile)->ijazah_path, 'icon' => 'fa-graduation-cap', 'color' => 'text-amber-500', 'bg' => 'bg-amber-50'],
+                     ['type' => 'certificate', 'title' => 'Sertifikat', 'path' => optional($profile)->certificate_path, 'icon' => 'fa-certificate', 'color' => 'text-rose-500', 'bg' => 'bg-rose-50'],
+                 ];
+             @endphp
+             
+             <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                 @foreach($docs as $doc)
+                     @if($doc['path'])
+                         <a href="{{ route('documents.show', ['user' => $user->id, 'type' => $doc['type']]) }}" target="_blank" 
+                            class="group flex flex-col items-center p-4 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all text-center">
                             <div class="w-10 h-10 {{ $doc['bg'] }} {{ $doc['color'] }} rounded-lg flex items-center justify-center text-lg mb-2 group-hover:scale-110 transition-transform">
                                 <i class="fas {{ $doc['icon'] }}"></i>
                             </div>

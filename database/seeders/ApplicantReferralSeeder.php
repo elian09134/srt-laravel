@@ -261,7 +261,7 @@ class ApplicantReferralSeeder extends Seeder
             $email = strtolower($slug.'.'.uniqid().'@example.com');
         }
 
-        $user = User::create([
+        $user = User::forceCreate([
             'name' => $name,
             'email' => $email,
             'password' => Hash::make('password'),

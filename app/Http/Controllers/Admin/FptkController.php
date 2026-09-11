@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\ApproveFptkRequest;
+use App\Http\Requests\Admin\RejectFptkRequest;
+use App\Http\Requests\Admin\UpdateFptkFulfilledRequest;
 use App\Models\Fptk;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -95,42 +98,8 @@ class FptkController extends Controller
         return view('admin.fptk.show', compact('fptk'));
     }
 
-    public function approve(Request $request, Fptk $fptk)
+    public function approve(ApproveFptkRequest $request, Fptk $fptk)
     {
-        $request->validate([
-            'admin_note' => 'nullable|string|max:2000',
-            'admin_signature' => ['required', 'string', function ($attribute, $value, $fail) {
-                if (! preg_match('/^data:image\/(png|jpeg|webp|gif);base64,/', $value)) {
-                    $fail('Tanda tangan tidak valid — format data URL gambar tidak dikenali.');
-
-                    return;
-                }
-
-                $base64 = preg_replace('/^data:image\/(png|jpeg|webp|gif);base64,/', '', $value);
-                $decoded = base64_decode($base64, true);
-
-                if ($decoded === false) {
-                    $fail('Tanda tangan tidak valid — data base64 corrupt.');
-
-                    return;
-                }
-
-                $size = strlen($decoded);
-
-                if ($size < 200) {
-                    $fail('Tanda tangan tidak valid — ukuran terlalu kecil, kemungkinan tandatangan kosong.');
-
-                    return;
-                }
-
-                if ($size > 512000) {
-                    $fail('Tanda tangan terlalu besar — maksimal 500KB.');
-
-                    return;
-                }
-            }],
-        ]);
-
         $fptk->status = 'approved';
         $fptk->admin_id = Auth::id();
         $fptk->admin_note = $request->input('admin_note');
@@ -140,9 +109,8 @@ class FptkController extends Controller
         return redirect()->route('admin.fptk.index')->with('status', 'FPTK berhasil disetujui.');
     }
 
-    public function reject(Request $request, Fptk $fptk)
+    public function reject(RejectFptkRequest $request, Fptk $fptk)
     {
-        $request->validate(['admin_note' => 'nullable|string|max:2000']);
         $fptk->status = 'rejected';
         $fptk->admin_id = Auth::id();
         $fptk->admin_note = $request->input('admin_note');
@@ -166,12 +134,8 @@ class FptkController extends Controller
         return redirect()->route('admin.fptk.index', ['tab' => 'selesai'])->with('status', 'FPTK berhasil ditandai selesai.');
     }
 
-    public function updateFulfilled(Request $request, Fptk $fptk)
+    public function updateFulfilled(UpdateFptkFulfilledRequest $request, Fptk $fptk)
     {
-        $request->validate([
-            'fulfilled_count' => 'required|integer|min:0|max:'.$fptk->qty,
-        ]);
-
         $fptk->update([
             'fulfilled_count' => $request->input('fulfilled_count'),
         ]);

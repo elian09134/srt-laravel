@@ -94,7 +94,7 @@ class TalentPoolSeeder extends Seeder
 
         foreach ($talents as $data) {
             // Create User
-            $user = User::create([
+            $user = User::forceCreate([
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make('password'),

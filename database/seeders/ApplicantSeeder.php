@@ -19,7 +19,7 @@ class ApplicantSeeder extends Seeder
             return;
         }
 
-        User::create([
+        User::forceCreate([
             'name' => 'Pelamar',
             'email' => $email,
             'email_verified_at' => now(),
